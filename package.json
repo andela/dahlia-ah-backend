@@ -4,13 +4,20 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
+    "dev:start": "cross-env DEBUG=dev babel-node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
+    "debug": "^4.1.1",
     "dotenv": "^6.0.0",
     "ejs": "^2.6.1",
     "errorhandler": "^1.5.0",
@@ -22,9 +29,16 @@
     "methods": "^1.1.2",
     "mongoose": "^5.2.2",
     "mongoose-unique-validator": "^2.0.1",
+    "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "request": "^2.87.0",
     "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.2"
   }
 }
