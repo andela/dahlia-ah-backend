@@ -1,3 +1,5 @@
+[![](https://img.shields.io/badge/Protected_by-Hound-a873d1.svg)](https://houndci.com)
+
 # Authors Haven - A Social platform for the creative at heart.
 
 # Team Dahlia
