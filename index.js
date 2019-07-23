@@ -47,6 +47,14 @@ if (isProduction) {
 
 // app.use(require('./routes'));
 
+
+app.get('/', (req, res) => {
+  res.send({
+    status: 200,
+    message: 'Welcome to Author\'s Haven'
+  });
+});
+
 // / catch 404 and forward to error handler
 app.use((req, res, next) => {
   const err = new Error('Not Found');
@@ -89,3 +97,5 @@ app.use((err, req, res, next) => {
 const server = app.listen(process.env.PORT || 3000, () => {
   log(`Listening on port ${server.address().port}`);
 });
+
+export default app;
