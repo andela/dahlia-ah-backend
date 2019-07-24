@@ -1,0 +1,131 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Author's Haven is a Create a community of like minded authors to foster inspiration and innovation by leveraging the modern web.\n\nApi on [app-url.herokuapp.com](http://app-url.herokuapp.com) \n",
+    "version" : "1.0.0",
+    "title" : "Author's Haven",
+    "contact" : {
+      "email" : "some-email@andela.com"
+    },
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host" : "our-app.heroku.com",
+  "basePath" : "/api/",
+  "tags" : [ {
+    "name" : "user",
+    "description" : "Operations about user"
+  } ],
+  "schemes" : [ "https", "http" ],
+  "security" : [ {
+    "Authorization" : [ ]
+  } ],
+  "paths" : {
+    "/users" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Create user",
+        "description" : "create a user.",
+        "operationId" : "createUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Created user object",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "error, operation not successful"
+          }
+        }
+      }
+    },
+    "/users/login" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Login User",
+        "description" : "Login user.",
+        "operationId" : "LoginUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Login user object",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Login"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "error, operation not successful"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "Authorization" : {
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "User" : {
+      "type" : "object",
+      "properties" : {
+        "firstName" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "bio" : {
+          "type" : "string"
+        },
+        "sex" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        },
+        "phoneNumber" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "User"
+      }
+    },
+    "Login" : {
+      "type" : "object",
+      "properties" : {
+        "email" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "User"
+      }
+    }
+  }
+}

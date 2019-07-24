@@ -5,7 +5,9 @@ import cors from 'cors';
 import errorhandler from 'errorhandler';
 import { connect, set } from 'mongoose';
 import debug from 'debug';
+import swaggerUI from 'swagger-ui-express';
 import './models/User';
+import documentation from './docs/swagger.json';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -14,6 +16,9 @@ const app = express();
 const log = debug('dev');
 
 app.use(cors());
+
+// Setup swagger documentation
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(documentation));
 
 // Normal express config defaults
 app.use(require('morgan')('dev'));
