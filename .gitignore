@@ -36,3 +36,9 @@ node_modules
 
 # VS Code folder
 .vscode/
+
+# Test reporter file
+.nyc_output
+
+# Environment variable file
+.env
