@@ -1,4 +1,5 @@
 [![](https://img.shields.io/badge/Protected_by-Hound-a873d1.svg)](https://houndci.com)
+[![Build Status](https://travis-ci.com/andela/dahlia-ah-backend.svg?branch=staging)](https://travis-ci.com/andela/dahlia-ah-backend)
 
 # Authors Haven - A Social platform for the creative at heart.
 
