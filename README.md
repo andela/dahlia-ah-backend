@@ -2,6 +2,8 @@
 
 # Authors Haven - A Social platform for the creative at heart.
 
+[![Coverage Status](https://coveralls.io/repos/github/andela/dahlia-ah-backend/badge.svg?branch=staging)](https://coveralls.io/github/andela/dahlia-ah-backend?branch=staging)
+
 # Team Dahlia
 
 ## Vision
