@@ -4,8 +4,13 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf build && mkdir build",
+    "build-server": "babel ./src --out-dir ./build -s  --copy-files",
+    "build": "npm run clean && npm run build-server",
+    "heroku-postbuild": "npm run build && npm run db:migrate",
+    "start": "node ./build/index.js",
     "test": "mocha  --require @babel/register ./tests/* --exit",
-    "dev:start": "cross-env DEBUG=dev babel-node ./src/index.js",
+    "dev:start": "cross-env DEBUG=dev nodemon --exec babel-node ./src/index.js",
     "db:ready": "npm-run-all db:undo db:migrate db:seed",
     "db:migrate": "sequelize db:migrate",
     "db:undo": "sequelize db:migrate:undo:all",
@@ -37,11 +42,12 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^6.2.0",
     "cross-env": "^5.2.0",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.2",
+    "mocha": "^6.2.0",
+    "nodemon": "^1.19.1",
     "sequelize-cli": "^5.5.0"
   }
 }
