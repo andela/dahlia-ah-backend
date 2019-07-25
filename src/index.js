@@ -3,9 +3,10 @@ import { urlencoded, json } from 'body-parser';
 import session from 'express-session';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
-import { connect, set } from 'mongoose';
 import debug from 'debug';
-import './models/User';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'path';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -38,22 +39,17 @@ if (!isProduction) {
   app.use(errorhandler());
 }
 
-if (isProduction) {
-  connect(process.env.MONGODB_URI);
-} else {
-  connect('mongodb://localhost/conduit');
-  set('debug', true);
-}
-
-// app.use(require('./routes'));
-
-
 app.get('/', (req, res) => {
   res.send({
     status: 200,
     message: 'Welcome to Author\'s Haven'
   });
 });
+
+const documentation = YAML.load(path.join(__dirname, '../docs/swagger.yaml'));
+
+// setup swagger documentation
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(documentation));
 
 // / catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -67,7 +63,7 @@ app.use((req, res, next) => {
 // development error handler
 // will print stacktrace
 if (!isProduction) {
-  app.use((err, req, res, next) => {
+  app.use((err, req, res) => {
     log(err.stack);
 
     res.status(err.status || 500);
@@ -83,7 +79,7 @@ if (!isProduction) {
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(err.status || 500);
   res.json({
     errors: {

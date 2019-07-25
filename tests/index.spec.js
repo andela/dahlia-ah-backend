@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../index';
+import app from '../src/index';
 
 chai.use(chaiHttp);
 
@@ -22,7 +22,7 @@ describe('Test for base api base url', () => {
 describe('Test for endpoint not found(404)', () => {
   it('should return a status code of 404 when the endpoint supplied is not on our server', (done) => {
     chai.request(app)
-      .get('/404error/1')
+      .get('/404error')
       .end((err, res) => {
         expect(res).to.have.status(404);
         done();
