@@ -5,6 +5,11 @@ logs
 
 npm-debug.log*
 
+.env
+
+# Build
+build
+
 # Runtime data
 pids
 *.pid
