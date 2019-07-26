@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: Author's Haven
+  description: Author's Haven is a Create a community of like minded authors to foster
+    inspiration and innovation by leveraging the modern web Api on [https://ah-dahlia.herokuapp.com/](https://ah-dahlia-staging.herokuapp.com/)
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://ah-dahlia.herokuapp.com/
+  description: Author's Haven documentation
+security:
+- ApiKeyAuth: []
+paths:
+  /users:
+    post:
+      summary: Creates a new user.
+      requestBody:
+        description: Create a user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        400:
+          description: bad input parameter
+components:
+  schemas:
+    User:
+      required:
+      - bio
+      - firstname
+      - id
+      - image_url
+      - lastname
+      - sex
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: john
+        lastname:
+          type: string
+          example: doe
+        sex:
+          type: string
+          example: male
+        bio:
+          type: string
+          example: I am awesome
+        image_url:
+          type: string
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: Authorization
+      in: header

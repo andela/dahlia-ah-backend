@@ -4,6 +4,9 @@ import session from 'express-session';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
 import debug from 'debug';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'path';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -42,6 +45,11 @@ app.get('/', (req, res) => {
     message: 'Welcome to Author\'s Haven'
   });
 });
+
+const documentation = YAML.load(path.join(__dirname, '../docs/swagger.yaml'));
+
+// setup swagger documentation
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(documentation));
 
 // / catch 404 and forward to error handler
 app.use((req, res, next) => {
