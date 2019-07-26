@@ -1,12 +1,14 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../src/index';
-import userMock from './mockData/mockUser';
+import mockData from './mockData';
 
 chai.use(chaiHttp);
 
 const { expect, should } = chai;
 should();
+
+const { userMock } = mockData;
 
 const url = '/api/v1/users';
 

@@ -13,7 +13,7 @@ cache:
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
 
-script: npm run coverage
+script: npm run test
 
 after_success:
   - npm run coveralls

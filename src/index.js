@@ -9,6 +9,7 @@ import path from 'path';
 import routes from './routes';
 
 const isProduction = process.env.NODE_ENV === 'production';
+const isTest = process.env.NODE_ENV === 'test';
 
 // Create global app object
 const app = express();
@@ -27,7 +28,7 @@ app.use(require('method-override')());
 app.use(express.static(`${__dirname}/public`));
 
 
-if (!isProduction) {
+if (!isProduction || !isTest) {
   app.use(errorhandler());
 }
 
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 });
 
 const documentation = YAML.load(path.join(__dirname, '../docs/swagger.yaml'));
+documentation.servers[0].url = process.env.SERVER_URL;
 
 // setup swagger documentation
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(documentation));
@@ -58,7 +60,7 @@ app.use((req, res, next) => {
 
 // development error handler
 // will print stacktrace
-if (!isProduction) {
+if (!isProduction || !isTest) {
   app.use((err, req, res) => {
     log(err.stack);
 

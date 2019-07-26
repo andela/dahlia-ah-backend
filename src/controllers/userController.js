@@ -1,5 +1,7 @@
 import models from '../database/models';
-import { authHelper, responseHelper } from '../helpers/index';
+import helpers from '../helpers/index';
+
+const { authHelper, responseHelper } = helpers;
 
 /**
    *
