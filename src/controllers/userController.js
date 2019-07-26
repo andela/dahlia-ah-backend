@@ -3,7 +3,7 @@ import helpers from '../helpers';
 import services from '../services';
 
 const {
-  authHelper, successResponse, errorResponse, responseMessage
+  authHelper, successResponse, errorResponse, responseMessage, verifyUser
 } = helpers;
 const { userServices: { findUser, findFollower } } = services;
 const { User } = models;
@@ -33,6 +33,12 @@ const signUp = async (req, res) => {
   };
 
   const createdUser = await User.create(user);
+  await verifyUser({
+    id: createdUser.id,
+    email: createdUser.email,
+    firstName: createdUser.firstName
+  });
+
   const response = {
     user: {
       id: createdUser.id,

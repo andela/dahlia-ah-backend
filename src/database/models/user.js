@@ -50,6 +50,15 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: 'b79c4eed-60c6-42fb-9040-f0822d8414fa'
     },
+    verifiedToken: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    paymentStatus: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE

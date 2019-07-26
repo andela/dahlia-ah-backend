@@ -4,6 +4,7 @@ import emptyBody from './emptyBody';
 import emailMessages from './emailMessages';
 import responseMessage from './responseMessage';
 import validators from './validator';
+import verifyUser from './verifyUser';
 
 const { forgotPasswordMessage } = emailMessages;
 
@@ -14,5 +15,6 @@ export default {
   emptyBody,
   forgotPasswordMessage,
   responseMessage,
-  validators
+  validators,
+  verifyUser,
 };

@@ -72,7 +72,7 @@ export default {
     password: 'Password'
   },
   forgotPasswordEmail: {
-    email: 'eden@gmail.com'
+    email: 'lordvader@order66.com'
   },
   wrongForgotPasswordEmail: {
     email: 'example@gmail.com'
