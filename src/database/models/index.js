@@ -1,10 +1,11 @@
 import { readdirSync } from 'fs';
-import { basename as _basename, resolve, join } from 'path';
+import { basename as _basename, join } from 'path';
 import Sequelize from 'sequelize';
+import * as dbConfig from '../config/config';
 
 const basename = _basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = resolve(__dirname, '/../config/config.js')[env];
+const config = dbConfig[env];
 const db = {};
 
 let sequelize;

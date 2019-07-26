@@ -4,8 +4,10 @@ import session from 'express-session';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
 import debug from 'debug';
+import routes from './routes';
 
 const isProduction = process.env.NODE_ENV === 'production';
+const isTest = process.env.NODE_ENV === 'test';
 
 // Create global app object
 const app = express();
@@ -32,7 +34,7 @@ app.use(
   })
 );
 
-if (!isProduction) {
+if (!isProduction || !isTest) {
   app.use(errorhandler());
 }
 
@@ -42,6 +44,8 @@ app.get('/', (req, res) => {
     message: 'Welcome to Author\'s Haven'
   });
 });
+
+app.use('/api/v1', routes);
 
 // / catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -54,7 +58,7 @@ app.use((req, res, next) => {
 
 // development error handler
 // will print stacktrace
-if (!isProduction) {
+if (!isProduction || !isTest) {
   app.use((err, req, res) => {
     log(err.stack);
 

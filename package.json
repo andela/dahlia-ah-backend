@@ -6,7 +6,8 @@
   "scripts": {
     "heroku-postbuild": "npm run db:migrate",
     "start": "babel-node ./src/index.js",
-    "test": "mocha  --require @babel/register ./tests/* --exit",
+    "mocha-test": "nyc mocha --require @babel/register --recursive tests --timeout 20000 --exit",
+    "test": "cross-env NODE_ENV=test npm-run-all db:migrate db:seed mocha-test db:undo",
     "dev:start": "cross-env DEBUG=dev nodemon --exec babel-node ./src/index.js",
     "db:ready": "npm-run-all db:undo db:migrate db:seed",
     "db:migrate": "sequelize db:migrate",
@@ -22,6 +23,8 @@
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
+    "@sendgrid/mail": "^6.4.0",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "debug": "^4.1.1",
@@ -29,13 +32,15 @@
     "errorhandler": "^1.5.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "jsonwebtoken": "^8.5.1",
     "method-override": "^2.3.10",
     "methods": "^1.1.2",
     "morgan": "^1.9.1",
     "npm-run-all": "^4.1.5",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.10.2"
+    "sequelize": "^5.10.2",
+    "sinon": "^7.3.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
