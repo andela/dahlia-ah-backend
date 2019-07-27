@@ -7,6 +7,7 @@ import debug from 'debug';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import path from 'path';
+import routes from './routes';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -50,6 +51,8 @@ const documentation = YAML.load(path.join(__dirname, '../docs/swagger.yaml'));
 
 // setup swagger documentation
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(documentation));
+
+app.use('/api/v1', routes);
 
 // / catch 404 and forward to error handler
 app.use((req, res, next) => {
