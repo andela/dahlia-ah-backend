@@ -1,18 +1,18 @@
 import { readdirSync } from 'fs';
-import { basename as _basename, resolve, join } from 'path';
+import { basename as _basename, join } from 'path';
 import Sequelize from 'sequelize';
+import dotenv from 'dotenv';
+import * as dbConfig from '../config/config';
+
+dotenv.config();
 
 const basename = _basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = resolve(__dirname, '/../config/config.js')[env];
+const config = dbConfig[env];
 const db = {};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+
+const sequelize = new Sequelize(process.env[config.use_env_variable], config);
 
 readdirSync(__dirname)
   .filter(file => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))

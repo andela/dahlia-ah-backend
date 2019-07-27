@@ -1,12 +1,12 @@
 import express from 'express';
 import { urlencoded, json } from 'body-parser';
-import session from 'express-session';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
 import debug from 'debug';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import path from 'path';
+import routes from './routes/index';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -26,18 +26,12 @@ app.use(require('method-override')());
 
 app.use(express.static(`${__dirname}/public`));
 
-app.use(
-  session({
-    secret: 'authorshaven',
-    cookie: { maxAge: 60000 },
-    resave: false,
-    saveUninitialized: false
-  })
-);
 
 if (!isProduction) {
   app.use(errorhandler());
 }
+
+app.use(routes);
 
 app.get('/', (req, res) => {
   res.send({
