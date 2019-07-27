@@ -2,7 +2,7 @@
    * helper for sending server success messages
    * @param {Object} res - server response
    * @param {Object} statusCode - server status code
-   * @param {Object} data - application resource
+   * @param {Object} data - response errors
    * @returns {Object} custom response
    */
 const successResponse = (res, statusCode, data) => res.status(statusCode).json(data);
@@ -10,10 +10,10 @@ const successResponse = (res, statusCode, data) => res.status(statusCode).json(d
 /**
    * helper for sending server success messages
    * @param {Object} res - server response
-   * @param {Object} statusCode - error status code
-   * @param {Object} error - operation error message
+   * @param {Object} statusCode - server status code
+   * @param {Object} errors - response nerrors
    * @returns {Object} custom response
    */
-const errorResponse = (res, statusCode, error) => res.status(statusCode).json(error);
+const errorResponse = (res, statusCode, errors) => res.status(statusCode).json({ errors });
 
-export default { successResponse, errorResponse };
+export { successResponse, errorResponse };

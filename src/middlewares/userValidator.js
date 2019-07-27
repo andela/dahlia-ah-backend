@@ -16,10 +16,14 @@ const userValidator = {
     isValidPassword(),
     validatorError
   ],
+  login: [
+    isValidEmail(),
+    validatorError
+  ],
   forgotPassword: [
     isValidEmail(),
     validatorError
-  ]
+  ],
 };
 
 export default userValidator;

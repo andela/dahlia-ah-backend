@@ -14,9 +14,9 @@ externalDocs:
   url: https://github.com/andela/dahlia-ah-backend
 
 servers:
-- url: /api/
+- url: /api/v1
   description: Local host
-- url: https://ah-dahlia-staging.herokuapp.com/api/
+- url: https://ah-dahlia-staging.herokuapp.com/api/v1
   description: Heroku deployment
 
 tags:
@@ -36,10 +36,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserInput'
+              $ref: '#/components/schemas/UserRegisterInput'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserInput'
+              $ref: '#/components/schemas/UserRegisterInput'
         required: true
       responses:
         201:
@@ -70,6 +70,34 @@ paths:
           description: resource already exists
         500:
           description: internal server error                  
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: Login an existing user with email
+      requestBody:
+        description: fields containing user login data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserLoginInput'
+        required: true
+      responses:
+        200:
+          description: user login successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        400:
+          description: bad input parameter
+        409:
+          description: resource already exists
+        500:
+          description: internal server error
   /auth/forgotpassword:
     post:
       summary: Forgot password
@@ -101,6 +129,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardServerResponse'
+  
 components:
   schemas:
     User:
@@ -135,7 +164,7 @@ components:
         address:
           type: string
           example: 123 Eve's Garden Road, Eden
-    UserInput:
+    UserRegisterInput:
       required:
         - firstName
         - lastName
@@ -158,13 +187,22 @@ components:
         password:
           type: string
           example: Flyplanex22
+    UserLoginInput:
+      properties:
+        email:
+          type: string
+          example: johndoe@email.com
+        password:
+          type: string
+          example: Flyplanex22
     AuthResponse:
+      properties:
         token:
           type: string
         username:
           type: string
         bio:
-         type: string
+          type: string
     ForgotPasswordUser:
       required:
       - email

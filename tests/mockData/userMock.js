@@ -103,5 +103,13 @@ export default {
   },
   wrongForgotPasswordEmail: {
     email: 'example@gmail.com'
+  },
+  seededUser1: {
+    firstName: 'Eden',
+    lastName: 'Hazard',
+    email: 'eden@gmail.com',
+    username: 'eden101',
+    password: 'edenHazard',
+    bio: 'I am the best author in the world'
   }
 };
