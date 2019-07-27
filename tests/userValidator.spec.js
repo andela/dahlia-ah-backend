@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../src/index';
-import userMock from './mockdata/user';
+import userMock from './mockData/mockUser';
 
 chai.use(chaiHttp);
 
@@ -9,18 +9,6 @@ const { expect, should } = chai;
 should();
 
 const url = '/api/v1/users';
-
-describe('A test to check for the successful signup of a valid user', () => {
-  it('should return a status 200 on a valid user parameters', (done) => {
-    chai.request(app)
-      .post(url)
-      .send(userMock.validUser)
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        done();
-      });
-  });
-});
 
 describe('A test to check for user email address during signup validations', () => {
   it('should return a status 400 on invalid email', (done) => {
@@ -98,7 +86,7 @@ describe('A test to check for username during signup validations', () => {
       .send(userMock.invalidUserName)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.errors[0].field).to.equal('userName');
+        expect(res.body.errors[0].field).to.equal('username');
         done();
       });
   });
@@ -108,7 +96,7 @@ describe('A test to check for username during signup validations', () => {
       .send(userMock.emptyUserName)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.errors[0].field).to.equal('userName');
+        expect(res.body.errors[0].field).to.equal('username');
         done();
       });
   });

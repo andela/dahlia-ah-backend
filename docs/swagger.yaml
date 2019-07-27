@@ -1,87 +1,128 @@
 openapi: 3.0.0
 info:
   title: Author's Haven
-  description: Author's Haven is a Create a community of like minded authors to foster
+  description: Author's Haven is a community of like minded authors to foster
     inspiration and innovation by leveraging the modern web Api on [https://ah-dahlia.herokuapp.com/](https://ah-dahlia-staging.herokuapp.com/)
-  contact:
-    email: you@your-company.com
+
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
   version: 1.0.0
+
+externalDocs:
+  description: Checkout the GitHub repo
+  url: https://github.com/andela/dahlia-ah-backend
+
 servers:
-- url: https://ah-dahlia.herokuapp.com/api/v1
-  description: Author's Haven documentation
+- url: /api/
+  description: Local host
+- url: https://ah-dahlia-staging.herokuapp.com/api/
+  description: Heroku deployment
+
+tags:
+- name: Users
+  description: Operations available for user endpoints
+
 security:
 - ApiKeyAuth: []
 paths:
   /users:
     post:
-      summary: Creates a new user.
+      tags:
+        - Users
+      summary: Creates a new user
       requestBody:
-        description: Create a user
+        description: fields containing user data
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserInput'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserInput'
         required: true
       responses:
-        200:
-          description: search results matching criteria
+        201:
+          description: user created successfully
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/AuthResponse'
         400:
           description: bad input parameter
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: 
-                  errors:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        field:
-                          type: string
-                          example: email
-                        message:
-                          type: string
-                          example: the email address you supplied is invalid
-
+        409:
+          description: resource already exists
+        500:
+          description: internal server error
 components:
   schemas:
     User:
       required:
-      - bio
       - firstName
-      - id
-      - image_url
       - lastName
-      - sex
+      - email
+      - username
       type: object
       properties:
-        firstname:
+        firstName:
           type: string
           example: john
-        lastname:
+        lastName:
           type: string
           example: doe
-        sex:
+        email:
           type: string
-          example: male
+          example: johndoe@email.com
+        username:
+          type: string
+          example: johnnydoe12
         bio:
           type: string
           example: I am awesome
-        image_url:
+        avatarURL:
           type: string
+          example: https://your_avatar.com/your_avatar.jpg
+        phoneNo:
+          type: string
+          example: 2347012345678
+        address:
+          type: string
+          example: 123 Eve's Garden Road, Eden
+    UserInput:
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: john
+        lastName:
+          type: string
+          example: doe
+        username:
+          type: string
+          example: johnnydoe12
+        email:
+          type: string
+          example: johndoe@email.com
+        password:
+          type: string
+          example: Flyplanex22
+    AuthResponse:
+      type: object
+      properties:
+        email:
+          type: string
+        token:
+          type: string
+        username:
+          type: string
+        bio:
+         type: string
+  
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
