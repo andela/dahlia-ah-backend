@@ -10,7 +10,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: https://ah-dahlia.herokuapp.com/
+- url: https://ah-dahlia.herokuapp.com/api/v1
   description: Author's Haven documentation
 security:
 - ApiKeyAuth: []
@@ -39,15 +39,32 @@ paths:
                   $ref: '#/components/schemas/User'
         400:
           description: bad input parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: email
+                        message:
+                          type: string
+                          example: the email address you supplied is invalid
+
 components:
   schemas:
     User:
       required:
       - bio
-      - firstname
+      - firstName
       - id
       - image_url
-      - lastname
+      - lastName
       - sex
       type: object
       properties:
