@@ -50,10 +50,57 @@ paths:
                 $ref: '#/components/schemas/AuthResponse'
         400:
           description: bad input parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: email
+                        message:
+                          type: string
+                          example: the email address you supplied is invalid
         409:
           description: resource already exists
         500:
-          description: internal server error
+          description: internal server error                  
+  /auth/forgotpassword:
+    post:
+      summary: Forgot password
+      description: Sends an email to a user with the reset password link
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        200:
+          description: succesful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardServerResponse'
+        404:
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardServerResponse'
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardServerResponse'
 components:
   schemas:
     User:
@@ -112,17 +159,29 @@ components:
           type: string
           example: Flyplanex22
     AuthResponse:
-      type: object
-      properties:
-        email:
-          type: string
         token:
           type: string
         username:
           type: string
         bio:
          type: string
-  
+    ForgotPasswordUser:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          type: string
+          example: example@gmail.com
+    StandardServerResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: internal server error   
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

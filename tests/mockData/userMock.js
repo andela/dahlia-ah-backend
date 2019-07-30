@@ -1,5 +1,5 @@
 
-const userMock = {
+export default {
   invalidEmail: {
     firstName: 'john',
     lastName: 'joe',
@@ -97,7 +97,11 @@ const userMock = {
     username: 'Vader',
     email: 'hondod@pirate.com',
     password: 'Password'
+  },
+  forgotPasswordEmail: {
+    email: 'eden@gmail.com'
+  },
+  wrongForgotPasswordEmail: {
+    email: 'example@gmail.com'
   }
 };
-
-export default userMock;
