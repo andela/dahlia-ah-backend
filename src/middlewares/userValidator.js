@@ -6,7 +6,7 @@ const userValidator = {
     validator.isValidEmail(),
     validator.isValidName('firstName'),
     validator.isValidName('lastName'),
-    validator.isValidUserName('userName'),
+    validator.isValidUserName('username'),
     validator.isValidPassword(),
     errorHandler.validatorError
   ],

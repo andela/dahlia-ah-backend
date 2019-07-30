@@ -1,6 +1,5 @@
 import express from 'express';
 import { urlencoded, json } from 'body-parser';
-import session from 'express-session';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
 import debug from 'debug';
@@ -27,18 +26,12 @@ app.use(require('method-override')());
 
 app.use(express.static(`${__dirname}/public`));
 
-app.use(
-  session({
-    secret: 'authorshaven',
-    cookie: { maxAge: 60000 },
-    resave: false,
-    saveUninitialized: false
-  })
-);
 
 if (!isProduction) {
   app.use(errorhandler());
 }
+
+app.use('api/v1/', routes);
 
 app.get('/', (req, res) => {
   res.send({

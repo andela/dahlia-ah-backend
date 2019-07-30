@@ -1,9 +1,9 @@
 [![](https://img.shields.io/badge/Protected_by-Hound-a873d1.svg)](https://houndci.com)
 [![Build Status](https://travis-ci.com/andela/dahlia-ah-backend.svg?branch=staging)](https://travis-ci.com/andela/dahlia-ah-backend)
+[![Coverage Status](https://coveralls.io/repos/github/andela/dahlia-ah-backend/badge.svg?branch=staging)](https://coveralls.io/github/andela/dahlia-ah-backend?branch=staging)
 
 # Authors Haven - A Social platform for the creative at heart.
 
-[![Coverage Status](https://coveralls.io/repos/github/andela/dahlia-ah-backend/badge.svg?branch=staging)](https://coveralls.io/github/andela/dahlia-ah-backend?branch=staging)
 
 # Team Dahlia
 
@@ -187,7 +187,7 @@ If a request fails any validations, expect errors in the following format:
 
 ### Authentication:
 
-`POST /api/users/login`
+`POST /api/v1/users/login`
 
 Example request body:
 
@@ -206,7 +206,7 @@ Required fields: `email`, `password`
 
 ### Registration:
 
-`POST /api/users`
+`POST /api/v1/users`
 
 Example request body:
 
