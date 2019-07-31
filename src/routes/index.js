@@ -5,9 +5,10 @@ import novel from './novel';
 import comment from './comment';
 import notification from './notification';
 import report from './report';
+import oauth from './oauth';
 
 const router = express.Router();
 
-router.use('/', user, auth, novel, comment, notification, report);
+router.use('/', user, auth, novel, oauth, comment, notification, report);
 
 export default router;

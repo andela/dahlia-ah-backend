@@ -8,6 +8,7 @@ import YAML from 'yamljs';
 import path from 'path';
 import dotenv from 'dotenv';
 import routes from './routes';
+import setPassportMiddleware from './middlewares/passport/strategy';
 
 dotenv.config();
 
@@ -51,6 +52,8 @@ documentation.servers[0].url = process.env.SERVER_URL;
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(documentation));
 
 app.use('/api/v1', routes);
+
+setPassportMiddleware(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

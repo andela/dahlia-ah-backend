@@ -3,6 +3,7 @@ import AuthController from '../controllers/AuthController';
 import userController from '../controllers/userController';
 import middlewares from '../middlewares';
 
+
 const auth = express.Router();
 
 const { signUp, login } = userController;
