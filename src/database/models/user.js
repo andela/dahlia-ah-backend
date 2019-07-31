@@ -69,8 +69,12 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DATE
     }
   }, {});
-  User.associate = () => {
+  User.associate = (models) => {
     // associations can be defined here
+    User.hasMany(models.Novel, {
+      foreignKey: 'authorId',
+      as: 'author',
+    });
   };
   return User;
 };

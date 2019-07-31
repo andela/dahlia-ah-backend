@@ -29,19 +29,20 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Use
   },
   bio: {
     allowNull: true,
-    type: Sequelize.STRING
+    type: Sequelize.TEXT,
+  },
+  phoneNo: {
+    allowNull: true,
+    type: Sequelize.STRING,
+    unique: true
   },
   avatarUrl: {
     allowNull: true,
     type: Sequelize.STRING
   },
-  phoneNo: {
-    allowNull: true,
-    type: Sequelize.STRING
-  },
   isVerified: {
     allowNull: false,
-    type: Sequelize.STRING,
+    type: Sequelize.BOOLEAN,
     defaultValue: false
   },
   isSubscribed: {

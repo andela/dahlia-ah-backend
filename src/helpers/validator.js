@@ -54,6 +54,30 @@ const isValidPassword = () => check('password').isLength({ min: 8 })
   .isAlphanumeric()
   .withMessage('password should contain only numbers and alphabets');
 
+/**
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
+const isNotEmpty = field => check(field)
+  .trim()
+  .not()
+  .isEmpty()
+  .exists()
+  .withMessage(`${field} is a required field`);
+
+/**
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
+const isValidGenre = field => check(field)
+  .trim()
+  .not()
+  .isEmpty()
+  .exists()
+  .withMessage(`${field} is a required field`)
+  .isIn(['action', 'thriller', 'romance', 'fiction', 'motivational'])
+  .withMessage('Must be a valid genre: action, thriller, romance, fiction, motivational');
+
 export default {
-  isValidEmail, isValidName, isValidPassword, isValidUserName
+  isValidEmail, isValidName, isValidPassword, isValidUserName, isNotEmpty, isValidGenre
 };

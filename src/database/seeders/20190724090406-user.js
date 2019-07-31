@@ -16,4 +16,6 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   createdAt: new Date(),
   updatedAt: new Date()
 }], {});
-export const down = queryInterface => queryInterface.bulkDelete('Users', null, {});
+export const down = queryInterface => queryInterface.bulkDelete('Users', {
+  email: 'eden@gmail.com',
+});
