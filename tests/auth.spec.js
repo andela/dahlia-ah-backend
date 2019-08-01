@@ -13,15 +13,16 @@ const { userMock } = mockData;
 const { forgotPasswordEmail, wrongForgotPasswordEmail } = userMock;
 
 const BASE_URL = '/api/v1';
-const endpoint = `${BASE_URL}/users`;
 const FORGOT_PASSWORD_URL = `${BASE_URL}/auth/forgotPassword`;
+
 
 describe('AUTH', () => {
   describe('POST /auth/signup', () => {
+    const signupEndpoint = `${BASE_URL}/users`;
     it('should #create a user and #generate jwt', (done) => {
       chai
         .request(server)
-        .post(endpoint)
+        .post(signupEndpoint)
         .type('form')
         .send(userMock.validUser2)
         .end((err, res) => {
@@ -36,32 +37,26 @@ describe('AUTH', () => {
     it('should return error on duplicate email', (done) => {
       chai
         .request(server)
-        .post(endpoint)
+        .post(signupEndpoint)
         .type('form')
         .send(userMock.duplicateEmail)
         .end((err, res) => {
-          const errorArray = res.body.errors[0];
+          const { errors } = res.body;
           expect(res).status(409);
-          expect(res.body.errors).to.be.an('array');
-          expect(errorArray).to.be.an('object');
-          expect(errorArray).property('field').eq('email');
-          expect(errorArray).property('message').eq('user with email already exists');
+          expect(errors).eq('user with email already exists');
           done(err);
         });
     });
     it('should return error on duplicate username', (done) => {
       chai
         .request(server)
-        .post(endpoint)
+        .post(signupEndpoint)
         .type('form')
         .send(userMock.duplicateUsername)
         .end((err, res) => {
-          const errorArray = res.body.errors[0];
+          const { errors } = res.body;
           expect(res).status(409);
-          expect(res.body.errors).to.be.an('array');
-          expect(errorArray).to.be.an('object');
-          expect(errorArray).property('field').eq('username');
-          expect(errorArray).property('message').eq('username already taken');
+          expect(errors).eq('username already taken');
           done(err);
         });
     });
@@ -102,10 +97,70 @@ describe('AUTH', () => {
         .send(forgotPasswordEmail)
         .end((error, response) => {
           expect(response).to.have.status(500);
+          stub.restore();
           expect(response.body).to.be.an('object');
           expect(response.body.error).to.equal('error occured!');
           done();
         });
     });
+  });
+});
+
+describe('POST /api/users/login', () => {
+  const signupEndpoint = `${BASE_URL}/users`;
+  const loginsignupEndpoint = `${BASE_URL}/users/login`;
+  before((done) => {
+    chai.request(server)
+      .post(`${signupEndpoint}`)
+      .type('form')
+      .send(userMock.validUser)
+      .end((err) => {
+        done(err);
+      });
+  });
+  const authErrorMessage = 'email or password is incorrect';
+  it('should #login a user and #generate jwt', (done) => {
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(userMock.seededUser1)
+      .end((err, res) => {
+        const { user } = res.body;
+        expect(res).status(200);
+        expect(user).property('token');
+        expect(user).property('email');
+        expect(user).property('username');
+        expect(user).property('bio');
+        done(err);
+      });
+  });
+  it('should return authorized error on incorrect email', (done) => {
+    const incorrectEmail = { ...userMock.validUser };
+    incorrectEmail.email = 'wrong@email.com';
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(incorrectEmail)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body).property('errors').eq(authErrorMessage);
+        done(err);
+      });
+  });
+  it('should return authorized error on incorrect email', (done) => {
+    const incorrectPassword = { ...userMock.validUser };
+    incorrectPassword.password = 'WrongPassword1';
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(incorrectPassword)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body).property('errors').eq(authErrorMessage);
+        done(err);
+      });
   });
 });
