@@ -55,7 +55,7 @@ describe('Test for novel CRUD', () => {
         .send(novelMock.validNovel)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.errors).to.equal('No token provided');
+          expect(res.body.error).to.equal('no token provided');
           done();
         });
     });
@@ -67,7 +67,7 @@ describe('Test for novel CRUD', () => {
         .set('authorization', 'wrong token')
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.errors).to.equal('Failed to authenticate token');
+          expect(res.body.error).to.equal('invalid token');
           done();
         });
     });

@@ -70,10 +70,14 @@ export default (sequelize, DataTypes) => {
     }
   }, {});
   User.associate = (models) => {
-    // associations can be defined here
     User.hasMany(models.Novel, {
       foreignKey: 'authorId',
-      as: 'author',
+      onDelete: 'CASCADE'
+    });
+
+    User.hasMany(models.Comment, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
     });
   };
   return User;

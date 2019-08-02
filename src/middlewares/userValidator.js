@@ -1,9 +1,11 @@
-import validator from '../helpers/validator';
+import helpers from '../helpers';
 import errorHandler from './errorHandler';
 
+
+const { validators } = helpers;
 const {
   isValidEmail, isValidName, isValidUserName, isValidPassword
-} = validator;
+} = validators;
 
 const { validatorError } = errorHandler;
 

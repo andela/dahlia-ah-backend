@@ -1,14 +1,14 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import sinon from 'sinon';
+import sendgridMail from '@sendgrid/mail';
+import jwt from 'jsonwebtoken';
 import server from '../src';
-import models from '../src/database/models';
 import mockData from './mockData';
 
 chai.use(chaiHttp);
 const { expect } = chai;
 
-const { User } = models;
 const { userMock } = mockData;
 const { forgotPasswordEmail, wrongForgotPasswordEmail } = userMock;
 
@@ -65,6 +65,9 @@ describe('AUTH', () => {
   // Forgot password route
   describe('Forgot password', () => {
     it('should sucessfully return an appropiate message after sending a mail to the user', (done) => {
+      const stub = sinon.stub(sendgridMail, 'send');
+      stub.returns({ message: 'you will receive a link in your mail shortly' });
+
       chai.request(server)
         .post(FORGOT_PASSWORD_URL)
         .send(forgotPasswordEmail)
@@ -72,6 +75,7 @@ describe('AUTH', () => {
           expect(response).to.have.status(200);
           expect(response.body).to.be.an('object');
           expect(response.body.message).to.equal('you will receive a link in your mail shortly');
+          stub.restore();
           done();
         });
     });
@@ -89,7 +93,7 @@ describe('AUTH', () => {
     });
 
     it('should return a failure response if a server error occurs', (done) => {
-      const stub = sinon.stub(User, 'findOne');
+      const stub = sinon.stub(jwt, 'sign');
       stub.throws(new Error('error occured!'));
 
       chai.request(server)
