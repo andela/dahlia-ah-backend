@@ -45,6 +45,46 @@ const isValidPassword = () => check('password').isLength({ min: 8 })
    * @param {String} field
    * @returns {Object} - Express-validator
    */
+const isValidProfileName = field => check(field)
+  .optional()
+  .trim()
+  .custom((value) => {
+    if (!/^[a-z]{1,}[\s]{0,1}[-']{0,1}[a-z]+$/i.test(value)) {
+      return false;
+    }
+    return true;
+  })
+  .escape()
+  .withMessage(`the ${field} can only contain alphabets, a space, apostrophe(') and a dash(-)`)
+  .not()
+  .isEmpty()
+  .withMessage(`${field} is a required field`);
+
+/**
+   * @returns {Object} - Express-validator
+   */
+const isValidProfilePassword = () => check('password').isLength({ min: 8 })
+  .optional()
+  .withMessage('password cannot be updated here')
+  .isLength({ min: 0, max: 0 })
+  .withMessage('password cannot be updated here');
+
+/**
+   * @returns {Object} - Express-validator
+   */
+const isValidAvatarUrl = () => check('avatarUrl')
+  .optional()
+  .trim()
+  .not()
+  .isEmpty()
+  .withMessage('avatarUrl cannot be blank')
+  .isURL()
+  .withMessage('avatarUrl must be a valid URL string');
+
+/**
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
 const isNotEmpty = field => check(field)
   .trim()
   .not()
@@ -109,5 +149,8 @@ export default {
   isValidGenre,
   isNotEmptySlug,
   isValidComment,
-  isValidId
+  isValidId,
+  isValidProfileName,
+  isValidProfilePassword,
+  isValidAvatarUrl
 };

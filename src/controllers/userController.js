@@ -106,5 +106,33 @@ const getProfile = async (request, response) => {
   });
 };
 
-const userController = { getProfile, signUp, login };
-export default userController;
+/**
+ * @description updates the profile of a user
+ * @param {object} request express request object
+ * @param {object} response express response object
+ * @param {object} next express next argument
+ * @returns {json} json
+ */
+const editProfile = async (request, response) => {
+  const { body, user } = request;
+  const updatedUser = await User.update({ ...body }, {
+    where: { id: user.id },
+    returning: true,
+    raw: true
+  });
+  if (updatedUser[0]) {
+    const {
+      password, createdAt, updatedAt, ...profile
+    } = updatedUser[1][0];
+    return responseMessage(response, 200, {
+      message: 'profile successfully updated',
+      data: { profile }
+    });
+  }
+  const errorField = Object.keys(body).toString().replace(',', ', ');
+  return responseMessage(response, 400, { error: `the ${errorField} field(s) entered are invalid` });
+};
+
+export default {
+  getProfile, editProfile, signUp, login
+};

@@ -1,9 +1,11 @@
 import helpers from '../helpers';
 import errorHandler from './errorHandler';
 
-const { validators } = helpers;
+const { validators, emptyBody } = helpers;
 const {
-  isValidEmail, isValidName, isValidId, isValidPassword
+  isValidEmail, isValidName, isValidId, isValidPassword,
+  isValidProfileName, isValidProfilePassword,
+  isValidAvatarUrl
 } = validators;
 
 const { validatorError } = errorHandler;
@@ -23,6 +25,14 @@ const userValidator = {
   profileValidator: [
     isValidId('userId'),
     validatorError
+  ],
+  editProfileValidator: [
+    isValidProfileName('firstName'),
+    isValidProfileName('lastName'),
+    isValidAvatarUrl(),
+    isValidProfilePassword(),
+    validatorError,
+    emptyBody
   ],
   forgotPassword: [
     isValidEmail(),
