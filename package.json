@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "heroku-postbuild": "npm run db:migrate",
+    "heroku-postbuild": "npm run db:ready",
     "start": "babel-node ./src/index.js",
     "mocha-test": "nyc mocha --require @babel/register tests/*.js --timeout 20000 --exit",
     "test": "cross-env NODE_ENV=test npm-run-all db:undo db:migrate db:seed mocha-test",

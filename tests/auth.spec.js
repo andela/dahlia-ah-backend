@@ -100,6 +100,7 @@ describe('AUTH', () => {
           stub.restore();
           expect(response.body).to.be.an('object');
           expect(response.body.error).to.equal('error occured!');
+          stub.restore();
           done();
         });
     });

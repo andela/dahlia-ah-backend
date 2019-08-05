@@ -17,7 +17,9 @@ servers:
 - url: /api/v1
   description: Local host
 - url: https://ah-dahlia-staging.herokuapp.com/api/v1
-  description: Heroku deployment
+  description: Heroku Staging deployment
+- url: https://ah-dahlia.herokuapp.com/api/v1
+  description: Heroku Production deployment
 
 tags:
 - name: Users
@@ -66,6 +68,30 @@ paths:
                         message:
                           type: string
                           example: the email address you supplied is invalid
+        409:
+          description: resource already exists
+        500:
+          description: internal server error 
+  /novels:
+    post:
+      tags:
+        - Novels
+      summary: Creates a new novel
+      requestBody:
+        description: fields containing novel data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovelInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NovelInput'
+        required: true
+      responses:
+        201:
+          description: novel created successfully
+        401:
+          description: Authentication failed
         409:
           description: resource already exists
         500:
@@ -129,7 +155,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardServerResponse'
-  
+      security:
+      - bearerToken: []
 components:
   schemas:
     User:
@@ -195,6 +222,26 @@ components:
         password:
           type: string
           example: Flyplanex22
+    NovelInput:
+      required:
+        - title
+        - description
+        - body
+        - genre
+      type: object
+      properties:
+        title:
+          type: string
+          example: Think Big
+        description:
+          type: string
+          example: Learn how to think big
+        body:
+          type: string
+          example: There are five steps to thinking big...
+        genre:
+          type: string
+          example: Action
     AuthResponse:
       properties:
         token:
@@ -221,7 +268,7 @@ components:
           type: string
           example: internal server error   
   securitySchemes:
-    ApiKeyAuth:
+    bearerToken:
       type: apiKey
       name: Authorization
       in: header

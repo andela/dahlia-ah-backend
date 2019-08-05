@@ -21,6 +21,13 @@ export default {
     password: 'password2',
     email: 'doe@gmail.com'
   },
+  novelUser: {
+    firstName: 'john',
+    lastName: 'novel',
+    username: 'novelist',
+    password: 'password',
+    email: 'novel@gmail.com'
+  },
   invalidFirstName: {
     firstName: 'john77***99he**J',
     lastName: 'joe',
