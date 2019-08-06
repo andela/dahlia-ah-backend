@@ -1,11 +1,12 @@
+import { Op } from 'sequelize';
 import models from '../database/models';
 
-const { Genre, Novel } = models;
+const { Genre, Novel, Likes } = models;
 
 /**
  * Finds a novel from the database by slug
  * @param {string} param
- * @returns {object} a user object
+ * @returns {object} a novel object
  */
 
 const findNovel = async (param) => {
@@ -14,6 +15,42 @@ const findNovel = async (param) => {
   });
   return novel;
 };
+
+/**
+ * Finds a novel from the database by id
+ * @param {string} param
+ * @returns {object} a novel object
+ */
+
+const findNovelById = param => Novel.findOne({
+  where: { id: param }
+});
+
+/**
+ * Finds a novelLikes from the database by userid and novelId
+ * @param {string} userId
+ * @param {string} novelId
+ * @returns {object}
+ */
+
+const findNovelLike = (userId, slug) => Likes.findOne({
+  where: {
+    [Op.and]: [{ userId }, { slug }]
+  }
+});
+
+/**
+ * deletes particular novelLikes record from the table by userid and novelId
+ * @param {string} userId
+ * @param {string} novelId
+ * @returns {object}
+ */
+
+const removeNovelLike = (userId, slug) => Likes.destroy({
+  where: {
+    [Op.and]: [{ userId }, { slug }]
+  }
+});
 
 /**
  *
@@ -62,5 +99,8 @@ const createNewNovel = async (novel, author) => {
 
 export default {
   findNovel,
-  createNewNovel
+  createNewNovel,
+  findNovelById,
+  findNovelLike,
+  removeNovelLike
 };

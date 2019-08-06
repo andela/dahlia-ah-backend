@@ -99,7 +99,53 @@ paths:
         409:
           description: resource already exists
         500:
-          description: internal server error                  
+          description: internal server error          
+  /novels/{slug}/like:
+    post:
+      tags:
+        - Novels
+      summary: Likes or Unlikes a novel
+      parameters:
+      - name: "slug"
+        in: "path"
+        description: "slug of novel being rated"
+        required: true
+        schema:
+          $ref: '#/components/schemas/novelId'
+          
+      responses:
+        201:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulRating"
+        401:
+          description: "Invalid token, token does not exist"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/invalidTokenResponse"
+                
+        400:
+          description: "invalid novelId or userId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/invalidParameterResponse"
+        404:
+          description: "user or novel not fround"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notFoundResponse"
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardServerResponse'
+        
   /users/login:
     post:
       tags:
@@ -504,6 +550,8 @@ components:
         error:
           type: string
           example: "User already verified"
+    novelId:
+      type: string
     User:
       required:
       - firstName
@@ -615,6 +663,30 @@ components:
         email:
           type: string
           example: example@gmail.com
+    notFoundResponse:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: user or novel not found
+    successfulRating:
+      type: object
+      properties:
+        message:
+          type: string
+          example: you've successfully liked this novel
+    invalidTokenResponse:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: Unauthorized user
+    invalidParameterResponse:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: invalid operation
     StandardServerResponse:
       type: object
       properties:

@@ -91,6 +91,10 @@ export default (Sequelize, DataTypes) => {
 
     User.belongsTo(models.Role, {
       foreignKey: 'roleId',
+    });
+
+    User.hasMany(models.Likes, {
+      foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
   };
