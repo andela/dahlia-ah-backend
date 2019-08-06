@@ -20,25 +20,23 @@ const { userServices: { findUser } } = services;
 export default (request, response, next) => {
   const token = request.headers.authorization || request.query.token;
 
-  if (token) {
-    jwt.verify(token, SECRET_KEY, async (error, decoded) => {
-      if (error) {
-        const message = (error.name === 'TokenExpiredError') ? 'token expired' : 'invalid token';
-        responseMessage(response, 401, { error: message });
-      } else {
-        try {
-          const user = await findUser(decoded.id);
-          if (!user) {
-            return responseMessage(response, 404, { error: 'user not found' });
-          }
-          request.user = user;
-          return next();
-        } catch (err) {
-          responseMessage(response, 500, { error: err.message });
-        }
-      }
-    });
-  } else {
-    responseMessage(response, 401, { error: 'no token provided' });
+  if (!token) {
+    return responseMessage(response, 401, { error: 'no token provided' });
   }
+  jwt.verify(token, SECRET_KEY, async (error, decoded) => {
+    if (error) {
+      const message = (error.name === 'TokenExpiredError') ? 'token expired' : 'invalid token';
+      return responseMessage(response, 401, { error: message });
+    }
+    try {
+      const user = await findUser(decoded.id);
+      if (!user) {
+        return responseMessage(response, 404, { error: 'user not found' });
+      }
+      request.user = user;
+      return next();
+    } catch (err) {
+      return responseMessage(response, 500, { error: err.message });
+    }
+  });
 };

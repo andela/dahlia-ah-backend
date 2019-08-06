@@ -25,14 +25,14 @@ tags:
 - name: Users
   description: Operations available for user endpoints
 
-security:
-- ApiKeyAuth: []
 paths:
   /users:
     post:
       tags:
         - Users
-      summary: Creates a new user
+      summary: Creates a new user.
+      security:
+      - ApiKeyAuth: []
       requestBody:
         description: fields containing user data
         content:
@@ -77,6 +77,8 @@ paths:
       tags:
         - Novels
       summary: Creates a new novel
+      security:
+      - ApiKeyAuth: []
       requestBody:
         description: fields containing novel data
         content:
@@ -138,7 +140,7 @@ paths:
                   type: string
       responses:
         200:
-          description: succesful request
+          description: successful request
           content:
             application/json:
               schema:
@@ -246,14 +248,42 @@ paths:
                     example: novel not found
         500:
           description: server error
+  '/profiles/{userId}':
+    get:
+      tags:
+        - Users
+      summary: View a user profile.
+      security:
+      - ApiKeyAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: '1'
+      responses:
+        200:
+          description: profile details of user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+        404:
+          description: user not found
           content:
             application/json:
               schema:
                 type: object
-                properties:
+                properties: 
                   error:
-                    type: string
-                    example: error occured
+                    type: object
+                    properties:
+                      message:
+                          type: string
+                          example: 'user not found'
   /novels/{slug}/comments/{parentId}:
     post:
       summary: Creates a reply
@@ -363,38 +393,6 @@ paths:
                     example: error occured
 components:
   schemas:
-    User:
-      required:
-      - firstName
-      - lastName
-      - email
-      - username
-      type: object
-      properties:
-        firstName:
-          type: string
-          example: john
-        lastName:
-          type: string
-          example: doe
-        email:
-          type: string
-          example: johndoe@email.com
-        username:
-          type: string
-          example: johnnydoe12
-        bio:
-          type: string
-          example: I am awesome
-        avatarURL:
-          type: string
-          example: https://your_avatar.com/your_avatar.jpg
-        phoneNo:
-          type: string
-          example: 2347012345678
-        address:
-          type: string
-          example: 123 Eve's Garden Road, Eden
     UserRegisterInput:
       required:
         - firstName
@@ -409,9 +407,6 @@ components:
         lastName:
           type: string
           example: doe
-        username:
-          type: string
-          example: johnnydoe12
         email:
           type: string
           example: johndoe@email.com
@@ -450,8 +445,8 @@ components:
       properties:
         token:
           type: string
-        username:
-          type: string
+        id:
+          type: integer
         bio:
           type: string
     ForgotPasswordUser:
@@ -470,7 +465,27 @@ components:
           example: success
         message:
           type: string
-          example: internal server error   
+          example: internal server error 
+    Profile:
+      required:
+      - id
+      - bio
+      - image
+      - following
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        bio:
+          type: string
+          example: I love novels
+        image:
+          type: string
+          example: ''
+        following:
+          type: boolean
+          example: true
   securitySchemes:
     bearerToken:
       type: apiKey

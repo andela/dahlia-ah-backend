@@ -5,14 +5,12 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   firstName: 'Eden',
   lastName: 'Hazard',
   email: 'eden@gmail.com',
-  username: 'eden101',
   password: bcrypt.hashSync('edenHazard', 10),
   bio: 'I am the best author in the world',
   avatarUrl: null,
   phoneNo: null,
   isVerified: true,
   isSubscribed: true,
-  paymentStatus: true,
   createdAt: new Date(),
   updatedAt: new Date()
 },
@@ -21,17 +19,26 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   firstName: 'James',
   lastName: 'Bond',
   email: 'jamesbond@gmail.com',
-  username: 'JB007',
-  password: bcrypt.hashSync('jamesBond', 10),
+  password: bcrypt.hashSync('jamesbond', 10),
   bio: 'My name is James, James Bond',
   avatarUrl: null,
   phoneNo: null,
   isVerified: true,
   isSubscribed: false,
-  paymentStatus: true,
+  createdAt: new Date(),
+  updatedAt: new Date()
+}, {
+  id: '0ce36391-2c08-4703-bddb-a4ea8cccbbc5',
+  firstName: 'jamie',
+  lastName: 'foxx',
+  email: 'jamiefoxx@gmail.com',
+  password: bcrypt.hashSync('jamiefoxx', 10),
+  avatarUrl: '',
+  bio: 'I am a writer, and i have authored 5 best selling books',
+  phoneNo: '2347032123404',
+  isVerified: true,
+  isSubscribed: true,
   createdAt: new Date(),
   updatedAt: new Date()
 }], {});
-export const down = queryInterface => queryInterface.bulkDelete('Users', {
-  email: 'eden@gmail.com',
-});
+export const down = queryInterface => queryInterface.bulkDelete('Users', null, {});

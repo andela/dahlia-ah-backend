@@ -29,7 +29,6 @@ describe('AUTH', () => {
           const { user } = res.body;
           expect(user).property('token');
           expect(user).property('email');
-          expect(user).property('username');
           expect(user).property('bio');
           done(err);
         });
@@ -44,19 +43,6 @@ describe('AUTH', () => {
           const { errors } = res.body;
           expect(res).status(409);
           expect(errors).eq('user with email already exists');
-          done(err);
-        });
-    });
-    it('should return error on duplicate username', (done) => {
-      chai
-        .request(server)
-        .post(signupEndpoint)
-        .type('form')
-        .send(userMock.duplicateUsername)
-        .end((err, res) => {
-          const { errors } = res.body;
-          expect(res).status(409);
-          expect(errors).eq('username already taken');
           done(err);
         });
     });
@@ -125,7 +111,6 @@ describe('POST /api/users/login', () => {
         expect(res).status(200);
         expect(user).property('token');
         expect(user).property('email');
-        expect(user).property('username');
         expect(user).property('bio');
         done(err);
       });

@@ -1,9 +1,11 @@
-import { Op } from 'sequelize';
 import models from '../database/models';
 import helpers from '../helpers';
+import services from '../services';
 
-const { authHelper, successResponse, errorResponse } = helpers;
-
+const {
+  authHelper, successResponse, errorResponse, responseMessage
+} = helpers;
+const { userServices: { findUser, findFollower } } = services;
 const { User } = models;
 
 /**
@@ -14,30 +16,18 @@ const { User } = models;
    */
 const signUp = async (req, res) => {
   const {
-    firstName, lastName, username, email, password
+    firstName, lastName, email, password
   } = req.body;
 
-  const rows = await User.findAll({
-    where: {
-      [Op.or]: [{ email }, { username }]
-    }
-  });
-
-  const foundUser = rows[0];
+  const foundUser = await findUser(email);
 
   if (foundUser && foundUser.email.toString() === email) {
     return errorResponse(res, 409, 'user with email already exists');
   }
 
-  if (foundUser && foundUser.username.toString() === username) {
-    const errors = 'username already taken';
-    return errorResponse(res, 409, errors);
-  }
-
   const user = {
     firstName,
     lastName,
-    username,
     email,
     password: authHelper.hashedPassword(password)
   };
@@ -45,9 +35,9 @@ const signUp = async (req, res) => {
   const createdUser = await User.create(user);
   const response = {
     user: {
+      id: createdUser.id,
       email: createdUser.email,
       token: authHelper.generateToken({ id: createdUser.id }),
-      username: createdUser.username,
       bio: createdUser.bio,
       image: createdUser.avatar
     }
@@ -83,14 +73,38 @@ const login = async (req, res) => {
 
   const data = {
     user: {
+      id: foundUser.id,
       email: foundUser.email,
       token: authHelper.generateToken({ id: foundUser.id }),
-      username: foundUser.username,
       bio: foundUser.bio
     }
   };
   return successResponse(res, 200, data);
 };
 
+/**
+ * @description returns profile of a user
+ * @param {object} request express request object
+ * @param {object} response express response object
+ * @param {object} next express next argument
+ * @returns {json} json
+ */
+const getProfile = async (request, response) => {
+  const { userId } = request.params;
+  const user = await findUser(userId);
+  if (!user) {
+    return responseMessage(response, 404, { error: 'user not found' });
+  }
+  const { bio, avatarUrl } = user;
+  const { id } = request.user;
+  const follower = await findFollower(userId, id);
+  const following = !!follower;
+  return responseMessage(response, 200, {
+    profile: {
+      id: userId, bio, image: avatarUrl, following
+    }
+  });
+};
 
-export { signUp, login };
+const userController = { getProfile, signUp, login };
+export default userController;

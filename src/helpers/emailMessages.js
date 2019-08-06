@@ -1,6 +1,6 @@
 const messageHeader = "<div style='width:600px;font-family: Arial,Helvetica,sans-serif; text-decoration: none; margin:auto; font-size: 14px;'><div style='background-color:#8c9ca8; color:#fff; padding:20px;text-align: center;font-size: 18px;'><span style='margin-right: 10px'>Authors Haven</span></div><div style='padding:15px'>";
 
-const messageFooter = "<p style='margin-top:20px; margin-bottom:0px; color:#6a6c6f; line-height: 1.35em;'>Thank you,</p><p style='margin-top:0px; margin-bottom:5px; color:#6a6c6f; line-height: 1.35em;'>The Aurthors Haven Team</p></div><div style='background-color:#8c9ca8; color:#fff; padding:7px'></div></div>";
+const messageFooter = "<p style='margin-top:20px; margin-bottom:0px; color:#6a6c6f; line-height: 1.35em;'>Thank you,</p><p style='margin-top:0px; margin-bottom:5px; color:#6a6c6f; line-height: 1.35em;'>The Authors Haven Team</p></div><div style='background-color:#8c9ca8; color:#fff; padding:7px'></div></div>";
 
 
 /**
