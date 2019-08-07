@@ -1,34 +1,44 @@
 import jwt from 'jsonwebtoken';
-import services from '../services';
+import dotenv from 'dotenv';
 import helpers from '../helpers';
+import services from '../services';
 
-const { errorResponse } = helpers;
+dotenv.config();
 
-const { findUser } = services;
+const { SECRET_KEY } = process.env;
 
-const secret = process.env.SECRET_KEY;
+const { responseMessage } = helpers;
+const { userServices: { findUser } } = services;
 
 /**
  *
- *
- * @param {object} req
- * @param {object} res
+ * @param {object} request
+ * @param {object} response
  * @param {*} next
  * @returns {*} json or next
  */
-const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
-  if (!token) {
-    return errorResponse(res, 401, 'No token provided');
-  }
-  jwt.verify(token, secret, async (err, decoded) => {
-    if (err) {
-      return errorResponse(res, 401, 'Failed to authenticate token');
-    }
-    const user = await findUser(decoded.id, res);
-    req.user = user;
-    return next();
-  });
-};
+export default (request, response, next) => {
+  const token = request.headers.authorization || request.query.token;
 
-export default verifyToken;
+  if (token) {
+    jwt.verify(token, SECRET_KEY, async (error, decoded) => {
+      if (error) {
+        const message = (error.name === 'TokenExpiredError') ? 'token expired' : 'invalid token';
+        responseMessage(response, 401, { error: message });
+      } else {
+        try {
+          const user = await findUser(decoded.id);
+          if (!user) {
+            return responseMessage(response, 404, { error: 'user not found' });
+          }
+          request.user = user;
+          return next();
+        } catch (err) {
+          responseMessage(response, 500, { error: err.message });
+        }
+      }
+    });
+  } else {
+    responseMessage(response, 401, { error: 'no token provided' });
+  }
+};

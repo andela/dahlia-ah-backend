@@ -66,6 +66,28 @@ const isNotEmpty = field => check(field)
   .withMessage(`${field} is a required field`);
 
 /**
+   * @returns {Object} - Express-validator
+   */
+const isNotEmptySlug = () => check('slug')
+  .not()
+  .isEmpty({ ignore_whitespace: true })
+  .withMessage('slug cannot be empty')
+  .custom(value => !/\s/.test(value))
+  .withMessage('slug cannot contain whitespace');
+
+
+/**
+   * @returns {Object} - Express-validator
+   */
+const isValidComment = () => check('commentBody')
+  .exists()
+  .withMessage('commentBody is a required field')
+  .not()
+  .isEmpty({ ignore_whitespace: true })
+  .withMessage('commentBody cannot be empty')
+  .isLength({ max: 200 });
+
+/**
    * @param {String} field
    * @returns {Object} - Express-validator
    */
@@ -78,6 +100,28 @@ const isValidGenre = field => check(field)
   .isIn(['action', 'thriller', 'romance', 'fiction', 'motivational'])
   .withMessage('Must be a valid genre: action, thriller, romance, fiction, motivational');
 
+/**
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
+const isValidId = field => check(field)
+  .exists()
+  .withMessage(`${field} is a required field`)
+  .trim()
+  .not()
+  .isEmpty()
+  .withMessage(`${field} cannot be empty`)
+  .isInt()
+  .withMessage(`${field} must be an integer`);
+
 export default {
-  isValidEmail, isValidName, isValidPassword, isValidUserName, isNotEmpty, isValidGenre
+  isValidEmail,
+  isValidName,
+  isValidPassword,
+  isValidUserName,
+  isNotEmpty,
+  isValidGenre,
+  isNotEmptySlug,
+  isValidComment,
+  isValidId
 };

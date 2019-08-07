@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken';
 import helpers from '../helpers';
 import services from '../services';
 
-const { forgotPasswordMessage } = helpers;
-const { sendMail, findUser } = services;
+const { forgotPasswordMessage, responseMessage } = helpers;
+const { sendMail, userServices: { findUser } } = services;
 
 /**
  *
@@ -15,9 +15,9 @@ const { sendMail, findUser } = services;
 const forgotPassword = async (request, response) => {
   const { email } = request.body;
   try {
-    const user = await findUser(email, response);
+    const user = await findUser(email);
+    if (!user) return responseMessage(response, 404, { error: 'user not found' });
     const { id, firstName } = user;
-    if (!id) return;
     const token = jwt.sign({ id }, process.env.SECRET_KEY, { expiresIn: '2h' });
     const message = forgotPasswordMessage(firstName, token);
     await sendMail(process.env.ADMIN_MAIL, email, message);

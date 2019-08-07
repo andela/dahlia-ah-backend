@@ -15,6 +15,22 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   roleId: 1,
   createdAt: new Date(),
   updatedAt: new Date()
+},
+{
+  firstName: 'James',
+  lastName: 'Bond',
+  email: 'jamesbond@gmail.com',
+  username: 'JB007',
+  password: bcrypt.hashSync('jamesBond', 10),
+  bio: 'My name is James, James Bond',
+  avatarUrl: null,
+  phoneNo: null,
+  isVerified: true,
+  isSubscribed: false,
+  paymentStatus: true,
+  roleId: 1,
+  createdAt: new Date(),
+  updatedAt: new Date()
 }], {});
 export const down = queryInterface => queryInterface.bulkDelete('Users', {
   email: 'eden@gmail.com',

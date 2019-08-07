@@ -1,7 +1,7 @@
-import createNewNovel from '../services/createNovel';
+import services from '../services';
 import helpers from '../helpers';
 
-
+const { novelServices: { createNewNovel } } = services;
 const { errorResponse, successResponse } = helpers;
 
 /**

@@ -1,9 +1,11 @@
 import sendMail from './sendMail';
-import findUser from './findUser';
-import createNovel from './createNovel';
+import userServices from './userService';
+import novelServices from './novelService';
+import commentServices from './commentService';
 
 export default {
   sendMail,
-  findUser,
-  createNovel
+  userServices,
+  novelServices,
+  commentServices
 };

@@ -155,8 +155,212 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardServerResponse'
-      security:
-      - bearerToken: []
+  /novels/{slug}/comments:
+    post:
+      summary: Creates a comment
+      description: Post a comment on a novel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentBody:
+                  type: string
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: succesful request, entity created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    type: object
+                    properties:
+                      novel:
+                        type: string
+                        example: The Good Book
+                      commenter:
+                        type: string
+                        example: bigShaq004
+                      commentBody:
+                        type: string
+                        example: I really love this book
+                      updatedAt:
+                        type: string
+                        example: '2019-08-05T14:17:58.518Z'
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: commentBody
+                        message:
+                          type: string
+                          example: commentBody cannot be empty
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: you have to be subscribed to comment on a novel
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: novel not found
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: error occured
+  /novels/{slug}/comments/{parentId}:
+    post:
+      summary: Creates a reply
+      description: Reply a parent comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentBody:
+                  type: string
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: parentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: succesful request, entity created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reply:
+                    type: object
+                    properties:
+                      novel:
+                        type: string
+                        example: The Good Book
+                      parentComment:
+                        type: string
+                        example: this book is really nice
+                      replier:
+                        type: string
+                        example: I really love this book
+                      replyBody:
+                        type: string
+                        example: yeah I think so too
+                      updatedAt:
+                        type: string
+                        example: '2019-08-05T14:17:58.518Z'
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: commentBody
+                        message:
+                          type: string
+                          example: commentBody cannot be empty
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: you have to be subscribed to comment on a novel
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: no comment found with the provided id
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: error occured
 components:
   schemas:
     User:

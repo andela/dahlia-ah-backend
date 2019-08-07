@@ -3,6 +3,19 @@ import models from '../database/models';
 const { Genre, Novel } = models;
 
 /**
+ * Finds a novel from the database by slug
+ * @param {string} param
+ * @returns {object} a user object
+ */
+
+const findNovel = async (param) => {
+  const novel = await Novel.findOne({
+    where: { slug: param }
+  });
+  return novel;
+};
+
+/**
  *
  *
  * @param {object} novel
@@ -46,4 +59,7 @@ const createNewNovel = async (novel, author) => {
   };
 };
 
-export default createNewNovel;
+export default {
+  findNovel,
+  createNewNovel
+};
