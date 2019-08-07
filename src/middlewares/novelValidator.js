@@ -2,22 +2,26 @@ import validator from '../helpers/validator';
 import errorHandler from './errorHandler';
 
 const {
-  isNotEmpty, isValidGenre, isValidInt
+  isNotEmpty, isValidGenre, isValidInt, isValidName
 } = validator;
 
 const { validatorError } = errorHandler;
 
 const novelValidator = {
-  createNovel: [
+  createNovelValidator: [
     isNotEmpty('title'),
     isNotEmpty('description'),
     isNotEmpty('body'),
     isValidGenre('genre'),
     validatorError
   ],
-  getNovels: [
+  getNovelValidator: [
     isValidInt('page').optional(),
     isValidInt('limit').optional(),
+    validatorError
+  ],
+  genreValidator: [
+    isValidName('name'),
     validatorError
   ]
 };

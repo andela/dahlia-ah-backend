@@ -61,7 +61,7 @@ const removeNovelLike = (userId, novelId) => Like.destroy({
  * @param {object} author
  * @returns {object} json
  */
-const createNewNovel = async (novel, author) => {
+const addNovel = async (novel, author) => {
   const {
     genre,
     title,
@@ -114,9 +114,21 @@ const findAllNovels = async (offset, limit) => {
   return novels;
 };
 
+/*
+ * Finds a genre from the database by name
+ * @name sendMail
+ * @param {string} name
+ * @returns {object} a user object
+ */
+const findGenre = async (name) => {
+  const genre = await Genre.findOne({ where: { name } });
+  return genre;
+};
+
 export default {
+  findGenre,
   findNovel,
-  createNewNovel,
+  addNovel,
   findNovelById,
   findNovelLike,
   removeNovelLike,
