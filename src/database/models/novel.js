@@ -16,8 +16,8 @@ export default (Sequelize, DataTypes) => {
       allowNull: false
     },
     slug: {
-      type: DataTypes.STRING,
       allowNull: false,
+      type: DataTypes.STRING,
       unique: true
     },
     title: {
@@ -42,7 +42,6 @@ export default (Sequelize, DataTypes) => {
     }
   }, {});
   Novel.associate = (models) => {
-    // associations can be defined here
     Novel.belongsTo(models.User, {
       foreignKey: 'authorId',
       onDelete: 'CASCADE',
@@ -51,8 +50,8 @@ export default (Sequelize, DataTypes) => {
       foreignKey: 'novelId',
       onDelete: 'CASCADE'
     });
-    Novel.hasMany(models.Likes, {
-      foreignKey: 'slug',
+    Novel.hasMany(models.Like, {
+      foreignKey: 'novelId',
       onDelete: 'CASCADE'
     });
     Novel.belongsTo(models.Genre, {

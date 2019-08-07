@@ -1,5 +1,6 @@
 import express, { urlencoded, json } from 'express';
 import cors from 'cors';
+import socket from 'socket.io';
 import errorhandler from 'errorhandler';
 import debug from 'debug';
 import swaggerUi from 'swagger-ui-express';
@@ -93,5 +94,8 @@ app.use((err, req, res, next) => {
 const server = app.listen(process.env.PORT || 3000, () => {
   log(`Listening on port ${server.address().port}`);
 });
+
+const io = socket(server);
+global.io = io;
 
 export default app;

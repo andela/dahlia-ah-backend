@@ -80,7 +80,6 @@ describe('A test to check for user last name during signup validations', () => {
       });
   });
 });
-
 describe('A test to check for password during signup validations', () => {
   it('should return a status 400 on invalid password', (done) => {
     chai.request(app)

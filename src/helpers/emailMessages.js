@@ -52,4 +52,22 @@ const VerifyAccountEmailPage = (info) => {
 </html>`;
 };
 
-export default { forgotPasswordMessage, VerifyAccountEmailPage };
+const emailNotificationMessage = (notificationObject) => {
+  const [{
+    actor, message, novelTitle, novelUrl
+  }] = notificationObject;
+  const data = {
+    subject: 'Authors Haven - Notification',
+    html: `${messageHeader}
+            <p>${actor} ${message}
+            ${novelTitle && novelUrl ? `<a href="${process.env.SERVER_URL}${novelUrl}"> ${novelTitle}</a></p>` : ''}
+            ${messageFooter}`,
+  };
+  return data;
+};
+
+export default {
+  forgotPasswordMessage,
+  emailNotificationMessage,
+  VerifyAccountEmailPage
+};

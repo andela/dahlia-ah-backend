@@ -2,11 +2,13 @@ import services from '../services';
 import helpers from '../helpers';
 import models from '../database/models';
 
-const { novelServices: { createNewNovel, findAllNovels } } = services;
 const {
   errorResponse, successResponse, extractNovels, responseMessage
 } = helpers;
 const { Novel } = models;
+const {
+  novelServices: { createNewNovel, findAllNovels }, notificationServices: { addNotification }
+} = services;
 
 /**
  * createNovel
@@ -21,6 +23,14 @@ const createNovel = async (req, res) => {
   if (createdNovel.error) {
     return errorResponse(res, createdNovel.status, createdNovel.error);
   }
+  const config = {
+    configObjectId: 0,
+    entityId: createdNovel.id,
+    followeeId: req.user.id,
+    isSingle: false,
+    response: res
+  };
+  addNotification(config);
   return successResponse(res, 201, {
     message: 'Novel created successfully',
     novel: {

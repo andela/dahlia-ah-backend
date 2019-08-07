@@ -8,9 +8,9 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Lik
     allowNull: false,
     type: Sequelize.UUID
   },
-  slug: {
+  novelId: {
     allowNull: false,
-    type: Sequelize.STRING
+    type: Sequelize.UUID
   },
   createdAt: {
     allowNull: false,

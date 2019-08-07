@@ -43,5 +43,35 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   roleId: 'b79c4eed-60c6-42fb-9040-f0822d8414fa',
   createdAt: new Date(),
   updatedAt: new Date()
+},
+{
+  id: 'ce87299b-0dfa-44ed-bb53-45d434647eb2',
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'doe@gmail.com',
+  password: bcrypt.hashSync('doe', 10),
+  bio: 'sarcasm',
+  avatarUrl: null,
+  phoneNo: null,
+  isVerified: true,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  isSubscribed: true,
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '20eacfca-0fe5-4833-862c-0263dfbf66e5',
+  firstName: 'Benny',
+  lastName: 'Who knows',
+  email: 'benny@gmail.com',
+  password: bcrypt.hashSync('benny', 10),
+  bio: 'Just love spantenousity',
+  avatarUrl: null,
+  phoneNo: null,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  isVerified: true,
+  isSubscribed: true,
+  createdAt: new Date(),
+  updatedAt: new Date()
 }], {});
 export const down = queryInterface => queryInterface.bulkDelete('Users', null, {});

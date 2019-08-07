@@ -6,8 +6,9 @@ import responseMessage from './responseMessage';
 import validators from './validator';
 import verifyUser from './verifyUser';
 import extractNovels from './extractNovels';
+import notificationConfig from './notificationConfig';
 
-const { forgotPasswordMessage } = emailMessages;
+const { forgotPasswordMessage, emailNotificationMessage } = emailMessages;
 
 export default {
   authHelper,
@@ -19,4 +20,6 @@ export default {
   validators,
   verifyUser,
   extractNovels,
+  emailNotificationMessage,
+  notificationConfig
 };

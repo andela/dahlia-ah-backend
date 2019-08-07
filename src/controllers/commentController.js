@@ -2,7 +2,11 @@ import helpers from '../helpers';
 import services from '../services';
 
 const { responseMessage } = helpers;
-const { novelServices: { findNovel }, commentServices: { findComment, createComment } } = services;
+const {
+  novelServices: { findNovel },
+  commentServices: { findComment, createComment },
+  notificationServices: { addNotification }
+} = services;
 
 /**
  *
@@ -24,10 +28,14 @@ const postComment = async (request, response) => {
     if (!novel) {
       return responseMessage(response, 404, { error: 'novel not found' });
     }
-
     const parentCommentId = null;
     const novelId = novel.id;
+    const followeeId = novel.authorId;
     const newComment = await createComment(commentBody, userId, parentCommentId, novelId);
+
+    addNotification({
+      configObjectId: 2, entityId: newComment.id, actorId: userId, followeeId, response
+    });
     response.status(201).json({
       comment: {
         novel: novel.title,

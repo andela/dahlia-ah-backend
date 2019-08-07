@@ -15,7 +15,6 @@ const { forgotPasswordEmail, wrongForgotPasswordEmail } = userMock;
 const BASE_URL = '/api/v1';
 const FORGOT_PASSWORD_URL = `${BASE_URL}/auth/forgotPassword`;
 
-
 describe('AUTH', () => {
   describe('POST /auth/signup', () => {
     const signupEndpoint = `${BASE_URL}/users`;
