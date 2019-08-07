@@ -111,8 +111,8 @@ const isValidId = field => check(field)
   .not()
   .isEmpty()
   .withMessage(`${field} cannot be empty`)
-  .isInt()
-  .withMessage(`${field} must be an integer`);
+  .isUUID()
+  .withMessage(`${field} must be an UUID`);
 
 export default {
   isValidEmail,

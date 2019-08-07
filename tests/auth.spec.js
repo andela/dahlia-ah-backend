@@ -112,17 +112,7 @@ describe('AUTH', () => {
 });
 
 describe('POST /api/users/login', () => {
-  const signupEndpoint = `${BASE_URL}/users`;
   const loginsignupEndpoint = `${BASE_URL}/users/login`;
-  before((done) => {
-    chai.request(server)
-      .post(`${signupEndpoint}`)
-      .type('form')
-      .send(userMock.validUser)
-      .end((err) => {
-        done(err);
-      });
-  });
   const authErrorMessage = 'email or password is incorrect';
   it('should #login a user and #generate jwt', (done) => {
     chai
@@ -165,6 +155,30 @@ describe('POST /api/users/login', () => {
       .end((err, res) => {
         expect(res).status(401);
         expect(res.body).property('errors').eq(authErrorMessage);
+        done(err);
+      });
+  });
+  it('should return error if password id not correct', (done) => {
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(userMock.seededUser2)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body).property('errors').eq('email or password is incorrect');
+        done(err);
+      });
+  });
+  it('should return error if user is not verified', (done) => {
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(userMock.validUser2)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body).property('errors').eq('please verify your email');
         done(err);
       });
   });

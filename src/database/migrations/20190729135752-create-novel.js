@@ -1,12 +1,11 @@
 const up = (queryInterface, Sequelize) => queryInterface.createTable('Novels', {
   id: {
     allowNull: false,
-    autoIncrement: true,
     primaryKey: true,
-    type: Sequelize.INTEGER
+    type: Sequelize.UUID,
   },
   authorId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.UUID,
     onDelete: 'CASCADE',
     allowNull: false,
     references: {
@@ -15,7 +14,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Novels', {
     },
   },
   genreId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.UUID,
     allowNull: false,
     references: {
       model: 'Genres',

@@ -25,7 +25,6 @@ const signUp = async (req, res) => {
 
   const foundUser = rows[0];
 
-
   if (foundUser && foundUser.email.toString() === email) {
     return errorResponse(res, 409, 'user with email already exists');
   }
@@ -44,7 +43,6 @@ const signUp = async (req, res) => {
   };
 
   const createdUser = await User.create(user);
-
   const response = {
     user: {
       email: createdUser.email,

@@ -118,5 +118,9 @@ export default {
     username: 'eden101',
     password: 'edenHazard',
     bio: 'I am the best author in the world'
+  },
+  seededUser2: {
+    email: 'eden@gmail.com',
+    password: 'edenHazargd',
   }
 };

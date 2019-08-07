@@ -19,26 +19,25 @@ const { commentMock } = mockData;
 const { validComment, invalidComment } = commentMock;
 
 const BASE_URL = '/api/v1';
-const COMMENT_URL = `${BASE_URL}/novels/religion-versus-spirituality/comments`;
-const REPLY_URL = `${BASE_URL}/novels/religion-versus-spirituality/comments/1`;
+const COMMENT_URL = `${BASE_URL}/novels/hancock/comments`;
+const REPLY_URL = `${BASE_URL}/novels/hancock/comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
 
 const wrongSlugUrlForComment = `${BASE_URL}/novels/no-slug-like-this-in-database/comments`;
-const wrongSlugUrlForReply = `${BASE_URL}/novels/no-slug-like-this-in-database/comments/1`;
-const wrongParentIdUrl = `${BASE_URL}/novels/religion-versus-spirituality/comments/1123433445`;
-const nonParentCommentUrl = `${BASE_URL}/novels/religion-versus-spirituality/comments/2`;
-const emptySlugUrl = `${BASE_URL}/novels/ /comments/1`;
+const wrongSlugUrlForReply = `${BASE_URL}/novels/no-slug-like-this-in-database/comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
+const wrongParentIdUrl = `${BASE_URL}/novels/hancock/comments/394d6e2b-5217-476f-866e-8fba89527a45`;
+const nonParentCommentUrl = `${BASE_URL}/novels/hancock/comments/b84f246f-ba18-4f83-876d-145be90b494d`;
+const emptySlugUrl = `${BASE_URL}/novels/ /comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
 const whitespaceSlugUrl = `${BASE_URL}/novels/best-book in-the-world/comments/1`;
 const invalidParentIdUrl = `${BASE_URL}/novels/religion-versus-spirituality/comments/g`;
 
 // token of subscribed user Eden Hazard in the database
-const subscribedUserToken = jwt.sign({ id: 1 }, SECRET_KEY, { expiresIn: '60s' });
+const subscribedUserToken = jwt.sign({ id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456' }, SECRET_KEY, { expiresIn: '60s' });
 
 describe('COMMENT ROUTES', () => {
   // Create A Comment On A Post
   describe('Create A Parent Comment', () => {
     it('should return an error if the user\'s token is expired', (done) => {
       const expiredToken = jwt.sign({ id: 1 }, SECRET_KEY, { expiresIn: '0.01s' });
-
       chai.request(server)
         .post(emptySlugUrl)
         .send(validComment)
@@ -130,7 +129,7 @@ describe('COMMENT ROUTES', () => {
 
     it('should return an error if an unfound user tries to access the account', (done) => {
       // token of unfound user
-      const notFoundUserToken = jwt.sign({ id: 12434353532523 }, SECRET_KEY, { expiresIn: '60s' });
+      const notFoundUserToken = jwt.sign({ id: '0e8d9f25-ce70-4037-96cd-1e115bc676ea' }, SECRET_KEY, { expiresIn: '60s' });
 
       chai.request(server)
         .post(COMMENT_URL)
@@ -146,7 +145,7 @@ describe('COMMENT ROUTES', () => {
 
     it('should return an error if an unSubscribed user tries to access this endpoint', (done) => {
       // token of unSubscribed user James Bond in the database
-      const unSubscribedUserToken = jwt.sign({ id: 2 }, SECRET_KEY, { expiresIn: '60s' });
+      const unSubscribedUserToken = jwt.sign({ id: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8' }, SECRET_KEY, { expiresIn: '60s' });
 
       chai.request(server)
         .post(COMMENT_URL)
@@ -233,14 +232,14 @@ describe('COMMENT ROUTES', () => {
         .end((error, response) => {
           expect(response).to.have.status(400);
           expect(response.body).to.be.an('object');
-          expect(response.body.errors[0].message).to.equal('parentId must be an integer');
+          expect(response.body.errors[0].message).to.equal('parentId must be an UUID');
           done();
         });
     });
 
     it('should return an error if an unSubscribed user tries to access this endpoint', (done) => {
       // token of unSubscribed user James Bond in the database
-      const unSubscribedUserToken = jwt.sign({ id: 2 }, SECRET_KEY, { expiresIn: '60s' });
+      const unSubscribedUserToken = jwt.sign({ id: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8' }, SECRET_KEY, { expiresIn: '60s' });
 
       chai.request(server)
         .post(REPLY_URL)
@@ -296,7 +295,7 @@ describe('COMMENT ROUTES', () => {
     it('should successfully create a reply', (done) => {
       chai.request(server)
         .post(REPLY_URL)
-        .send(validComment)
+        .send({ commentBody: 'nice one there' })
         .set('authorization', subscribedUserToken)
         .end((error, response) => {
           expect(response).to.have.status(201);

@@ -1,10 +1,11 @@
+
 export default (sequelize, DataTypes) => {
   const Genre = sequelize.define('Genre', {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
     },
     name: {
       allowNull: false,

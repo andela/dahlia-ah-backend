@@ -1,9 +1,8 @@
 export const up = (queryInterface, Sequelize) => queryInterface.createTable('Users', {
   id: {
     allowNull: false,
-    autoIncrement: true,
     primaryKey: true,
-    type: Sequelize.INTEGER,
+    type: Sequelize.UUID,
   },
   firstName: {
     allowNull: false,
@@ -55,11 +54,6 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Use
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
-  roleId: {
-    allowNull: false,
-    type: Sequelize.INTEGER,
-    defaultValue: 1
-  },
   createdAt: {
     allowNull: false,
     type: Sequelize.DATE
@@ -69,4 +63,5 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Use
     type: Sequelize.DATE
   }
 });
+
 export const down = queryInterface => queryInterface.dropTable('Users');

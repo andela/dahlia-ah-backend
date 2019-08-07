@@ -24,6 +24,7 @@ const postComment = async (request, response) => {
     if (!novel) {
       return responseMessage(response, 404, { error: 'novel not found' });
     }
+
     const parentCommentId = null;
     const novelId = novel.id;
     const newComment = await createComment(commentBody, userId, parentCommentId, novelId);
@@ -67,6 +68,7 @@ const replyComment = async (request, response) => {
     if (!parentComment.novelId) {
       return responseMessage(response, 403, { error: 'you can only reply a parent comment' });
     }
+
     const novelId = null;
     const newComment = await createComment(commentBody, userId, parentCommentId, novelId);
     response.status(201).json({

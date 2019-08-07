@@ -1,18 +1,18 @@
-export default (sequelize, DataTypes) => {
-  const Novel = sequelize.define('Novel', {
+export default (Sequelize, DataTypes) => {
+  const Novel = Sequelize.define('Novel', {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
     },
     authorId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       onDelete: 'CASCADE',
       allowNull: false
     },
     genreId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false
     },
     slug: {
