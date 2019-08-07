@@ -23,6 +23,13 @@ export default {
     password: 'password',
     email: 'novel@gmail.com'
   },
+  getUser: {
+    firstName: 'john',
+    lastName: 'snow',
+    username: 'knows',
+    password: 'password',
+    email: 'snow@gmail.com'
+  },
   invalidFirstName: {
     firstName: 'john77***99he**J',
     lastName: 'joe',

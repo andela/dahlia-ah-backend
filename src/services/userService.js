@@ -30,6 +30,19 @@ const findFollower = async (followeeId, followerId) => {
   return follower;
 };
 
+/**
+ * @name getAllUsers
+ * @returns {Array} array of users
+ */
+const getAllUsers = async () => {
+  const allUsers = await User.findAll({
+    attributes: ['id', 'firstName', 'lastName', 'bio', 'avatarUrl']
+  });
+  return allUsers;
+};
+
 export default {
-  findUser, findFollower
+  findUser,
+  findFollower,
+  getAllUsers
 };

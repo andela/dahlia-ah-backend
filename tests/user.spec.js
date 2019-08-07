@@ -2,16 +2,20 @@ import chaiHttp from 'chai-http';
 import chai, { expect } from 'chai';
 import mockData from './mockData';
 import app from '../src';
+import userController from '../src/controllers/userController';
+
+const { listUsers } = userController;
 
 const API_VERSION = '/api/v1';
 const LOGIN_URL = `${API_VERSION}/users/login`;
 const PROFILE_URL = `${API_VERSION}/profiles`;
+const endpointUser = '/api/v1/users';
 const validId = '122a0d86-8b78-4bb8-b28f-8e5f7811c456';
 const invalidId = '9a5f3850-c53b-4450-8ce4-d560aa2ca736';
 const {
   userMock: {
     validProfileLogin, validProfile, invalidProfile1, invalidProfile2,
-    invalidProfile3, invalidProfileToken: { expiredToken }
+    invalidProfile3, getUser, invalidProfileToken: { expiredToken }
   }
 } = mockData;
 let authToken;
@@ -186,6 +190,50 @@ describe('USER ROUTES', () => {
           expect(response.body).to.be.an('object');
           done();
         });
+    });
+  });
+});
+
+describe('Test for getting users', () => {
+  before((done) => {
+    const user = getUser;
+    chai.request(app)
+      .post(endpointUser)
+      .send(user)
+      .end((err, res) => {
+        authToken = res.body.user.token;
+        done();
+      });
+  });
+  describe('GET /api/v1/users', () => {
+    it('should get all users if user is authenticated', (done) => {
+      chai.request(app)
+        .get(endpointUser)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.property('message');
+          expect(res.body).to.have.property('users');
+          done();
+        });
+    });
+
+    it('should not get all users if user is not authenticated', (done) => {
+      chai.request(app)
+        .get(endpointUser)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.error).to.equal('no token provided');
+          done();
+        });
+    });
+
+    it('should return a failure response if a server error occurs', async () => {
+      try {
+        await listUsers('request', 'response');
+      } catch (error) {
+        expect(error).to.be.an('error');
+      }
     });
   });
 });
