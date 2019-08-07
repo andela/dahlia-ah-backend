@@ -1,12 +1,19 @@
 import chai from 'chai';
 import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
+import sinon from 'sinon';
 import server from '../src/index';
 import mockData from './mockData';
+import models from '../src/database/models';
+import helpers from '../src/helpers';
 
 chai.use(chaiHttp);
 
+const { SECRET_KEY } = process.env;
+
 const { expect } = chai;
+const { Novel } = models;
+const { extractNovels } = helpers;
 const { userMock, novelMock } = mockData;
 
 let authToken, authReaderToken;
@@ -17,6 +24,9 @@ const nonexistNovelEndpoint = '/api/v1/novels/3c3b6226-b691-472e-babf-a96c6eb373
 const invalidToken = 'ksjbvksvkerlgvdsbv.ergrpewgjperger.gergnkerl';
 const nonExistUserToken = jwt.sign({ id: '8b031dd76-7348-425c-98ea-7b4bd5812c6f' }, process.env.SECRET_KEY);
 let endpoint;
+
+// token of logged in user Eden Hazard in the database
+const loggedInUserToken = jwt.sign({ id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456' }, SECRET_KEY, { expiresIn: '120s' });
 
 describe('Test for novel CRUD', () => {
   before((done) => {
@@ -167,6 +177,156 @@ describe('Test for novel CRUD', () => {
           expect(res.body).property('message').eq('you\'ve succesfully unliked this book');
           done();
         });
+    });
+  });
+
+  describe('Pagination support for novels listing', () => {
+    it('should return an error response if the page provided is not an integer', (done) => {
+      chai.request(server)
+        .get(endpointNovel)
+        .query({ page: 'abc', limit: 20 })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('page');
+          expect(response.body.errors[0].message).to.equal('page must be an integer');
+          done();
+        });
+    });
+
+    it('should return an error response if the limit provided is not an integer', (done) => {
+      chai.request(server)
+        .get(endpointNovel)
+        .query({ page: 1, limit: 'abc' })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('limit');
+          expect(response.body.errors[0].message).to.equal('limit must be an integer');
+          done();
+        });
+    });
+
+    it('should return an error response if the limit query provided is empty', (done) => {
+      chai.request(server)
+        .get(endpointNovel)
+        .query({ page: 1, limit: '' })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('limit');
+          expect(response.body.errors[0].message).to.equal('limit cannot be empty');
+          done();
+        });
+    });
+
+    it('should return an error response if the page query provided is empty', (done) => {
+      chai.request(server)
+        .get(endpointNovel)
+        .query({ page: '', limit: 10 })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('page');
+          expect(response.body.errors[0].message).to.equal('page cannot be empty');
+          done();
+        });
+    });
+
+    it('should return an appropiate message if the count of novels gotten from the database is less than 1', (done) => {
+      const stub = sinon.stub(Novel, 'findAndCountAll');
+      stub.returns({ count: 0 });
+
+      chai.request(server)
+        .get(endpointNovel)
+        .query({ page: 1, limit: 10 })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body).to.have.keys(['message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('no novels found in database');
+          stub.restore();
+          done();
+        });
+    });
+
+    it('should return an error message if the page number supplied is more than the available pages', (done) => {
+      chai.request(server)
+        .get(endpointNovel)
+        .query({ page: 1000, limit: 10 })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body).to.haveOwnProperty('error');
+          expect(response.body.error).to.be.a('string');
+          expect(response.body.error).to.equal('page not found');
+          done();
+        });
+    });
+
+    it('should return an error message if a server error occurs', (done) => {
+      const stub = sinon.stub(Novel, 'findAndCountAll');
+      stub.throws(new Error('error occured!'));
+
+      chai.request(server)
+        .get(endpointNovel)
+        .query({ limit: 10 })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.haveOwnProperty('error');
+          expect(response.body.error).to.be.a('string');
+          expect(response.body.error).to.equal('error occured!');
+          stub.restore();
+          done();
+        });
+    });
+
+    it('should successfully return the novels for that page', (done) => {
+      chai.request(server)
+        .get(endpointNovel)
+        .query({ page: 1, limit: 10 })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.have.keys(['message', 'currentPage', 'totalPages', 'limit', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('succesfully returned novels');
+          expect(response.body.data.length).to.not.equal(0);
+          done();
+        });
+    });
+  });
+
+  describe('Unit test for extractNovels function', () => {
+    it('should throw an error if an invalid argument is passed', () => {
+      expect(extractNovels.bind(extractNovels, 1)).to.throw('invalid argument type');
+    });
+
+    it('should return an empty array if an empty array is passed', () => {
+      const results = extractNovels([]);
+
+      expect(results).to.be.an('array');
+      expect(results.length).to.equal(0);
     });
   });
 });

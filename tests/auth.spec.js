@@ -87,7 +87,6 @@ describe('AUTH', () => {
         .send(forgotPasswordEmail)
         .end((error, response) => {
           expect(response).to.have.status(500);
-          stub.restore();
           expect(response.body).to.be.an('object');
           expect(response.body.error).to.equal('error occured!');
           stub.restore();

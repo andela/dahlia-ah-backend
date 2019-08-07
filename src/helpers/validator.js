@@ -130,7 +130,7 @@ const isValidGenre = field => check(field)
    * @param {String} field
    * @returns {Object} - Express-validator
    */
-const isValidId = field => check(field)
+const isValidUUID = field => check(field)
   .exists()
   .withMessage(`${field} is a required field`)
   .trim()
@@ -140,6 +140,20 @@ const isValidId = field => check(field)
   .isUUID()
   .withMessage(`${field} must be an UUID`);
 
+/**
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
+const isValidInt = field => check(field)
+  .exists()
+  .withMessage(`${field} is a required field`)
+  .trim()
+  .not()
+  .isEmpty()
+  .withMessage(`${field} cannot be empty`)
+  .isInt()
+  .withMessage(`${field} must be an integer`);
+
 export default {
   isValidEmail,
   isValidName,
@@ -148,8 +162,9 @@ export default {
   isValidGenre,
   isNotEmptySlug,
   isValidComment,
-  isValidId,
+  isValidUUID,
   isValidProfileName,
   isValidProfilePassword,
-  isValidAvatarUrl
+  isValidAvatarUrl,
+  isValidInt
 };

@@ -99,7 +99,114 @@ paths:
         409:
           description: resource already exists
         500:
-          description: internal server error          
+          description: internal server error
+    get:
+      tags:
+        - Novels
+      summary: fetches novels with pagination
+      description: fetches novels from the database with pagination
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: succesfully fetched novels
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: succesfully returned novels
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        title:
+                          type: string
+                          example: We Are Here Again
+                        slug:
+                          type: string
+                          example: we-are-here-again
+                        author:
+                          type: string
+                          example: Eden Hazard
+                        genre:
+                          type: string
+                          example: action
+                        description:
+                          type: string
+                          example: Reminder of our presence again
+                        body:
+                          type: string
+                          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                        createdAt:
+                          type: string
+                          example: '2019-08-07T00:53:02.535Z'
+                        updatedAt:
+                          type: string
+                          example: '2019-08-07T00:53:02.535Z'
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: page
+                        message:
+                          type: string
+                          example: page cannot be empty
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: page not found
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: error occured
   /novels/{slug}/like:
     post:
       tags:
@@ -145,7 +252,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardServerResponse'
-        
   /users/login:
     post:
       tags:
@@ -225,6 +331,8 @@ paths:
                       
   /auth/forgotpassword:
     post:
+      tags:
+        - Auth
       summary: Forgot password
       description: Sends an email to a user with the reset password link
       requestBody:

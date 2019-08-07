@@ -19,6 +19,226 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   createdAt: new Date(),
   updatedAt: new Date()
+},
+{
+  id: '32900c25-def1-43e0-961d-41848cc4c506',
+  slug: 'religion-versus-spirituality',
+  title: 'Religion And Spirituality',
+  description: 'A beautiful take on religion and Spirituality',
+  body: 'Religion and Christianity proposes that all the answers can be found in the Bible, while Christianity is all bout searching for anwsers.',
+  authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'b22bf69f-2f61-46cc-84b6-97fabf3e22a3',
+  slug: 'a-game-of-thrones',
+  title: 'A Game of Thrones',
+  description: 'A 7-part series of the power struggle of seven kingdoms',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
+  genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '4f8fd30c-a498-4173-8d8c-dd2729bb499b',
+  slug: 'half-of-a-yellow-sun',
+  title: 'Half of A Yellow Sun',
+  description: 'A tale of a yellow sun',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '0b2e9ded-22db-4a30-ad03-2e830e277bc0',
+  slug: 'what-a-time-to-be-alive',
+  title: 'What A Time To Be Alive',
+  description: 'The highs of been alive at this point',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'd54bd6cb-6e62-4689-b39f-a2805da0e859',
+  slug: 'the-world-is-ours',
+  title: 'The World is Ours',
+  description: 'Explaining why the world is really ours',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'fba0989b-efec-4738-a26d-64f3fb86ff25',
+  slug: 'we-are-here-again',
+  title: 'We Are Here Again',
+  description: 'Reminder of our presence again',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '0e0f43a0-2a73-44ee-96b7-e625d31b67e7',
+  slug: 'a-day-at-circus',
+  title: 'A Day At Circus',
+  description: 'Enjoying the beautiful circus',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: '09add0fe-d063-48ce-8e18-0dc590d04dcf',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'bf1f8528-36e2-4193-ad43-dba01aff5178',
+  slug: 'the-way-life-goes',
+  title: 'The Way Life Goes',
+  description: 'Life goes a certain way',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '20d1283b-175d-457d-8009-13f5a5144f64',
+  slug: 'before-you-came-around',
+  title: 'Before you came around',
+  description: 'Thank God You Came Around',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
+  genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'b45bdf8c-a9d5-436c-b2f6-f5c0fa56596a',
+  slug: 'higher-and-higher',
+  title: 'Higher and Higher',
+  description: 'Our journey to higher heights',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '8b72f73c-8045-4bb8-8646-5acd0edaa408',
+  slug: 'we-can-go-till-the-morning',
+  title: 'We Can Go Till The Morning',
+  description: 'It is morning time, let us go',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
+  genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '2d121687-0477-4f94-9480-24a27625986d',
+  slug: 'welcome-to-bootcamp',
+  title: 'Welcome To Bootcamp',
+  description: 'The trials of bootcamp',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '3fe74cd4-a460-4921-af40-f0e3c7fcbc8c',
+  slug: 'heaven-at-last',
+  title: 'Heaven At Last',
+  description: 'Finally making heaven',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'c27207eb-2aae-4bae-be6a-de6c5ee9fd79',
+  slug: 'love-in-the-air',
+  title: 'Love In The Air',
+  description: 'Love consuming the air',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'f13cf121-6cdd-4e2a-a2d7-45d1f3325214',
+  slug: 'which-way-nigeria',
+  title: 'Which Way Nigeria',
+  description: 'Which way Nigeria, which way to go',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: '09add0fe-d063-48ce-8e18-0dc590d04dcf',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '929a1f0b-3338-42c0-ade2-71eaa67cc653',
+  slug: 'blue-sapphire',
+  title: 'Blue Sapphire',
+  description: 'The beauty of the blue sapphire',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '52ae0d19-d660-4c8e-a127-fce42371fe7e',
+  slug: 'same-old-songs',
+  title: 'Same Old Songs',
+  description: 'The state of the music industry',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'a00bbeaf-b91e-4986-a3fd-485457b00436',
+  slug: 'i-remember-those-days',
+  title: 'I Remember Those Days',
+  description: 'Those glorious days of the past',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
+  genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '9c3fba74-1307-4f51-987d-dcb1a9a8abee',
+  slug: 'in-your-arms',
+  title: 'In Your Arms',
+  description: 'The warmth of your arms',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  genreId: '09add0fe-d063-48ce-8e18-0dc590d04dcf',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'b1e32d53-1e1f-4325-a021-7088377a7d22',
+  slug: 'set-on-fire',
+  title: 'Set On Fire',
+  description: 'The pains of fire',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
+  authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  createdAt: new Date(),
+  updatedAt: new Date()
 }], {});
 
-export const down = queryInterface => queryInterface.bulkDelete('Roles', null, {});
+export const down = queryInterface => queryInterface.bulkDelete('Novels', null, {});
