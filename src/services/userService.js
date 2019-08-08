@@ -9,7 +9,7 @@ const { User } = models;
  */
 
 const findUser = async (param) => {
-  const field = (/^\d+$/g.test(param)) ? { id: param } : { email: param };
+  const field = (/^[A-Z0-9_.-]+@[A-Z0-9.-]+[A-Z]$/ig.test(param)) ? { email: param } : { id: param };
   const user = await User.findOne({
     where: field,
     attributes: { exclude: ['password'] }

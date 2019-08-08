@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 
 export const up = queryInterface => queryInterface.bulkInsert('Users', [{
+  id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   firstName: 'Eden',
   lastName: 'Hazard',
   email: 'eden@gmail.com',
@@ -12,11 +13,11 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   isVerified: true,
   isSubscribed: true,
   paymentStatus: true,
-  roleId: 1,
   createdAt: new Date(),
   updatedAt: new Date()
 },
 {
+  id: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   firstName: 'James',
   lastName: 'Bond',
   email: 'jamesbond@gmail.com',
@@ -28,7 +29,6 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   isVerified: true,
   isSubscribed: false,
   paymentStatus: true,
-  roleId: 1,
   createdAt: new Date(),
   updatedAt: new Date()
 }], {});

@@ -24,6 +24,7 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
     "@sendgrid/mail": "^6.4.0",
+    "@types/sequelize": "^4.28.4",
     "@types/sinon": "^7.0.13",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
@@ -43,6 +44,7 @@
     "sequelize": "^5.10.2",
     "sinon": "^7.3.2",
     "swagger-ui-express": "^4.0.7",
+    "uuid": "^3.3.2",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {

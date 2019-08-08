@@ -1,9 +1,8 @@
 export const up = (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
   id: {
     allowNull: false,
-    autoIncrement: true,
     primaryKey: true,
-    type: Sequelize.INTEGER
+    type: Sequelize.UUID,
   },
   commentBody: {
     allowNull: false,
@@ -11,7 +10,7 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Com
   },
   userId: {
     allowNull: false,
-    type: Sequelize.INTEGER,
+    type: Sequelize.UUID,
     references: {
       model: 'Users',
       key: 'id'
@@ -19,7 +18,7 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Com
   },
   novelId: {
     allowNull: true,
-    type: Sequelize.INTEGER,
+    type: Sequelize.UUID,
     references: {
       model: 'Novels',
       key: 'id'
@@ -27,7 +26,7 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Com
   },
   parentId: {
     allowNull: true,
-    type: Sequelize.INTEGER,
+    type: Sequelize.UUID,
     references: {
       model: 'Comments',
       key: 'id'

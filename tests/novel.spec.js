@@ -10,12 +10,12 @@ const { userMock, novelMock } = mockData;
 
 let authToken;
 
-const endpointUser = '/api/v1/users';
+const endpointUser = '/api/v1/users/login';
 const endpointNovel = '/api/v1/novels';
 
 describe('Test for novel CRUD', () => {
   before((done) => {
-    const user = userMock.novelUser;
+    const user = userMock.seededUser1;
     chai.request(server)
       .post(endpointUser)
       .send(user)

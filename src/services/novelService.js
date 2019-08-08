@@ -38,6 +38,7 @@ const createNewNovel = async (novel, author) => {
       error: 'You already have a novel with this title'
     };
   }
+
   const createdNovel = await Novel.create({
     authorId: author.id,
     genreId: getGenre.id,

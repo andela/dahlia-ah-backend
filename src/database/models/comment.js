@@ -1,20 +1,26 @@
 export default (sequelize, DataTypes) => {
   const Comment = sequelize.define('Comment', {
+    id: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     commentBody: {
       allowNull: false,
       type: DataTypes.STRING
     },
     userId: {
       allowNull: false,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID
     },
     novelId: {
       allowNull: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID
     },
     parentId: {
       allowNull: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID
     }
   }, {});
   Comment.associate = (models) => {

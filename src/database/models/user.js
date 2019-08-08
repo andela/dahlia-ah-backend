@@ -1,10 +1,10 @@
-export default (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
+export default (Sequelize, DataTypes) => {
+  const User = Sequelize.define('User', {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
     },
     firstName: {
       allowNull: false,
@@ -54,11 +54,6 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.BOOLEAN,
       defaultValue: false
-    },
-    roleId: {
-      allowNull: false,
-      type: DataTypes.INTEGER,
-      defaultValue: 1
     },
     createdAt: {
       allowNull: false,
