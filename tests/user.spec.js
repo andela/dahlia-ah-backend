@@ -1,8 +1,10 @@
 import chaiHttp from 'chai-http';
+import sinon from 'sinon';
 import chai, { expect } from 'chai';
 import mockData from './mockData';
 import app from '../src';
 import userController from '../src/controllers/userController';
+import models from '../src/database/models';
 
 const { listUsers } = userController;
 
@@ -20,6 +22,8 @@ const {
 } = mockData;
 let authToken;
 
+const { Follower } = models;
+
 chai.use(chaiHttp);
 
 describe('USER ROUTES', () => {
@@ -33,6 +37,21 @@ describe('USER ROUTES', () => {
         done();
       });
   });
+  before((done) => {
+    chai.request(app)
+      .post(LOGIN_URL)
+      .send(validProfileLogin)
+      .end((error, response) => {
+        const { token } = response.body.user;
+        authToken = token;
+        done();
+      });
+  });
+  const seededUserId1 = '6dd5a28c-ce96-4866-b3e7-b29aa69aef97';
+  const seededUserId2 = 'fb94de4d-47ff-4079-89e8-b0186c0a3be8';
+  const seededUserId3 = '0ce36391-2c08-4703-bddb-a4ea8cccbbc5';
+  const invalidUUID = 'fb94de4d-47ff-4079-89e8-b0186';
+  const FOLLOW_URL = `${PROFILE_URL}/${seededUserId1}/follow`;
 
   describe('View user profile', () => {
     it('should be able to view a user profile', (done) => {
@@ -189,6 +208,140 @@ describe('USER ROUTES', () => {
           expect(response).to.have.status(401);
           expect(response.body).to.be.an('object');
           done();
+        });
+    });
+  });
+
+  describe('POST/DELETE profiles/:userId/follow', () => {
+    before((done) => {
+      chai.request(app)
+        .post(LOGIN_URL)
+        .send(validProfileLogin)
+        .end((error, response) => {
+          const { token } = response.body.user;
+          authToken = token;
+          done();
+        });
+    });
+
+    // ========================= FOLLOW USER ==========================
+    it('should follow a user', (done) => {
+      chai
+        .request(app)
+        .post(FOLLOW_URL)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(201);
+          expect(res.body).property('userId');
+          done(err);
+        });
+    });
+    it('should return error 400 if invalid UUID', (done) => {
+      chai
+        .request(app)
+        .post(`${PROFILE_URL}/${invalidUUID}/follow`)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(400);
+          expect(res.body).property('error').include('invalid request');
+          done(err);
+        });
+    });
+    it('should return error 403 if a user tries to follow self', (done) => {
+      chai
+        .request(app)
+        .post(`${PROFILE_URL}/${seededUserId2}/follow`)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(403);
+          expect(res.body).property('error').eql('You cannot follow yourself');
+          done(err);
+        });
+    });
+    it('should return conflict error 409 if user already followed', (done) => {
+      chai
+        .request(app)
+        .post(FOLLOW_URL)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(409);
+          expect(res.body).property('error').eql("You're already a follower");
+          done(err);
+        });
+    });
+
+    // ========================= UNFOLLOW USER ==========================
+    it('should unfollow a user', (done) => {
+      chai
+        .request(app)
+        .delete(FOLLOW_URL)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(200);
+          expect(res.body).property('message').a('string').contain('successfully unfollowed');
+          done(err);
+        });
+    });
+    it('should throw error if not already followed', (done) => {
+      chai
+        .request(app)
+        .delete(FOLLOW_URL)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(403);
+          expect(res.body).property('error').a('string').contain("you're not a follower");
+          done(err);
+        });
+    });
+
+    it('should return error 403 if a user tries to unfollow self', (done) => {
+      chai
+        .request(app)
+        .delete(`${PROFILE_URL}/${seededUserId2}/follow`)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(403);
+          expect(res.body).property('error').include('not allowed');
+          done(err);
+        });
+    });
+
+    it('should re-follow a user', (done) => {
+      chai
+        .request(app)
+        .post(FOLLOW_URL)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(201);
+          done(err);
+        });
+    });
+
+    it('should return error 500 on server error on unfollow', (done) => {
+      const stub = sinon.stub(Follower, 'destroy');
+      stub.throws(new Error('an error occured'));
+
+      chai
+        .request(app)
+        .delete(FOLLOW_URL)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(500);
+          done(err);
+        });
+    });
+
+    it('should return error 500 on create error', (done) => {
+      const stub = sinon.stub(Follower, 'create');
+      stub.throws(new Error('an error occured'));
+
+      chai
+        .request(app)
+        .post(`${PROFILE_URL}/${seededUserId3}/follow`)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(500);
+          done(err);
         });
     });
   });

@@ -19,16 +19,6 @@ const findNovel = async (param) => {
 };
 
 /**
- * Finds a novel from the database by id
- * @param {string} param
- * @returns {object} a novel object
- */
-
-const findNovelById = param => Novel.findOne({
-  where: { id: param }
-});
-
-/**
  * Finds a novelLikes from the database by userid and novelId
  * @param {string} userId
  * @param {string} novelId
@@ -130,7 +120,6 @@ export default {
   findGenre,
   findNovel,
   addNovel,
-  findNovelById,
   findNovelLike,
   removeNovelLike,
   findAllNovels

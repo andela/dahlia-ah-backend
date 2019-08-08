@@ -6,7 +6,7 @@ const {
   authHelper, successResponse, errorResponse, responseMessage, verifyUser
 } = helpers;
 const { userServices: { findUser, findFollower, getAllUsers } } = services;
-const { User } = models;
+const { User, Follower } = models;
 
 /**
    * user signup controller
@@ -158,6 +158,78 @@ const listUsers = async (request, response) => {
   }
 };
 
+/*
+   * follow users feature
+   * @param {Object} req - server request
+   * @param {Object} res - server response
+   * @return {Object} - custom response
+   */
+const follow = async (req, res) => {
+  const { userId } = req.params;
+  const authUserId = req.user.id;
+  if (userId === authUserId) {
+    return responseMessage(res, 403, { error: 'You cannot follow yourself' });
+  }
+
+  try {
+    const follower = await findFollower(userId, authUserId);
+    if (follower) {
+      return responseMessage(res, 409, { error: "You're already a follower" });
+    }
+
+    await Follower.create({
+      followerId: authUserId,
+      followeeId: userId
+    });
+
+    const user = await findUser(userId);
+    const { id, } = user;
+    const data = {
+      userId: id,
+      following: true
+    };
+    return responseMessage(res, 201, data);
+  } catch (error) {
+    return responseMessage(res, 500, { error: 'an error occured' });
+  }
+};
+
+/*
+   * unfollow user feature
+   * @param {Object} req - server request
+   * @param {Object} res - server response
+   * @return {Object} - custom response
+   */
+const unfollow = async (req, res) => {
+  const { userId } = req.params;
+  const authUserId = req.user.id;
+  if (userId === authUserId) {
+    return responseMessage(res, 403, { error: 'operation not allowed' });
+  }
+  try {
+    const follower = await findFollower(userId, authUserId);
+    if (!follower) {
+      return responseMessage(res, 403, { error: "you're not a follower" });
+    }
+
+    await Follower.destroy({
+      where: {
+        followerId: authUserId,
+        followeeId: userId
+      }
+    });
+  } catch (error) {
+    return responseMessage(res, 500, { error: 'an error occured' });
+  }
+
+
+  const data = {
+    message: 'successfully unfollowed',
+  };
+
+  return responseMessage(res, 200, data);
+};
+
 export default {
-  getProfile, editProfile, signUp, login, listUsers
+  getProfile, editProfile, signUp, login, listUsers, follow, unfollow
 };
