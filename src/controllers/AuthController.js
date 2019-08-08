@@ -12,7 +12,7 @@ const {
   userServices: { findUser, updateUser },
   passwordServices: { getPreviousPasswords, deletePreviousPassword, createPreviousPassword }
 } = services;
-const { User } = models;
+const { User, BlacklistedToken } = models;
 
 /**
  *
@@ -112,4 +112,28 @@ const updateStatus = async (req, res) => {
   return successResponse(res, 200, { message: 'You have sucessfully verified your email' });
 };
 
-export default { forgotPassword, updateStatus, changePassword };
+/**
+ *
+ * @name logOut
+ * @param {object} req
+ * @param {object} res
+ * @returns {json} - json
+ */
+const logOut = (req, res) => {
+  try {
+    const { token, decoded: { exp } } = req;
+    BlacklistedToken.create({ token, expTime: exp });
+    return res.status(200).json({
+      message: 'Logout was successful'
+    });
+  } catch (error) {
+    return responseMessage(res, 500, { error: 'Something went wrong' });
+  }
+};
+
+export default {
+  forgotPassword,
+  updateStatus,
+  logOut,
+  changePassword
+};

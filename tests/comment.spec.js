@@ -51,7 +51,7 @@ describe('COMMENT ROUTES', () => {
         .end((error, response) => {
           expect(response).to.have.status(401);
           expect(response.body).to.be.an('object');
-          expect(response.body.error).to.equal('token expired, you have to be signed in to continue');
+          expect(response.body.error).to.equal('token expired');
           done();
         });
     });
@@ -64,7 +64,7 @@ describe('COMMENT ROUTES', () => {
         .end((error, response) => {
           expect(response).to.have.status(401);
           expect(response.body).to.be.an('object');
-          expect(response.body.error).to.equal('you have to be signed in to continue');
+          expect(response.body.error).to.equal('invalid token');
           done();
         });
     });

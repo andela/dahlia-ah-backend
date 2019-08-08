@@ -39,8 +39,8 @@ describe('Test for base api base url', () => {
     invalidIdUrl = `/api/v1/auth/verify/${invalidIdTokenData}`;
   });
 
-  it('should return a sucess message on sucessful change of verified status', async () => {
-    await User.update({
+  it('should return a sucess message on sucessful change of verified status', (done) => {
+    User.update({
       verifiedToken: tokenData
     }, {
       where: {
@@ -52,11 +52,12 @@ describe('Test for base api base url', () => {
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.message).to.equal('You have sucessfully verified your email');
+        done();
       });
   });
 
-  it('should return an error message for invalid token', async () => {
-    await User.update({
+  it('should return an error message for invalid token', (done) => {
+    User.update({
       verifiedToken: invalidToken
     }, {
       where: {
@@ -67,7 +68,8 @@ describe('Test for base api base url', () => {
       .patch(`${invalidTokenUrl}`)
       .end((err, res) => {
         expect(res).to.have.status(401);
-        expect(res.body.error).to.equal('you have to be signed in to continue');
+        expect(res.body.error).to.equal('invalid token');
+        done();
       });
   });
 
@@ -120,7 +122,7 @@ describe('Test for base api base url', () => {
       .patch(`${expiredTokenUrl}`)
       .end((err, res) => {
         expect(res).to.have.status(401);
-        expect(res.body.error).to.equal('token expired, you have to be signed in to continue');
+        expect(res.body.error).to.equal('token expired');
         done();
       });
   });

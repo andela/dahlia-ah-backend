@@ -6,7 +6,9 @@ const auth = express.Router();
 const AUTH_URL = '/auth';
 
 const { userValidator, verifyToken } = middlewares;
-const { forgotPassword, updateStatus, changePassword } = AuthController;
+const {
+  forgotPassword, updateStatus, logOut, changePassword
+} = AuthController;
 
 // forgot password endpoint
 auth.post(`${AUTH_URL}/forgotpassword`, userValidator.forgotPassword, forgotPassword);
@@ -16,5 +18,7 @@ auth.post(`${AUTH_URL}/changepassword`, verifyToken, userValidator.changePasswor
 
 // verifyUser route
 auth.patch(`${AUTH_URL}/verify/:token`, verifyToken, updateStatus);
+
+auth.get(`${AUTH_URL}/logout`, verifyToken, logOut);
 
 export default auth;
