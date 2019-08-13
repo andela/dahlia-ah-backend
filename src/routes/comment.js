@@ -4,10 +4,11 @@ import middlewares from '../middlewares';
 
 const comment = express.Router();
 const COMMENT_URL = '/novels/:slug/comments';
+const CommentLikeUrl = '/comment/:commentId/like';
 
 const { verifyToken, commentValidator, authorizeUser } = middlewares;
 const {
-  postComment, replyComment, fetchCommentHistory, editComment
+  postComment, replyComment, fetchCommentHistory, editComment, likeComment
 } = commentController;
 
 // Route to create a comment
@@ -19,5 +20,5 @@ comment.post(`${COMMENT_URL}/:parentId`, verifyToken, commentValidator.replyComm
 // comment history
 comment.get(`${COMMENT_URL}/:commentId`, verifyToken, commentValidator.getEditedComment, fetchCommentHistory);
 comment.patch(`${COMMENT_URL}/:commentId`, verifyToken, commentValidator.editComment, editComment);
-
+comment.post(`${CommentLikeUrl}`, verifyToken, likeComment);
 export default comment;

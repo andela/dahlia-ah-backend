@@ -110,6 +110,10 @@ export default (Sequelize, DataTypes) => {
 
     User.hasMany(models.Follower, {
       foreignKey: 'followeeId',
+    });
+
+    User.hasOne(models.CommentLike, {
+      foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
 
