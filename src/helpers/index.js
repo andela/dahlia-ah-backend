@@ -5,8 +5,8 @@ import emailMessages from './emailMessages';
 import responseMessage from './responseMessage';
 import validators from './validator';
 import verifyUser from './verifyUser';
-import extractNovels from './extractNovels';
 import notificationConfig from './notificationConfig';
+import novelHelpers from './novelHelpers';
 
 const { forgotPasswordMessage, emailNotificationMessage } = emailMessages;
 
@@ -19,7 +19,7 @@ export default {
   responseMessage,
   validators,
   verifyUser,
-  extractNovels,
   emailNotificationMessage,
-  notificationConfig
+  notificationConfig,
+  novelHelpers
 };

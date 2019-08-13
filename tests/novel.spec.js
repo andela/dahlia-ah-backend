@@ -13,7 +13,6 @@ const { SECRET_KEY } = process.env;
 
 const { expect } = chai;
 const { Novel } = models;
-const { extractNovels } = helpers;
 const { Genre } = models;
 const {
   userMock: { validProfileLogin, validReaderProfileLogin },
@@ -21,6 +20,9 @@ const {
     validNovel, validGenre, invalidGenre, emptyGenre, existingGenre
   }
 } = mockData;
+const { novelHelpers: { extractNovels } } = helpers;
+
+let authToken, authReaderToken;
 
 const API_VERSION = '/api/v1';
 const LOGIN_URL = `${API_VERSION}/users/login`;
@@ -29,7 +31,6 @@ const GENRE_URL = `${API_VERSION}/genres`;
 const nonexistNovelEndpoint = `${NOVEL_URL}/3c3b6226-b691-472e-babf-a96c6eb373f0/like`;
 const invalidToken = 'ksjbvksvkerlgvdsbv.ergrpewgjperger.gergnkerl';
 const nonExistUserToken = jwt.sign({ id: '8b031dd76-7348-425c-98ea-7b4bd5812c6f' }, process.env.SECRET_KEY);
-let authToken, authReaderToken;
 let endpoint;
 
 // token of logged in user Eden Hazard in the database
@@ -332,6 +333,122 @@ describe('Test for novel CRUD', () => {
 
       expect(results).to.be.an('array');
       expect(results.length).to.equal(0);
+    });
+  });
+
+  describe('Search functionality', () => {
+    it('should return an error response if the title supplied is empty', (done) => {
+      chai.request(server)
+        .get(NOVEL_URL)
+        .query({ title: '' })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('title');
+          expect(response.body.errors[0].message).to.equal('title cannot be empty');
+          done();
+        });
+    });
+
+    it('should return an error response if the genre supplied is empty', (done) => {
+      chai.request(server)
+        .get(NOVEL_URL)
+        .query({ genre: '' })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('genre');
+          expect(response.body.errors[0].message).to.equal('genre cannot be empty');
+          done();
+        });
+    });
+
+    it('should return an error response if the author supplied is empty', (done) => {
+      chai.request(server)
+        .get(NOVEL_URL)
+        .query({ author: '' })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('author');
+          expect(response.body.errors[0].message).to.equal('author cannot be empty');
+          done();
+        });
+    });
+
+    it('should return an error response if the keyword supplied is empty', (done) => {
+      chai.request(server)
+        .get(NOVEL_URL)
+        .query({ keyword: '' })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('keyword');
+          expect(response.body.errors[0].message).to.equal('keyword cannot be empty');
+          done();
+        });
+    });
+
+    it('should return an error response if the keyword is supplied with any other generic param', (done) => {
+      chai.request(server)
+        .get(NOVEL_URL)
+        .query({ keyword: 'john', author: 'doe' })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('error');
+          expect(response.body.error).to.be.a('string');
+          expect(response.body.error).to.equal('keyword cannot be used with title, author or genre');
+          done();
+        });
+    });
+
+    it('should successfully return the novels based on single parameter supplied', (done) => {
+      chai.request(server)
+        .get(NOVEL_URL)
+        .query({ author: 'eden' })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.have.keys(['currentPage', 'limit', 'totalPages', 'message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('succesfully returned novels');
+          expect(response.body.data.length).to.not.equal(0);
+          done();
+        });
+    });
+
+    it('should successfully return the novels based on multiple parameter supplied', (done) => {
+      chai.request(server)
+        .get(NOVEL_URL)
+        .query({ author: 'eden', title: 'game' })
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.have.keys(['currentPage', 'limit', 'totalPages', 'message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('succesfully returned novels');
+          expect(response.body.data.length).to.not.equal(0);
+          done();
+        });
     });
   });
 });

@@ -86,10 +86,11 @@ const isValidAvatarUrl = () => check('avatarUrl')
    */
 const isNotEmpty = field => check(field)
   .trim()
+  .exists()
+  .withMessage(`${field} is a required field`)
   .not()
   .isEmpty()
-  .exists()
-  .withMessage(`${field} is a required field`);
+  .withMessage(`${field} cannot be empty`);
 
 /**
    * @returns {Object} - Express-validator

@@ -2,15 +2,15 @@ import models from '../database/models';
 import services from '../services';
 import helpers from '../helpers';
 
+const {
+  errorResponse, successResponse, novelHelpers: { extractNovels, filter }, responseMessage
+} = helpers;
 const { Novel } = models;
 const {
   novelServices: { addNovel, findGenre, findAllNovels },
   notificationServices: { addNotification }
 } = services;
-const {
-  errorResponse, successResponse,
-  extractNovels, responseMessage
-} = helpers;
+
 const { Genre } = models;
 
 /**
@@ -50,9 +50,18 @@ const createNovel = async (req, res) => {
  * @returns {object} json
  */
 const getNovels = async (request, response) => {
-  const { page = 1, limit = 20 } = request.query;
+  const {
+    title, author, genre, keyword, page = 1, limit = 20
+  } = request.query;
+  const standardQueries = title || author || genre;
+  const queryFilter = filter(title, genre, author, keyword);
   try {
-    const { count } = await Novel.findAndCountAll();
+    if (keyword && standardQueries) {
+      return responseMessage(response, 400, {
+        error: 'keyword cannot be used with title, author or genre'
+      });
+    }
+    const { count } = await Novel.findAndCountAll(queryFilter);
     if (!count) {
       return responseMessage(response, 404, { message: 'no novels found in database', data: [] });
     }
@@ -61,7 +70,7 @@ const getNovels = async (request, response) => {
       return responseMessage(response, 404, { error: 'page not found' });
     }
     const offset = limit * (page - 1);
-    const results = await findAllNovels(offset, limit);
+    const results = await findAllNovels(offset, limit, queryFilter);
     const novels = extractNovels(results);
     response.status(200).json({
       message: 'succesfully returned novels',

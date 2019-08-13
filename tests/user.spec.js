@@ -223,7 +223,7 @@ describe('Test for getting users', () => {
         .get(endpointUser)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.error).to.equal('no token provided');
+          expect(res.body.error).to.equal('you have to be signed in to continue');
           done();
         });
     });
