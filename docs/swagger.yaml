@@ -286,6 +286,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/notFoundResponse"
+  '/novel/{slug}':
+    get:
+      tags:
+        - Users
+      summary: View a novel details.
+      security:
+      - ApiKeyAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: novel details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NovelInput'
+        404:
+          description: novel not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: object
+                    properties:
+                      message:
+                          type: string
+                          example: 'novel not found'
         500:
           description: server error
           content:

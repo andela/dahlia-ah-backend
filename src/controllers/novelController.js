@@ -7,7 +7,9 @@ const {
 } = helpers;
 const { Novel } = models;
 const {
-  novelServices: { addNovel, findGenre, findAllNovels },
+  novelServices: {
+    addNovel, findGenre, findNovel, findAllNovels
+  },
   notificationServices: { addNotification }
 } = services;
 
@@ -113,4 +115,26 @@ const createGenre = async (request, response) => {
   }
 };
 
-export default { createNovel, getNovels, createGenre };
+/**
+ * @description returns novel with slug
+ * @param {object} request express request object
+ * @param {object} response express response object
+ * @param {object} next express next argument
+ * @returns {json} json
+ */
+const getNovel = async (request, response) => {
+  try {
+    const { slug } = request.params;
+    const novel = await findNovel(slug);
+    if (!novel) {
+      return responseMessage(response, 404, { error: 'novel not found' });
+    }
+    return responseMessage(response, 200, { novel });
+  } catch (error) {
+    responseMessage(response, 500, { error: error.message });
+  }
+};
+
+export default {
+  createNovel, getNovel, getNovels, createGenre
+};

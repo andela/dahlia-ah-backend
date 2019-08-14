@@ -1,9 +1,11 @@
 import { Op } from 'sequelize';
 import models from '../database/models';
+import helpers from '../helpers';
 
 const {
-  Genre, Novel, Like
+  Genre, Novel, Like, User
 } = models;
+const { generateReadTime } = helpers;
 
 /**
  * Finds a novel from the database by slug
@@ -13,7 +15,8 @@ const {
 
 const findNovel = async (param) => {
   const novel = await Novel.findOne({
-    where: { slug: param }
+    where: { slug: param },
+    include: [{ model: Genre, attributes: ['name'] }, { model: User, attributes: ['id', 'firstName', 'lastName', 'bio', 'avatarUrl'] }],
   });
   return novel;
 };
@@ -71,6 +74,8 @@ const addNovel = async (novel, author) => {
   const getGenre = await Genre.findOne({ where: { name: genre } });
   const slug = `${title.toLowerCase().split(' ').join('-')}-${author.id}`;
   const foundNovel = await Novel.findOne({ where: { slug } });
+  const generatedReadTime = generateReadTime(body);
+  const readTime = (generatedReadTime > 0) ? generatedReadTime : 1;
   if (foundNovel) {
     return {
       status: 409,
@@ -84,7 +89,8 @@ const addNovel = async (novel, author) => {
     slug,
     title,
     description,
-    body
+    body,
+    readTime
   });
   return {
     id: createdNovel.id,
@@ -94,6 +100,7 @@ const addNovel = async (novel, author) => {
     body: createdNovel.body,
     genre,
     author: `${author.firstName} ${author.lastName}`,
+    readTime,
     createdAt: createdNovel.createdAt,
     updatedAt: createdNovel.updatedAt
   };
