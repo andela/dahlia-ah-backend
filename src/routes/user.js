@@ -1,13 +1,23 @@
 import express from 'express';
-import userValidator from '../middlewares/userValidator';
-import { signUp, login } from '../controllers/userController';
+import middlewares from '../middlewares';
+import userController from '../controllers/userController';
 
+const {
+  userValidator: {
+    signUpValidator, loginValidator, profileValidator
+  },
+  verifyToken
+} = middlewares;
+const { signUp, login, getProfile } = userController;
 const user = express.Router();
 
-const middlewares = [userValidator.signUp];
-const loginValidator = [userValidator.login];
+// Route to sign up a user
+user.post('/users', signUpValidator, signUp);
 
-user.post('/users', middlewares, signUp);
+// Route to login a user
 user.post('/users/login', loginValidator, login);
+
+// Route to get user profile by userId
+user.get('/profiles/:userId', verifyToken, profileValidator, getProfile);
 
 export default user;

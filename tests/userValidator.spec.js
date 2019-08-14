@@ -81,29 +81,6 @@ describe('A test to check for user last name during signup validations', () => {
   });
 });
 
-describe('A test to check for username during signup validations', () => {
-  it('should return a status 400 on invalid username', (done) => {
-    chai.request(app)
-      .post(url)
-      .send(userMock.invalidUserName)
-      .end((err, res) => {
-        expect(res).to.have.status(400);
-        expect(res.body.errors[0].field).to.equal('username');
-        done();
-      });
-  });
-  it('should return a status 400 on an empty username', (done) => {
-    chai.request(app)
-      .post(url)
-      .send(userMock.emptyUserName)
-      .end((err, res) => {
-        expect(res).to.have.status(400);
-        expect(res.body.errors[0].field).to.equal('username');
-        done();
-      });
-  });
-});
-
 describe('A test to check for password during signup validations', () => {
   it('should return a status 400 on invalid password', (done) => {
     chai.request(app)

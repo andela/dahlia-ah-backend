@@ -1,9 +1,9 @@
 import models from '../database/models';
 
-const { User } = models;
+const { User, Follower } = models;
 
 /**
- * Finds a user from the database by email or id
+ * @description Finds a user from the database by id or email
  * @param {string} param
  * @returns {object} a user object
  */
@@ -17,6 +17,18 @@ const findUser = async (param) => {
   return user;
 };
 
+/**
+ * @description Finds a follower following a user
+ * @param {string} followeeId
+ * @param {string} followerId
+ * @returns {object} a user object
+ */
+
+const findFollower = async (followeeId, followerId) => {
+  const follower = await Follower.findOne({ where: { followeeId, followerId } });
+  return follower;
+};
+
 export default {
-  findUser
+  findUser, findFollower
 };

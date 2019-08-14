@@ -19,11 +19,6 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true
     },
-    username: {
-      allowNull: false,
-      type: DataTypes.STRING,
-      unique: true
-    },
     password: {
       allowNull: false,
       type: DataTypes.STRING
@@ -50,11 +45,6 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    paymentStatus: {
-      allowNull: false,
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE
@@ -72,6 +62,16 @@ export default (Sequelize, DataTypes) => {
 
     User.hasMany(models.Comment, {
       foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
+
+    User.hasMany(models.Follower, {
+      foreignKey: 'followerId',
+      onDelete: 'CASCADE'
+    });
+
+    User.hasMany(models.Follower, {
+      foreignKey: 'followeeId',
       onDelete: 'CASCADE'
     });
   };

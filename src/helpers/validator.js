@@ -32,23 +32,10 @@ const isValidName = field => check(field)
   .withMessage(`${field} is a required field`);
 
 /**
-   * @param {String} field
-   * @returns {Object} - Express-validator
-   */
-const isValidUserName = field => check(field)
-  .trim()
-  .escape()
-  .isAlphanumeric()
-  .withMessage(`${field} should contain aphanumeric characters`)
-  .not()
-  .isEmpty()
-  .withMessage(`${field} is a required field`);
-
-/**
    * @returns {Object} - Express-validator
    */
 const isValidPassword = () => check('password').isLength({ min: 8 })
-  .withMessage('password must be atleast 8 characters long').not()
+  .withMessage('password must be at least 8 characters long').not()
   .isEmpty()
   .withMessage('password is a required field')
   .isAlphanumeric()
@@ -118,7 +105,6 @@ export default {
   isValidEmail,
   isValidName,
   isValidPassword,
-  isValidUserName,
   isNotEmpty,
   isValidGenre,
   isNotEmptySlug,

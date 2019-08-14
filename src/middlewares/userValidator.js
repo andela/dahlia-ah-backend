@@ -1,25 +1,27 @@
 import helpers from '../helpers';
 import errorHandler from './errorHandler';
 
-
 const { validators } = helpers;
 const {
-  isValidEmail, isValidName, isValidUserName, isValidPassword
+  isValidEmail, isValidName, isValidId, isValidPassword
 } = validators;
 
 const { validatorError } = errorHandler;
 
 const userValidator = {
-  signUp: [
+  signUpValidator: [
     isValidEmail(),
     isValidName('firstName'),
     isValidName('lastName'),
-    isValidUserName('username'),
     isValidPassword(),
     validatorError
   ],
-  login: [
+  loginValidator: [
     isValidEmail(),
+    validatorError
+  ],
+  profileValidator: [
+    isValidId('userId'),
     validatorError
   ],
   forgotPassword: [

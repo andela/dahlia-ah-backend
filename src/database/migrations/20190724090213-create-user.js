@@ -17,11 +17,6 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Use
     type: Sequelize.STRING,
     unique: true
   },
-  username: {
-    allowNull: false,
-    type: Sequelize.STRING,
-    unique: true
-  },
   password: {
     allowNull: false,
     type: Sequelize.STRING
@@ -45,11 +40,6 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Use
     defaultValue: false
   },
   isSubscribed: {
-    allowNull: false,
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
-  },
-  paymentStatus: {
     allowNull: false,
     type: Sequelize.BOOLEAN,
     defaultValue: false

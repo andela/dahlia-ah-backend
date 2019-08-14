@@ -1,5 +1,4 @@
-import express from 'express';
-import { urlencoded, json } from 'body-parser';
+import express, { urlencoded, json } from 'express';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
 import debug from 'debug';
@@ -49,14 +48,14 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(documentation));
 
 app.use('/api/v1', routes);
 
-// / catch 404 and forward to error handler
+// catch 404 and forward to error handler
 app.use((req, res, next) => {
   const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
-// / error handlers
+// error handlers
 
 // development error handler
 // will print stacktrace
@@ -77,12 +76,12 @@ if (!isProduction || !isTest) {
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
+  if (res.headersSent) { return next(err); }
   res.json({
     errors: {
-      message: err.message,
-      error: {}
+      message: err.message
     }
   });
 });
