@@ -11,7 +11,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: true,
-  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  roleId: '2c4dfb3f-1798-43d4-8eb6-1c125994a263',
   createdAt: new Date(),
   updatedAt: new Date()
 },

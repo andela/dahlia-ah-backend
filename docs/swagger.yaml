@@ -746,6 +746,75 @@ paths:
                   error:
                     type: string
                     example: no comment found with the provided id
+  /novels/{slug}/report:
+    post:
+      summary: Report a novel
+      description: Replort a novel that violates the terms and condition of the house
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                body:
+                  type: string
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: succesfully reported an article
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: report was created successfully
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: body
+                        message:
+                          type: string
+                          example: body cannot be empty
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: novel not found
   '/profiles':
     patch:
       tags:
