@@ -46,6 +46,17 @@ const userValidator = {
   followUserValidator: [
     isValidUUIDParam('userId'),
     paramsValidatorError
+  ],
+  validateCreateUser: [
+    isValidEmail(),
+    isValidName('firstName'),
+    isValidName('lastName'),
+    isValidName('roleName'),
+    validatorError
+  ],
+  validateUUID: [
+    isValidUUIDParam('userId'),
+    validatorError
   ]
 };
 

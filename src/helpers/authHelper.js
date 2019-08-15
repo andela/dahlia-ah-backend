@@ -32,4 +32,31 @@ const generateToken = (payload) => {
   return token;
 };
 
-export default { hashedPassword, comparePassword, generateToken };
+/**
+   * Generate a random password
+   * @returns {String} randomPassword
+   * @returns {String} hashedRandomPassword
+   */
+const generateRandomPassword = () => {
+  const upperLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const lowerLetters = upperLetters.toLowerCase();
+  const digits = '0123456789';
+  const alphanumeric = upperLetters + lowerLetters + digits;
+  const alphanumericArray = alphanumeric.split('');
+  const arrayLength = alphanumericArray.length;
+  let randomPassword = '';
+  const passwordLength = 8;
+  let i;
+
+  for (i = 0; i <= passwordLength; i += 1) {
+    const randomNumber = Math.floor(Math.random() * arrayLength);
+    const char = alphanumericArray[randomNumber];
+    randomPassword += char;
+  }
+
+  return { randomPassword, hashedRandomPassword: hashedPassword(randomPassword) };
+};
+
+export default {
+  hashedPassword, comparePassword, generateToken, generateRandomPassword
+};

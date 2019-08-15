@@ -1,11 +1,18 @@
+import debug from 'debug';
 import models from '../database/models';
 import helpers from '../helpers';
 import services from '../services';
 
+const log = debug('dev');
+
 const {
   authHelper, successResponse, errorResponse, responseMessage, verifyUser
 } = helpers;
-const { userServices: { findUser, findFollower, getAllUsers } } = services;
+const {
+  userServices: {
+    findUser, findFollower, getAllUsers, addUser
+  }
+} = services;
 const { User, Follower } = models;
 
 /**
@@ -80,6 +87,8 @@ const login = async (req, res) => {
   const data = {
     user: {
       id: foundUser.id,
+      firstname: foundUser.firstName,
+      lastName: foundUser.lastName,
       email: foundUser.email,
       token: authHelper.generateToken({ id: foundUser.id }),
       bio: foundUser.bio
@@ -230,6 +239,55 @@ const unfollow = async (req, res) => {
   return responseMessage(res, 200, data);
 };
 
+/**
+   * ADMIN Get one user
+   * @param {Object} req - server request
+   * @param {Object} res - server response
+   * @return {Object} - custom response
+   */
+const getUser = async (req, res) => {
+  const { userId } = req.params;
+  const { dataValues: user } = await findUser(userId);
+
+  const response = {
+    message: 'successful',
+    data: user
+  };
+
+  return responseMessage(res, 200, response);
+};
+
+/**
+       * ADMIN create user
+       * @param {Object} req - server request
+       * @param {Object} res - server response
+       * @return {Object} - custom response
+       */
+const createUser = async (req, res) => {
+  try {
+    const foundUser = await findUser(req.body.email);
+    if (foundUser) {
+      return responseMessage(res, 409, { error: 'user with email already exists' });
+    }
+
+    const createdUser = await addUser(req.body);
+    const response = {
+      data: {
+        firstName: createdUser.firstName,
+        lastName: createdUser.lastName,
+        email: createdUser.email,
+        roleId: createdUser.roleId
+      }
+    };
+
+    return responseMessage(res, 201, response);
+  } catch (error) {
+    log(error.message);
+    return responseMessage(res, 500, { error: 'an error occurred' });
+  }
+};
+
+
 export default {
-  getProfile, editProfile, signUp, login, listUsers, follow, unfollow
+  getProfile, editProfile, signUp, login, listUsers, follow, unfollow, createUser, getUser
 };
