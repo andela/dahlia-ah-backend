@@ -176,6 +176,34 @@ const isValidUUIDParam = paramName => param(paramName)
   .isUUID()
   .withMessage('invalid request');
 
+/**
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
+const isValidPhoneNumber = field => check(field)
+  .trim()
+  .isMobilePhone()
+  .withMessage(`${field} requires a valid phone number`);
+
+/**
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
+const isValidSubcription = field => check(field)
+  .trim()
+  .isIn(['true', 'false'])
+  .withMessage(`${field} requires a valid phone number`);
+
+/**
+ * Validates allowed role names
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
+const isValidRoleName = field => check(field)
+  .trim()
+  .isIn(['reader', 'author', 'admin', 'superadmin'])
+  .withMessage(`${field} can only be one of: 'reader', 'author', 'admin', 'superadmin'`);
+
 export default {
   isValidEmail,
   isValidName,
@@ -191,5 +219,8 @@ export default {
   isValidInt,
   isNotTypeOfReport,
   isBoolean,
-  isValidUUIDParam
+  isValidUUIDParam,
+  isValidPhoneNumber,
+  isValidSubcription,
+  isValidRoleName
 };

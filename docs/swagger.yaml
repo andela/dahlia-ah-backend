@@ -24,22 +24,28 @@ servers:
 tags:
 - name: Users
   description: Operations available for user endpoints
+- name: Admin
+  description: Operations available for Admin and Super-admin
+- name: Auth
+  description: Register and login operations
 
 paths:
   /users:
     post:
       tags:
-        - Users
-      summary: Creates a new user.
+        - Admin
+      summary: Super Admin endpoint for creating a new user.
+      security:
+      - ApiKeyAuth: []
       requestBody:
         description: fields containing user data
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserRegisterInput'
+              $ref: '#/components/schemas/SuperAdminCreateInput'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserRegisterInput'
+              $ref: '#/components/schemas/SuperAdminCreateInput'
         required: true
       responses:
         201:
@@ -47,7 +53,52 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: '#/components/schemas/User'
+        401:
+          description: unathorized
+        403:
+          description: Forbidden. Permission needed.
+        409:
+          description: resource already exists
+        500:
+          description: internal server error 
+    
+    get:
+      tags:
+        - Users
+      summary: Gets all users
+      responses:
+        200:
+          description: request successful
+        401:
+          description: Authentication failed
+      security:
+      - token: [] 
+  
+  /users/{userId}:
+    get:
+      tags:
+        - Admin
+      summary: Admin endpoint for fetching user by id
+      description: Returns a single user
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to fetch
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: '#/components/schemas/User'
         400:
           description: bad input parameter
           content:
@@ -62,25 +113,92 @@ paths:
                       properties:
                         field:
                           type: string
-                          example: email
+                          example: userId
                         message:
                           type: string
-                          example: the email address you supplied is invalid
-        409:
-          description: resource already exists
+                          example: invalid request
+        403:
+          description: Forbidden. Permission needed.
+        404:
+          description: not found
         500:
-          description: internal server error 
-    get:
+          description: internal server error
+    patch:
       tags:
-        - Users
-      summary: Gets all users
+        - Admin
+      summary: Admin endpoint for updating a user by id
+      description: Updates a single user
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to fetch
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
       responses:
         200:
-          description: request successful
-        401:
-          description: Authentication failed
-      security:
-      - token: [] 
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/x-www-form-urlencoded:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: userId
+                        message:
+                          type: string
+                          example: invalid request
+        403:
+          description: Forbidden. Permission needed
+        404:
+          description: not found
+        500:
+          description: internal server error
+    delete:
+      tags:
+        - Admin
+      summary: Super admin endpoint for deleting a user
+      description: delete a user
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to fetch
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        403:
+          description: Forbidden. Permission needed
+        404:
+          description: not found
+        500:
+          description: internal server error
+  
   /notifications:
     get:
       tags:
@@ -285,41 +403,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/notFoundResponse"
-  '/novel/{slug}':
-    get:
-      tags:
-        - Users
-      summary: View a novel details.
-      security:
-      - ApiKeyAuth: []
-      parameters:
-        - name: slug
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: novel details
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/NovelInput'
-        404:
-          description: novel not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: 
-                  error:
-                    type: object
-                    properties:
-                      message:
-                          type: string
-                          example: 'novel not found'
         500:
           description: server error
           content:
@@ -353,10 +436,10 @@ paths:
           description: resource already exists
         500:
           description: internal server error                  
-  /users/login:
+  /auth/login:
     post:
       tags:
-        - Users
+        - Auth
       summary: Login an existing user with email
       requestBody:
         description: fields containing user login data
@@ -381,6 +464,61 @@ paths:
           description: resource already exists
         500:
           description: internal server error           
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Registers a new user
+      requestBody:
+        description: fields containing user data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRegisterInput'
+        required: true
+      responses:
+        201:
+          description: user created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        400:
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: email
+                        message:
+                          type: string
+                          example: the email address you supplied is invalid
+        409:
+          description: resource already exists
+        500:
+          description: internal server error 
+    get:
+      tags:
+        - Users
+      summary: Gets all users
+      responses:
+        200:
+          description: request successful
+        401:
+          description: Authentication failed
+      security:
+      - token: [] 
   /auth/verify/{token}:
     patch:
       tags:
@@ -1135,14 +1273,6 @@ paths:
       - Comments
       summary: Comments edit history
       description: Comment edit history
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                commentBody:
-                  type: string
       parameters:
         - name: slug
           in: path
@@ -1217,7 +1347,7 @@ paths:
   /auth/logout:
     get:
       tags:
-        - Users
+        - Auth
       summary: Logs out a user
       responses:
         200:
@@ -1615,6 +1745,27 @@ components:
         comment:
           type: string
           example: There is a missing exclamation
+    SuperAdminCreateInput:
+      required:
+        - firstName
+        - lastName
+        - email
+        - roleName
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: john
+        lastName:
+          type: string
+          example: doe
+        email:
+          type: string
+          example: johndoe@email.com
+        roleName:
+          type: string
+          example: author
+  
   securitySchemes:
     token:
       type: apiKey

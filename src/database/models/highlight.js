@@ -8,6 +8,7 @@ export default (Sequelize, DataTypes) => {
     },
     novelId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       type: DataTypes.UUID,
       references: {
         model: 'Novels',
@@ -16,6 +17,7 @@ export default (Sequelize, DataTypes) => {
     },
     readerId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       type: DataTypes.UUID,
       references: {
         model: 'Users',

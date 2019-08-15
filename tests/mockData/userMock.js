@@ -161,7 +161,7 @@ export default {
     password: 'jamiefoxx'
   },
   seededUser: {
-    id: 'ca849dff-da64-424a-a336-8bf1b59c5105',
+    id: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
     email: 'jamesbond@gmail.com',
     password: 'jamesbond'
   },

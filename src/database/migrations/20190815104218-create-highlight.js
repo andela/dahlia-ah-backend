@@ -7,6 +7,7 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Hig
   novelId: {
     allowNull: false,
     type: Sequelize.UUID,
+    onDelete: 'CASCADE',
     references: {
       model: 'Novels',
       key: 'id'
@@ -14,6 +15,7 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Hig
   },
   readerId: {
     allowNull: false,
+    onDelete: 'CASCADE',
     type: Sequelize.UUID,
     references: {
       model: 'Users',

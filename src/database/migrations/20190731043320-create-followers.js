@@ -7,18 +7,10 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Fol
   followeeId: {
     allowNull: false,
     type: Sequelize.UUID,
-    references: {
-      model: 'Users',
-      key: 'id'
-    },
   },
   followerId: {
     type: Sequelize.UUID,
     allowNull: false,
-    references: {
-      model: 'Users',
-      key: 'id'
-    },
   },
   createdAt: {
     allowNull: false,
