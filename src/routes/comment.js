@@ -5,13 +5,13 @@ import middlewares from '../middlewares';
 const comment = express.Router();
 const COMMENT_URL = '/novels/:slug/comments';
 
-const { verifyToken, commentValidator } = middlewares;
+const { verifyToken, commentValidator, authorizeUser } = middlewares;
 const { postComment, replyComment } = commentController;
 
-// create comment endpoint
-comment.post(`${COMMENT_URL}`, verifyToken, commentValidator.postComment, postComment);
+// Route to create a comment
+comment.post(`${COMMENT_URL}`, verifyToken, commentValidator.postComment, authorizeUser(['author', 'admin', 'superadmin']), postComment);
 
-// reply a comment
-comment.post(`${COMMENT_URL}/:parentId`, verifyToken, commentValidator.replyComment, replyComment);
+// Route to reply a comment
+comment.post(`${COMMENT_URL}/:parentId`, verifyToken, commentValidator.replyComment, authorizeUser(['author', 'admin', 'superadmin']), replyComment);
 
 export default comment;

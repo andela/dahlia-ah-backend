@@ -44,6 +44,16 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Use
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  roleId: {
+    type: Sequelize.UUID,
+    allowNull: false,
+    defaultValue: 'b79c4eed-60c6-42fb-9040-f0822d8414fa',
+    onDelete: 'CASCADE',
+    references: {
+      model: 'Roles',
+      key: 'id'
+    },
+  },
   createdAt: {
     allowNull: false,
     type: Sequelize.DATE

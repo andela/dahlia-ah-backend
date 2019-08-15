@@ -11,6 +11,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: true,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
 },
@@ -25,6 +26,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: false,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
 }, {
@@ -37,7 +39,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   bio: 'I am a writer, and i have authored 5 best selling books',
   phoneNo: '2347032123404',
   isVerified: true,
-  isSubscribed: true,
+  isSubscribed: false,
+  roleId: 'b79c4eed-60c6-42fb-9040-f0822d8414fa',
   createdAt: new Date(),
   updatedAt: new Date()
 }], {});

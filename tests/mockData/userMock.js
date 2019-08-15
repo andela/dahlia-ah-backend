@@ -116,5 +116,9 @@ export default {
   },
   invalidProfileToken: {
     expiredToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNTY0ODA0NDQ3LCJleHAiOjE1NjQ3NzkyNDd9.778heTKCI1eFw47SVT2rZLcBoBnTB4rD5wDacVzT3Kw'
+  },
+  validReaderProfileLogin: {
+    email: 'jamiefoxx@gmail.com',
+    password: 'jamiefoxx'
   }
 };

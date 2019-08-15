@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { expect } = chai;
 const { userMock, novelMock } = mockData;
 
-let authToken;
+let authToken, authReaderToken;
 
 const endpointUser = '/api/v1/users/login';
 const endpointNovel = '/api/v1/novels';
@@ -24,6 +24,17 @@ describe('Test for novel CRUD', () => {
         done();
       });
   });
+
+  before((done) => {
+    const reader = userMock.validReaderProfileLogin;
+    chai.request(server)
+      .post(endpointUser)
+      .send(reader)
+      .end((err, res) => {
+        authReaderToken = res.body.user.token;
+        done();
+      });
+  });
   describe('POST /api/v1/novels', () => {
     it('should create novel if all fields are valid', (done) => {
       chai.request(server)
@@ -33,6 +44,18 @@ describe('Test for novel CRUD', () => {
         .end((err, res) => {
           expect(res).to.have.status(201);
           expect(res.body).to.have.property('novel');
+          done();
+        });
+    });
+
+    it('should not create novel if user does not have required permission', (done) => {
+      chai.request(server)
+        .post(endpointNovel)
+        .send(novelMock.validNovel)
+        .set('authorization', authReaderToken)
+        .end((err, res) => {
+          expect(res).to.have.status(403);
+          expect(res.body.error).to.have.equal('you need permission');
           done();
         });
     });
