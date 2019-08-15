@@ -91,5 +91,30 @@ export default {
   validProfileLogin: {
     email: 'jamesbond@gmail.com',
     password: 'jamesbond'
+  },
+  validProfile: {
+    firstName: 'james',
+    lastName: 'bonder',
+    avatarUrl: 'https://gravatar.com/avatar/aed61baf1e9256ed7d70e2cbbfcba9aa?s=400&d=robohash&r=x',
+    bio: 'I like acting movies only',
+    phoneNo: '2347032123007',
+  },
+  invalidProfile1: {
+    password: 'password',
+    firstName: 'james',
+    lastName: 'bonder',
+    avatarUrl: 'https://gravatar.com/avatar/aed61baf1e9256ed7d70e2cbbfcba9aa?s=400&d=robohash&r=x',
+    bio: 'I like acting movies only',
+    phoneNo: '2347032123007',
+  },
+  invalidProfile2: {
+    firstName: '1232'
+  },
+  invalidProfile3: {
+    title: '1232',
+    description: 'just testing'
+  },
+  invalidProfileToken: {
+    expiredToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNTY0ODA0NDQ3LCJleHAiOjE1NjQ3NzkyNDd9.778heTKCI1eFw47SVT2rZLcBoBnTB4rD5wDacVzT3Kw'
   }
 };

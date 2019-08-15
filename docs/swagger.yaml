@@ -381,16 +381,56 @@ paths:
                   error:
                     type: string
                     example: no comment found with the provided id
+  '/profiles':
+    patch:
+      tags:
+        - Users
+      summary: Updates a user profile
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        description: fields containing user data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserProfileInput'
+        required: false
+      responses:
+        200:
+          description: profile successfully updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+        400:
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardServerResponse'
+        404:
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardServerResponse'
+        409:
+          description: email already exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardServerResponse'
         500:
           description: server error
           content:
             application/json:
               schema:
                 type: object
-                properties:
-                  error:
-                    type: string
-                    example: error occured
 components:
   schemas:
     UserRegisterInput:
@@ -441,6 +481,21 @@ components:
         genre:
           type: string
           example: Action
+    UserProfileInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: john
+        lastName:
+          type: string
+          example: doe
+        email:
+          type: string
+          example: johndoe@email.com
+        avatarUrl:
+          type: string
+          example: ''
     AuthResponse:
       properties:
         token:
