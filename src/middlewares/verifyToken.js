@@ -5,8 +5,8 @@ import services from '../services';
 
 dotenv.config();
 
-const { SECRET_KEY } = process.env;
-
+const { SECRET_KEY, ACCOUNT_VERIFICATION_SECRET } = process.env;
+const verifyPath = '/auth/verify/:token';
 const { responseMessage } = helpers;
 const { userServices: { findUser } } = services;
 
@@ -18,12 +18,14 @@ const { userServices: { findUser } } = services;
  * @returns {*} json or next
  */
 export default (request, response, next) => {
-  const token = request.headers.authorization || request.query.token;
-
+  const token = request.headers.authorization || request.query.token || request.params.token;
+  const { route: { path } } = request;
   if (!token) {
     return responseMessage(response, 401, { error: 'no token provided' });
   }
-  jwt.verify(token, SECRET_KEY, async (error, decoded) => {
+  const secret = (path === verifyPath) ? ACCOUNT_VERIFICATION_SECRET : SECRET_KEY;
+
+  jwt.verify(token, secret, async (error, decoded) => {
     if (error) {
       const message = (error.name === 'TokenExpiredError') ? 'token expired' : 'invalid token';
       return responseMessage(response, 401, { error: message });

@@ -127,7 +127,56 @@ paths:
         409:
           description: resource already exists
         500:
-          description: internal server error
+          description: internal server error           
+  /auth/verify/{token}:
+    patch:
+      tags:
+      - Users
+      summary: "Verifies user account"
+      description: "Verifies user account"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "Token sent to email of user to be verified."
+        required: true
+        schema:
+          $ref: '#/components/schemas/token'
+          
+      - name: "id"
+        in: "path"
+        description: "ID of user to be verified."
+        required: true
+        schema:
+          $ref: '#/components/schemas/token'
+          
+          
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/veriryUserSuccess"
+        401:
+          description: "Invalid token, User with ID does not exist, Token does not exit in the database"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/verifyUserFailure1"
+                
+        400:
+          description: "Already verified user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/verifyUserFailure2"
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardServerResponse'
+                      
   /auth/forgotpassword:
     post:
       summary: Forgot password
@@ -435,6 +484,58 @@ paths:
                 type: object
 components:
   schemas:
+    token:
+      type: string
+    veriryUserSuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "You have sucessfully verified your email"
+    verifyUserFailure1:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Sorry could not verify email"
+    verifyUserFailure2:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "User already verified"
+    User:
+      required:
+      - firstName
+      - lastName
+      - email
+      - username
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: john
+        lastName:
+          type: string
+          example: doe
+        email:
+          type: string
+          example: johndoe@email.com
+        username:
+          type: string
+          example: johnnydoe12
+        bio:
+          type: string
+          example: I am awesome
+        avatarURL:
+          type: string
+          example: https://your_avatar.com/your_avatar.jpg
+        phoneNo:
+          type: string
+          example: 2347012345678
+        address:
+          type: string
+          example: 123 Eve's Garden Road, Eden
     UserRegisterInput:
       required:
         - firstName

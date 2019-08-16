@@ -54,6 +54,15 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Use
       key: 'id'
     },
   },
+  paymentStatus: {
+    allowNull: false,
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  verifiedToken: {
+    allowNull: true,
+    type: Sequelize.STRING,
+  },
   createdAt: {
     allowNull: false,
     type: Sequelize.DATE

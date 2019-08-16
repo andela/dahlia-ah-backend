@@ -1,9 +1,13 @@
 import jwt from 'jsonwebtoken';
 import helpers from '../helpers';
 import services from '../services';
+import models from '../database/models';
 
-const { forgotPasswordMessage, responseMessage } = helpers;
+const {
+  forgotPasswordMessage, responseMessage, errorResponse, successResponse,
+} = helpers;
 const { sendMail, userServices: { findUser } } = services;
+const { User } = models;
 
 /**
  *
@@ -12,6 +16,7 @@ const { sendMail, userServices: { findUser } } = services;
  * @param {object} response
  * @returns {json} - json
  */
+
 const forgotPassword = async (request, response) => {
   const { email } = request.body;
   try {
@@ -31,6 +36,33 @@ const forgotPassword = async (request, response) => {
   }
 };
 
-export default {
-  forgotPassword
+/**
+ * Update user verified status
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {json} - json
+ */
+
+const updateStatus = async (req, res) => {
+  const { params: { token }, user: { verifiedToken, isVerified, id } } = req;
+
+  if (verifiedToken !== token) {
+    return errorResponse(res, 403, 'Sorry could not verify email');
+  }
+
+  if (isVerified) {
+    return errorResponse(res, 400, 'user already verified');
+  }
+
+  await User.update({
+    isVerified: true,
+  }, {
+    where: {
+      id,
+    }
+  });
+  return successResponse(res, 200, { message: 'You have sucessfully verified your email' });
 };
+
+export default { forgotPassword, updateStatus };

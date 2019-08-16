@@ -5,7 +5,10 @@ import debug from 'debug';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import path from 'path';
+import dotenv from 'dotenv';
 import routes from './routes';
+
+dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isTest = process.env.NODE_ENV === 'test';
