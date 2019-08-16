@@ -51,6 +51,10 @@ export default (Sequelize, DataTypes) => {
       foreignKey: 'novelId',
       onDelete: 'CASCADE'
     });
+    Novel.hasMany(models.Likes, {
+      foreignKey: 'slug',
+      onDelete: 'CASCADE'
+    });
     Novel.belongsTo(models.Genre, {
       foreignKey: 'genreId'
     });

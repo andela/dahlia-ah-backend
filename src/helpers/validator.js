@@ -1,5 +1,4 @@
 import { check } from 'express-validator';
-
 /**
    *  @param {String} field
    *  @returns {Object} - Express-validator
