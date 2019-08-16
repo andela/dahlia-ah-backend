@@ -119,6 +119,14 @@ export default {
     email: 'eden@gmail.com',
     password: 'edenHazargd'
   },
+  seededUser3: {
+    email: 'jamesbond@gmail.com',
+    password: 'jamesbond'
+  },
+  seededUser4: {
+    email: 'jamiefoxx@gmail.com',
+    password: 'jamiefoxx'
+  },
   validProfileLogin: {
     email: 'jamesbond@gmail.com',
     password: 'jamesbond'

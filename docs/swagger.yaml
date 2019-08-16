@@ -1194,7 +1194,50 @@ paths:
                   error:
                     type: string
                     example: error occured
-
+  /novels/{slug}:
+    get:
+      tags:
+        - Novels
+      summary: Get novel
+      description: Get single novel with highlights
+      security:
+      - token: [] 
+      responses:
+        200:
+          description: Request successful
+        401:
+          description: Authentication failed
+        404:
+          description: Novel not found
+        500:
+          description: internal server error  
+  /novels/{slug}/highlight:
+    post:
+      tags:
+        - Highlight
+      summary: Creates highlight
+      description: Post highlighted text
+      requestBody:
+        description: fields containing novel data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HighlightInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HighlightInput'
+        required: true
+      security:
+      - token: []
+      responses:
+        201:
+          description: Highlight created successfully
+        401:
+          description: Authentication failed
+        404:
+          description: Novel not found
+        500:
+          description: internal server error
 components:
   schemas:
     token:
@@ -1297,7 +1340,7 @@ components:
           example: There are five steps to thinking big...
         genre:
           type: string
-          example: Action
+          example: action
     UserProfileInput:
       type: object
       properties:
@@ -1413,6 +1456,21 @@ components:
         following:
           type: boolean
           example: true
+    HighlightInput:
+      required:
+        - startIndex
+        - endIndex
+      type: object
+      properties:
+        startIndex:
+          type: integer
+          example: 1
+        endIndex:
+          type: integer
+          example: 19
+        comment:
+          type: string
+          example: There is a missing exclamation
   securitySchemes:
     token:
       type: apiKey

@@ -8,7 +8,8 @@ const {
 const { Novel } = models;
 const {
   novelServices: {
-    addNovel, findGenre, findNovel, findAllNovels
+    addNovel, findGenre, findNovel, findAllNovels,
+    highlightNovelText, getNovelHighlights
   },
   notificationServices: { addNotification }
 } = services;
@@ -16,27 +17,26 @@ const {
 const { Genre } = models;
 
 /**
- * createNovel
- *
- * @param {object} req
- * @param {object} res
+ * @name createNovel
+ * @param {object} request
+ * @param {object} response
  * @returns {object} json
  */
-const createNovel = async (req, res) => {
-  const newNovel = req.body;
-  const createdNovel = await addNovel(newNovel, req.user);
+const createNovel = async (request, response) => {
+  const newNovel = request.body;
+  const createdNovel = await addNovel(newNovel, request.user);
   if (createdNovel.error) {
-    return errorResponse(res, createdNovel.status, createdNovel.error);
+    return errorResponse(response, createdNovel.status, createdNovel.error);
   }
   const config = {
     configObjectId: 0,
     entityId: createdNovel.id,
-    followeeId: req.user.id,
+    followeeId: request.user.id,
     isSingle: false,
-    response: res
+    response
   };
   addNotification(config);
-  return successResponse(res, 201, {
+  return successResponse(response, 201, {
     message: 'Novel created successfully',
     novel: {
       ...createdNovel
@@ -87,6 +87,41 @@ const getNovels = async (request, response) => {
 };
 
 /**
+ *
+ *
+ * @name getSingleNovel
+ * @param {object} request
+ * @param {object} response
+ * @returns {object} json
+ */
+const getSingleNovel = async (request, response) => {
+  const {
+    params: { slug },
+    user: { id: userId }
+  } = request;
+  try {
+    const novel = await findNovel(slug);
+    if (!novel) {
+      return responseMessage(response, 404, { error: 'Novel not found' });
+    }
+    const highlights = await getNovelHighlights(novel, userId);
+    if (highlights.length > 0) {
+      return responseMessage(response, 200, {
+        message: 'Request successful',
+        novel,
+        highlights
+      });
+    }
+    return responseMessage(response, 200, {
+      message: 'Request successful',
+      novel
+    });
+  } catch (error) {
+    return responseMessage(response, 500, { error: error.message });
+  }
+};
+
+/**
  * @description creates a genre
  * @param {object} request express request object
  * @param {object} response express response object
@@ -116,25 +151,38 @@ const createGenre = async (request, response) => {
 };
 
 /**
- * @description returns novel with slug
- * @param {object} request express request object
- * @param {object} response express response object
- * @param {object} next express next argument
- * @returns {json} json
- */
-const getNovel = async (request, response) => {
+ * @name highlightNovel
+ * @param {object} request
+ * @param {object} response
+ * @returns {object} json
+*/
+const highlightNovel = async (request, response) => {
+  const {
+    body: highlight,
+    user: { id: userId },
+    params: { slug }
+  } = request;
   try {
-    const { slug } = request.params;
     const novel = await findNovel(slug);
     if (!novel) {
-      return responseMessage(response, 404, { error: 'novel not found' });
+      return responseMessage(response, 404, { error: 'Novel not found' });
     }
-    return responseMessage(response, 200, { novel });
+    const createdHighlight = await highlightNovelText(novel.id, userId, highlight);
+    return successResponse(response, 201, {
+      message: 'Text highlighted successfully',
+      highlight: {
+        ...createdHighlight
+      }
+    });
   } catch (error) {
-    responseMessage(response, 500, { error: error.message });
+    return responseMessage(response, 500, { error: error.message });
   }
 };
 
 export default {
-  createNovel, getNovel, getNovels, createGenre
+  createNovel,
+  getNovels,
+  createGenre,
+  highlightNovel,
+  getSingleNovel
 };
