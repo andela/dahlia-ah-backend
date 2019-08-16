@@ -6,7 +6,8 @@ const {
   userValidator: {
     signUpValidator, loginValidator, profileValidator, editProfileValidator
   },
-  verifyToken
+  verifyToken,
+  authorizeUser
 } = middlewares;
 const {
   signUp, login, getProfile, editProfile
@@ -23,9 +24,9 @@ user.post(`${USER_URL}`, signUpValidator, signUp);
 user.post(`${USER_URL}/login`, loginValidator, login);
 
 // Route to get user profile by userId
-user.get(`${PROFILE_URL}/:userId`, verifyToken, profileValidator, getProfile);
+user.get(`${PROFILE_URL}/:userId`, verifyToken, authorizeUser(['reader', 'author', 'admin', 'superadmin']), profileValidator, getProfile);
 
 // Route to edit a user profile
-user.patch(`${PROFILE_URL}`, verifyToken, editProfileValidator, editProfile);
+user.patch(`${PROFILE_URL}`, verifyToken, authorizeUser(['reader', 'author', 'admin', 'superadmin']), editProfileValidator, editProfile);
 
 export default user;

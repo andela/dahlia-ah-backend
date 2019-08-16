@@ -45,6 +45,11 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    roleId: {
+      allowNull: false,
+      type: DataTypes.UUID,
+      defaultValue: 'b79c4eed-60c6-42fb-9040-f0822d8414fa'
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE
@@ -72,6 +77,11 @@ export default (Sequelize, DataTypes) => {
 
     User.hasMany(models.Follower, {
       foreignKey: 'followeeId',
+      onDelete: 'CASCADE'
+    });
+
+    User.belongsTo(models.Role, {
+      foreignKey: 'roleId',
       onDelete: 'CASCADE'
     });
   };

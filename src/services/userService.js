@@ -1,6 +1,6 @@
 import models from '../database/models';
 
-const { User, Follower } = models;
+const { User, Role, Follower } = models;
 
 /**
  * @description Finds a user from the database by id or email
@@ -12,7 +12,8 @@ const findUser = async (param) => {
   const field = (/^[A-Z0-9_.-]+@[A-Z0-9.-]+[A-Z]$/ig.test(param)) ? { email: param } : { id: param };
   const user = await User.findOne({
     where: field,
-    attributes: { exclude: ['password'] }
+    attributes: { exclude: ['password'] },
+    include: [{ model: Role }]
   });
   return user;
 };

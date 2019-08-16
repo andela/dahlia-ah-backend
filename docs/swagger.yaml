@@ -94,6 +94,8 @@ paths:
           description: novel created successfully
         401:
           description: Authentication failed
+        403:
+          description: you need permission
         409:
           description: resource already exists
         500:
