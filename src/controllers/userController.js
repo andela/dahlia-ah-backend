@@ -79,8 +79,9 @@ const login = async (req, res) => {
 
   const correctPassword = authHelper.comparePassword(password, foundUser.password);
 
-  if (!correctPassword) return errorResponse(res, 401, authErrorMessage);
-
+  if (!correctPassword) {
+    return errorResponse(res, 401, authErrorMessage);
+  }
   if (!foundUser.isVerified) {
     return errorResponse(res, 401, 'please verify your email');
   }

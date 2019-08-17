@@ -43,6 +43,16 @@ const isValidPassword = (field = 'password') => check(field).isLength({ min: 8 }
   .withMessage(`${field} should contain only numbers and alphabets`);
 
 /**
+ * @returns {Object} - Express-validator
+ */
+const isValidPasswords = () => check('newPassword').isLength({ min: 8 })
+  .withMessage('password must be at least 8 characters long').not()
+  .isEmpty()
+  .withMessage('password is a required field')
+  .isAlphanumeric()
+  .withMessage('password should contain only numbers and alphabets');
+
+/**
    * @param {String} field
    * @returns {Object} - Express-validator
    */
@@ -222,5 +232,6 @@ export default {
   isValidUUIDParam,
   isValidPhoneNumber,
   isValidSubcription,
-  isValidRoleName
+  isValidRoleName,
+  isValidPasswords
 };

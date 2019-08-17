@@ -16,26 +16,19 @@ export default (Sequelize, DataTypes) => {
       },
     },
     password: {
+      type: DataTypes.STRING,
       allowNull: false,
-      type: DataTypes.STRING
+      unique: true
     },
     passwordCount: {
-      allowNull: false,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
-    createdAt: {
-      allowNull: false,
-      type: DataTypes.DATE
-    },
-    updatedAt: {
-      allowNull: false,
-      type: DataTypes.DATE
-    }
   }, {});
   PreviousPassword.associate = (models) => {
-    PreviousPassword.hasMany(models.Novel, {
-      foreignKey: 'authorId',
-      onDelete: 'CASCADE'
+    PreviousPassword.belongsTo(models.User, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
     });
   };
   return PreviousPassword;

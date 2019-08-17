@@ -13,7 +13,8 @@ const {
   isValidUUIDParam,
   isValidPhoneNumber,
   isValidSubcription,
-  isValidRoleName
+  isValidRoleName,
+  isValidPasswords
 } = validators;
 
 const { validatorError, paramsValidatorError } = errorHandler;
@@ -72,6 +73,10 @@ const userValidator = {
     isValidRoleName('roleName').optional(),
     isValidPhoneNumber('phoneNumber').optional(),
     isValidSubcription('isSubscribed').optional(),
+    validatorError
+  ],
+  resetPasswordValidator: [
+    isValidPasswords(),
     validatorError
   ]
 };

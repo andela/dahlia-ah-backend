@@ -369,6 +369,8 @@ paths:
       tags:
         - Novels
       summary: Likes or Unlikes a novel
+      security:
+      - token: []  
       parameters:
       - name: "slug"
         in: "path"
@@ -408,10 +410,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardServerResponse'
-        
-      security:
-      - token: []                   
+                $ref: '#/components/schemas/StandardServerResponse'          
   /genres:
     post:
       tags:
@@ -1130,6 +1129,83 @@ paths:
                   error:
                     type: string
                     example: novel not found
+  /auth/passwordreset:
+    post:
+      summary: reset password
+      description: reset forgotten password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        200:
+          description: succesful request, entity changed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reply:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: successfully change password
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: newPassword
+                        message:
+                          type: string
+                          example: newPassword cannot be empty
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: you have to be verified to like a comment on a novel
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: no comment found with the provided id
+
   '/profiles':
     patch:
       tags:
