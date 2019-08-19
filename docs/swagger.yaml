@@ -676,6 +676,199 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  error:
+                    type: string
+                    example: error occured
+  /novels/{slug}/comments/{commentId}:
+    patch:
+      tags:
+      - Comments
+      summary: Edit comment
+      description: Edit comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentBody:
+                  type: string
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: succesful request, edited
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                      updatedAt:
+                        type: string
+                        example: '2019-08-05T14:17:58.518Z'
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: commentBody
+                        message:
+                          type: string
+                          example: commentBody cannot be empty
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: you have to be subscribed to edit a comment
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: no comment found with the provided id
+    get:
+      tags:
+      - Comments
+      summary: Comments edit history
+      description: Comment edit history
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentBody:
+                  type: string
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        201:
+          description: succesful request, get comments edit history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                      updatedAt:
+                        type: string
+                        example: '2019-08-05T14:17:58.518Z'
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: commentBody
+                        message:
+                          type: string
+                          example: commentBody cannot be empty
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: you have to be subscribed to edit a comment
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: no comment found with the provided id
+
+  /auth/logout:
+    get:
+      tags:
+        - Users
+      summary: Logs out a user
+      responses:
+        200:
+          description: Logout was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout was successful
+        401:
+          description: unauthorised request
+        500:
+          description: internal server error
+                  
 components:
   schemas:
     token:
