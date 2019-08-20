@@ -1382,6 +1382,53 @@ paths:
           description: Novel not found
         500:
           description: internal server error
+
+  /novels/:novelId/bookmarks:
+    post:
+      tags:
+        - Novels
+      summary: Bookmark Novels
+      requestBody:
+        description: User should be able to bookmark a novel
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovelInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NovelInput'
+        required: true
+      responses:
+        201:
+          description: Bookmark Novels
+        404:
+          description: Not found
+        500:
+          description: internal server error
+          
+  /novels/bookmarks:
+    get:
+      tags:
+        - Novels
+      summary: Fetch Bookmarks
+      requestBody:
+        description: Bookmarks fetched successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovelInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NovelInput'
+        required: true
+      responses:
+        201:
+          description: Bookmarks fetched successfully
+        404:
+          description: Not found
+        500:
+          description: internal server error   
+                  
 components:
   schemas:
     token:

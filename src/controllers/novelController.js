@@ -9,7 +9,8 @@ const { Novel } = models;
 const {
   novelServices: {
     addNovel, findGenre, findNovel, findAllNovels,
-    highlightNovelText, getNovelHighlights
+    highlightNovelText, getNovelHighlights,
+    findNovelById, bookmarkNovel, getAllBookmark
   },
   notificationServices: { addNotification }
 } = services;
@@ -179,10 +180,67 @@ const highlightNovel = async (request, response) => {
   }
 };
 
+/**
+ * createBookmark
+ * @param {object} req
+ * @param {object} res
+ * @returns {object} json
+ */
+
+const postBookmark = async (req, res) => {
+  const { novelId } = req.params;
+  const {
+    id: userId
+  } = req.user;
+
+  try {
+    const novel = await findNovelById(novelId);
+    if (!novel) {
+      return responseMessage(res, 404, { error: 'novel not found' });
+    }
+
+    const newBookmark = await bookmarkNovel(userId, novel.id);
+    res.status(201).json({
+      bookmark: {
+        novelId: novel.id,
+        title: novel.title,
+        updatedAt: newBookmark.updatedAt
+      }
+    });
+  } catch (error) {
+    return responseMessage(res, 500, { error: error.message });
+  }
+};
+
+/**
+ * getAllBookmark
+ * @param {object} req
+ * @param {object} res
+ * @returns {object} json
+ */
+
+const fetchBookmarks = async (req, res) => {
+  const {
+    id: userId
+  } = req.user;
+
+  try {
+    const bookmarks = await getAllBookmark(userId);
+    return successResponse(res, 201, {
+      message: 'Bookmarks fetched successfully',
+      bookmarks
+    });
+  } catch (error) {
+    return responseMessage(res, 500, { error: error.message });
+  }
+};
+
 export default {
   createNovel,
   getNovels,
   createGenre,
   highlightNovel,
-  getSingleNovel
+  getSingleNovel,
+  postBookmark,
+  fetchBookmarks
 };
