@@ -10,18 +10,22 @@ const {
 const { validatorError } = errorHandler;
 
 const commentValidator = {
-  postComment: [
+  getCommentValidator: [
+    isNotEmptySlug(),
+    validatorError
+  ],
+  postCommentValidator: [
     isValidComment(),
     isNotEmptySlug(),
     validatorError
   ],
-  replyComment: [
+  replyCommentValidator: [
     isNotEmptySlug(),
     isValidUUID('parentId'),
     isValidComment(),
     validatorError
   ],
-  editComment: [
+  editCommentValidator: [
     isValidComment(),
     isValidUUID('commentId'),
     validatorError

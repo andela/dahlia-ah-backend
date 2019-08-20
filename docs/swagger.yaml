@@ -646,6 +646,89 @@ paths:
                     example: novel not found
         500:
           description: server error
+  /novels/{slug}/comments:
+    get:
+      summary: Gets all comments
+      description: Gets all comments
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comments:
+                    type: object
+                    properties:
+                      novel:
+                        type: string
+                        example: The Good Book
+                      commentAuthor:
+                        type: string
+                        example: bigShaq004
+                      commentBody:
+                        type: string
+                        example: I really love this book
+                      updatedAt:
+                        type: string
+                        example: '2019-08-05T14:17:58.518Z'
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: commentBody
+                        message:
+                          type: string
+                          example: commentBody cannot be empty
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: you have to be subscribed to comment on a novel
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: novel not found
+        500:
+          description: server error
   '/profiles/{userId}':
     get:
       tags:

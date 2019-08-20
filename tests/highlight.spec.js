@@ -17,7 +17,7 @@ const {
 
 let authorToken, readerToken, reader2Token, novelSlug;
 
-const endpointUser = '/api/v1/users/login';
+const endpointUser = '/api/v1/auth/login';
 const endpointNovel = '/api/v1/novels';
 
 describe('Test for highlights', () => {
