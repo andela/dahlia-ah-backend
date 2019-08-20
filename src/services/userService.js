@@ -1,8 +1,13 @@
 import models from '../database/models';
 import helpers from '../helpers';
+import novelServices from './novelService';
 
-const { User, Role, Follower } = models;
 const { authHelper: { generateRandomPassword } } = helpers;
+const { getAllBookmark } = novelServices;
+
+const {
+  User, Role, Follower, readStats, Novel
+} = models;
 
 /**
  * @description Finds a user from the database by id or email
@@ -100,11 +105,53 @@ const findUserRole = async (param) => {
   return role;
 };
 
+/**
+ * @description Finds a follower following a user
+ * @param {string} followeeId
+ * @param {string} followerId
+ * @returns {object} a user object
+ */
+
+const fetchReadStats = async (userId, period) => {
+  period = parseInt(period, 10) + 1;
+
+  const today = Date.now();
+  const dateRead = object => (new Date(object.createdAt).getTime());
+
+  const { rows: readNovels, count: readCount } = await readStats.findAndCountAll({
+    where: { userId },
+    include: [
+      {
+        model: Novel,
+        required: false,
+      }
+    ]
+  });
+  let bookmarks = await getAllBookmark(userId);
+
+  if (!period || period <= 1) {
+    return { bookmarks, reads: readNovels, readCount };
+  }
+
+  const reads = readNovels.filter((novel) => {
+    const difference = Math.floor((today - dateRead(novel)) / 86400000);
+    return difference < period;
+  });
+
+  bookmarks = bookmarks.filter((bookmark) => {
+    const difference = Math.floor((today - dateRead(bookmark)) / 86400000);
+    return difference < period;
+  });
+
+  return { bookmarks, reads, readCount: reads.length };
+};
+
 export default {
   findUser,
   findFollower,
   getAllUsers,
   updateUser,
   addUser,
-  findUserRole
+  findUserRole,
+  fetchReadStats
 };

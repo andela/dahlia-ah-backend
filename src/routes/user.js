@@ -16,7 +16,8 @@ const {
 } = middlewares;
 
 const {
-  getProfile, editProfile, createUser, listUsers, getUser, follow, unfollow, updateUser, deleteUser
+  getProfile, editProfile, createUser, listUsers, getUser,
+  follow, unfollow, updateUser, deleteUser, getReadingStats
 } = userController;
 
 const user = express.Router();
@@ -24,6 +25,7 @@ const user = express.Router();
 const USER_URL = '/users';
 const PROFILE_URL = '/profiles';
 
+user.get(`${PROFILE_URL}/readingstats`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), getReadingStats);
 // Route to get user profile by userId
 user.get(`${PROFILE_URL}/:userId`, verifyToken, authorizeUser(['reader', 'author', 'admin', 'superadmin']), profileValidator, getProfile);
 
@@ -39,5 +41,6 @@ user.post('/profiles/:userId/follow', followUserValidator, verifyToken, follow);
 user.delete('/profiles/:userId/follow', followUserValidator, verifyToken, unfollow);
 user.patch(`${USER_URL}/:userId`, validateUUID, validateUpdateUser, verifyToken, authorizeUser(['admin', 'superadmin']), updateUser);
 user.delete(`${USER_URL}/:userId`, validateUUID, verifyToken, authorizeUser(['superadmin']), deleteUser);
+
 
 export default user;

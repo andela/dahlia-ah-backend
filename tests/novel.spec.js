@@ -13,12 +13,12 @@ chai.use(chaiHttp);
 const { SECRET_KEY } = process.env;
 
 const { expect } = chai;
-const { Novel, Bookmark } = models;
+const { Novel, Bookmark, readStats } = models;
 const { Genre } = models;
 const {
   userMock: { validProfileLogin, validReaderProfileLogin, seededUser5 },
   novelMock: {
-    validNovel, validNovel2, validGenre, invalidGenre, emptyGenre, existingGenre
+    validNovel, validNovel2, validGenre, invalidGenre, emptyGenre, existingGenre, seedNovel1
   }
 } = mockData;
 const { novelHelpers: { extractNovels } } = helpers;
@@ -416,6 +416,81 @@ describe('Test for novel CRUD', () => {
           expect(response.body.data).to.be.an('array');
           expect(response.body.message).to.equal('succesfully returned novels');
           expect(response.body.data.length).to.not.equal(0);
+          done();
+        });
+    });
+  });
+
+  describe('PATCH api/v1/novels/:novelId/markread', () => {
+    const markReadEndpoint = `${NOVEL_URL}/${seedNovel1.slug}/markread`;
+    const markReadInvalidEndpoint = `${NOVEL_URL}/INVALID_SLUG/markread`;
+    it('should mark novel status as read', (done) => {
+      chai.request(server)
+        .patch(markReadEndpoint)
+        .send({ readStatus: true })
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(200);
+          expect(res.body).property('message').includes('marked as read');
+          done();
+        });
+    });
+    it('should return error 500 on server error', (done) => {
+      const stub = sinon.stub(Novel, 'findOne');
+      stub.throws(new Error('error occurred!'));
+
+      chai.request(server)
+        .patch(markReadEndpoint)
+        .send({ readStatus: true })
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(500);
+          expect(res.body).property('error').includes('an error occurred');
+          stub.restore();
+          done();
+        });
+    });
+    it('should remove novel status as read', (done) => {
+      chai.request(server)
+        .patch(markReadEndpoint)
+        .send({ readStatus: false })
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(200);
+          expect(res.body).property('message').includes('removed as read');
+          done();
+        });
+    });
+    it('should perform no action if removed again', (done) => {
+      chai.request(server)
+        .patch(markReadEndpoint)
+        .send({ readStatus: false })
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(200);
+          expect(res.body).property('message').includes('removed as read');
+          done();
+        });
+    });
+    it('should perform no action if mark-read again', (done) => {
+      chai.request(server)
+        .patch(markReadEndpoint)
+        .send({ readStatus: true })
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(200);
+          expect(res.body).property('message').includes('marked as read');
+          done();
+        });
+    });
+    it('should return 404 if slug is invalid', (done) => {
+      chai.request(server)
+        .patch(markReadInvalidEndpoint)
+        .send({ readStatus: true })
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(404);
+          expect(res.body).property('error').includes('not found');
           done();
         });
     });
@@ -882,6 +957,58 @@ describe('DELETE /api/v1/novels/:slug', () => {
         expect(response).to.have.status(500);
         expect(response.body).to.be.an('object');
         expect(response.body.error).to.equal('error occured!');
+        stub.restore();
+        done();
+      });
+  });
+});
+describe('GET api/v1/profiles/readingstats', () => {
+  const readStatsEndpoint = '/api/v1/profiles/readingstats';
+  const readStatsWithPeriod = `${readStatsEndpoint}?period=10`;
+  const readStatsWithInvalidPeriod = `${readStatsEndpoint}?period=INVALID`;
+  it('should fetch read stats', (done) => {
+    chai.request(server)
+      .get(readStatsEndpoint)
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).status(200);
+        expect(res.body).property('message').include('success');
+        expect(res.body).property('readingStats').an('object');
+        done();
+      });
+  });
+  it('should fetch read stats with period', (done) => {
+    chai.request(server)
+      .get(readStatsWithPeriod)
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).status(200);
+        expect(res.body).property('message').include('success');
+        expect(res.body).property('readingStats').an('object');
+        done();
+      });
+  });
+  it('should fetch DEFAULT read stats with invalid period query', (done) => {
+    chai.request(server)
+      .get(readStatsWithInvalidPeriod)
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).status(200);
+        expect(res.body).property('message').include('success');
+        expect(res.body).property('readingStats').an('object');
+        done();
+      });
+  });
+  it('should return error 500 on server error', (done) => {
+    const stub = sinon.stub(readStats, 'findAndCountAll');
+    stub.throws(new Error('error occurred!'));
+
+    chai.request(server)
+      .get(readStatsEndpoint)
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).status(500);
+        expect(res.body).property('error').include('an error occurred');
         stub.restore();
         done();
       });

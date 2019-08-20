@@ -3,7 +3,7 @@ import models from '../database/models';
 import helpers from '../helpers';
 
 const {
-  Genre, Novel, Like, User, Highlight, Bookmark
+  Genre, Novel, Like, User, Highlight, Bookmark, readStats
 } = models;
 const { generateReadTime } = helpers;
 
@@ -22,16 +22,6 @@ const findNovel = async (param) => {
 };
 
 /**
- * Finds a novel from the database by id
- * @param {string} param
- * @returns {object} a novel object
- */
-
-const findNovelById = param => Novel.findOne({
-  where: { id: param }
-});
-
-/**
  * Finds a novelLikes from the database by userid and novelId
  * @param {string} userId
  * @param {string} novelId
@@ -42,6 +32,16 @@ const findNovelLike = (userId, novelId) => Like.findOne({
   where: {
     [Op.and]: [{ userId }, { novelId }]
   }
+});
+
+/**
+ * Finds a novel from the database by id
+ * @param {string} param
+ * @returns {object} a novel object
+ */
+
+const findNovelById = param => Novel.findOne({
+  where: { id: param }
 });
 
 /**
@@ -267,6 +267,34 @@ const removeNovel = async ({ slug }, user) => {
   return true;
 };
 
+/**
+ *
+ * @param {object} userId - user id
+ * @param {object} novelId - novel id
+ * @param {object} readStatus - property from request body
+ * @returns {object} object
+ */
+const toggleReadStatus = async (userId, novelId, readStatus) => {
+  readStatus = readStatus === 'true';
+  if (!readStatus) {
+    await readStats.destroy({ where: { userId, novelId } });
+    return 'removed as read';
+  }
+  const read = await readStats.findOne({
+    where: { userId, novelId }
+  });
+  if (read) {
+    return 'marked as read';
+  }
+  await readStats.create({
+    userId, novelId
+  }, {
+    where: { userId }
+  });
+  return 'marked as read';
+};
+
+
 export default {
   findGenre,
   findNovel,
@@ -280,5 +308,6 @@ export default {
   highlightNovelText,
   getNovelHighlights,
   bookmarkNovel,
-  getAllBookmark
+  getAllBookmark,
+  toggleReadStatus,
 };

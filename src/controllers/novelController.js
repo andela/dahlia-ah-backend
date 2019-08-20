@@ -1,7 +1,10 @@
 import Sequelize from 'sequelize';
+import debug from 'debug';
 import models from '../database/models';
 import services from '../services';
 import helpers from '../helpers';
+
+const log = debug('dev');
 
 const { Op } = Sequelize;
 const {
@@ -13,7 +16,7 @@ const {
     addNovel, findGenre, findNovel, findAllNovels,
     highlightNovelText, getNovelHighlights,
     findNovelById, bookmarkNovel, getAllBookmark,
-    updateNovel, removeNovel
+    updateNovel, removeNovel, toggleReadStatus
   },
   notificationServices: { addNotification }
 } = services;
@@ -311,6 +314,29 @@ const deleteNovel = async (request, response) => {
   }
 };
 
+/**
+ * @description returns novel with slug
+ * @param {object} request express request object
+ * @param {object} response express response object
+ * @param {object} next express next argument
+ * @returns {json} json
+ */
+const toggleRead = async (request, response) => {
+  const { slug } = request.params;
+  const { readStatus } = request.body;
+  try {
+    const novel = await findNovel(slug);
+    if (!novel) {
+      return responseMessage(response, 404, { error: 'novel not found' });
+    }
+    const status = await toggleReadStatus(request.user.id, novel.id, readStatus);
+    return responseMessage(response, 200, { message: status, novel });
+  } catch (error) {
+    log(error.message);
+    responseMessage(response, 500, { error: 'an error occurred' });
+  }
+};
+
 export default {
   createNovel,
   getNovels,
@@ -321,5 +347,6 @@ export default {
   postBookmark,
   fetchBookmarks,
   editNovel,
-  deleteNovel
+  deleteNovel,
+  toggleRead
 };
