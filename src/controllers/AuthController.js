@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import helpers from '../helpers';
 import services from '../services';
 import models from '../database/models';
@@ -6,7 +7,11 @@ import models from '../database/models';
 const {
   forgotPasswordMessage, responseMessage, errorResponse, successResponse,
 } = helpers;
-const { sendMail, userServices: { findUser } } = services;
+const {
+  sendMail,
+  userServices: { findUser, updateUser },
+  passwordServices: { getPreviousPasswords, deletePreviousPassword, createPreviousPassword }
+} = services;
 const { User } = models;
 
 /**
@@ -33,6 +38,48 @@ const forgotPassword = async (request, response) => {
     response.status(500).json({
       error: error.message
     });
+  }
+};
+
+/**
+ * Change password
+ *
+ * @param {object} request
+ * @param {object} response
+ * @returns {json} - json
+ */
+
+const changePassword = async (request, response) => {
+  const { currentPassword, newPassword } = request.body;
+  const { id, password } = request.user;
+  try {
+    const match = await bcrypt.compare(currentPassword, password);
+    if (!match) {
+      return responseMessage(response, 403, { error: 'wrong password' });
+    }
+    if (newPassword === currentPassword) {
+      return responseMessage(response, 409, { error: 'new password cannot be the same the current password' });
+    }
+    const previousPasswords = await getPreviousPasswords(id);
+    let count = 1;
+    if (previousPasswords.length > 1) {
+      const isPreviousPassword = previousPasswords
+        .find(item => bcrypt.compareSync(newPassword, item.password));
+
+      if (isPreviousPassword) {
+        return responseMessage(response, 409, { error: 'you cannot use any of your last 5 passwords' });
+      }
+      count = previousPasswords[previousPasswords.length - 1].passwordCount + 1;
+      if (previousPasswords.length === 5) {
+        await deletePreviousPassword(previousPasswords[0].id);
+      }
+    }
+    await createPreviousPassword(id, password, count);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await updateUser({ password: hashedPassword }, id);
+    return responseMessage(response, 200, { message: 'successfully changed password' });
+  } catch (error) {
+    responseMessage(response, 500, { error: error.message });
   }
 };
 
@@ -65,4 +112,4 @@ const updateStatus = async (req, res) => {
   return successResponse(res, 200, { message: 'You have sucessfully verified your email' });
 };
 
-export default { forgotPassword, updateStatus };
+export default { forgotPassword, updateStatus, changePassword };

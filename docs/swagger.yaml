@@ -381,8 +381,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardServerResponse'
-                      
+                $ref: '#/components/schemas/StandardServerResponse'                   
   /auth/forgotpassword:
     post:
       tags:
@@ -416,6 +415,99 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardServerResponse'
+  /auth/changepassword:
+    post:
+      summary: Change password
+      description: Allows an authenticated user to change their password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        201:
+          description: succesful request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: object
+                    example: successfully changed password
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: currentPassword
+                        message:
+                          type: string
+                          example: currentPassword is a required field
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: wrong password
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: user not found
+        409:
+          description: conflict error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: new password cannot be the same as current password
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: error occured
   /novels/{slug}/comments:
     post:
       summary: Creates a comment

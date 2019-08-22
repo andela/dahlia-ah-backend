@@ -12,10 +12,25 @@ const findUser = async (param) => {
   const field = (/^[A-Z0-9_.-]+@[A-Z0-9.-]+[A-Z]$/ig.test(param)) ? { email: param } : { id: param };
   const user = await User.findOne({
     where: field,
-    attributes: { exclude: ['password'] },
     include: [{ model: Role }]
   });
   return user;
+};
+
+/**
+ * @description Updates a user record
+ * @param {string} newValue
+ * @param {string} userId
+ * @returns {object} a user object
+ */
+const updateUser = async (newValue, userId) => {
+  const updatedUser = await User.update({
+    ...newValue
+  }, {
+    where: { id: userId },
+    returning: true
+  });
+  return updatedUser;
 };
 
 /**
@@ -44,5 +59,6 @@ const getAllUsers = async () => {
 export default {
   findUser,
   findFollower,
-  getAllUsers
+  getAllUsers,
+  updateUser
 };

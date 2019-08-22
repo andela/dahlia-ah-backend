@@ -38,6 +38,11 @@ const userValidator = {
     isValidEmail(),
     validatorError
   ],
+  changePassword: [
+    isValidPassword('currentPassword'),
+    isValidPassword('newPassword'),
+    validatorError
+  ],
 };
 
 export default userValidator;

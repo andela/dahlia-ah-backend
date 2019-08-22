@@ -31,14 +31,15 @@ const isValidName = field => check(field)
   .withMessage(`${field} is a required field`);
 
 /**
+   * @param {String} field
    * @returns {Object} - Express-validator
    */
-const isValidPassword = () => check('password').isLength({ min: 8 })
-  .withMessage('password must be at least 8 characters long').not()
+const isValidPassword = (field = 'password') => check(field).isLength({ min: 8 })
+  .withMessage(`${field} must be at least 8 characters long`).not()
   .isEmpty()
-  .withMessage('password is a required field')
+  .withMessage(`${field} is a required field`)
   .isAlphanumeric()
-  .withMessage('password should contain only numbers and alphabets');
+  .withMessage(`${field} should contain only numbers and alphabets`);
 
 /**
    * @param {String} field
