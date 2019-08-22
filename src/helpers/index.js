@@ -5,6 +5,7 @@ import emailMessages from './emailMessages';
 import responseMessage from './responseMessage';
 import validators from './validator';
 import verifyUser from './verifyUser';
+import extractNovels from './extractNovels';
 
 const { forgotPasswordMessage } = emailMessages;
 
@@ -17,4 +18,5 @@ export default {
   responseMessage,
   validators,
   verifyUser,
+  extractNovels,
 };

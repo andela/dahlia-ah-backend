@@ -4,7 +4,7 @@ import errorHandler from './errorHandler';
 
 const { validators } = helpers;
 const {
-  isValidComment, isNotEmptySlug, isValidId
+  isValidComment, isNotEmptySlug, isValidUUID
 } = validators;
 
 const { validatorError } = errorHandler;
@@ -17,7 +17,7 @@ const commentValidator = {
   ],
   replyComment: [
     isNotEmptySlug(),
-    isValidId('parentId'),
+    isValidUUID('parentId'),
     isValidComment(),
     validatorError
   ]

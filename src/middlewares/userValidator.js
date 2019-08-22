@@ -3,7 +3,7 @@ import errorHandler from './errorHandler';
 
 const { validators, emptyBody } = helpers;
 const {
-  isValidEmail, isValidName, isValidId, isValidPassword,
+  isValidEmail, isValidName, isValidUUID, isValidPassword,
   isValidProfileName, isValidProfilePassword,
   isValidAvatarUrl
 } = validators;
@@ -23,7 +23,7 @@ const userValidator = {
     validatorError
   ],
   profileValidator: [
-    isValidId('userId'),
+    isValidUUID('userId'),
     validatorError
   ],
   editProfileValidator: [

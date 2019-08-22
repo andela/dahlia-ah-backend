@@ -1,7 +1,9 @@
 import { Op } from 'sequelize';
 import models from '../database/models';
 
-const { Genre, Novel, Likes } = models;
+const {
+  User, Genre, Novel, Likes
+} = models;
 
 /**
  * Finds a novel from the database by slug
@@ -97,10 +99,26 @@ const createNewNovel = async (novel, author) => {
   };
 };
 
+/**
+ *
+ * @param {object} offset
+ * @param {object} limit
+ * @returns {object} json
+ */
+const findAllNovels = async (offset, limit) => {
+  const novels = await Novel.findAll({
+    offset,
+    limit,
+    include: [{ model: User }, { model: Genre }]
+  });
+  return novels;
+};
+
 export default {
   findNovel,
   createNewNovel,
   findNovelById,
   findNovelLike,
-  removeNovelLike
+  removeNovelLike,
+  findAllNovels
 };
