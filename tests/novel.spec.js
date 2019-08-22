@@ -16,14 +16,14 @@ const { expect } = chai;
 const { Novel, Bookmark } = models;
 const { Genre } = models;
 const {
-  userMock: { validProfileLogin, validReaderProfileLogin },
+  userMock: { validProfileLogin, validReaderProfileLogin, seededUser5 },
   novelMock: {
     validNovel, validNovel2, validGenre, invalidGenre, emptyGenre, existingGenre
   }
 } = mockData;
 const { novelHelpers: { extractNovels } } = helpers;
 
-let authToken, authReaderToken;
+let authToken, authReaderToken, author2token, endpointLike, endpointSlug;
 
 const { bookmarkNovel } = novelServices;
 
@@ -42,7 +42,6 @@ const wrongBookmarkId = '/api/v1/novels/35bbffbe-97d4-47f9-88ce-b4502e0489f1/boo
 const endpointFetchBookmark = '/api/v1/novels/bookmarks';
 const userIdbookmark = '0ce36391-2c08-4703-bddb-a4ea8cccbbc5';
 const novelIdbookmark = '7f45df6d-7003-424f-86ec-1e2b36e2fd14';
-let endpoint;
 
 // token of logged in user Eden Hazard in the database
 const loggedInUserToken = jwt.sign({ id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456' }, SECRET_KEY, { expiresIn: '120s' });
@@ -55,6 +54,16 @@ describe('Test for novel CRUD', () => {
       .end((error, response) => {
         const { token } = response.body.user;
         authToken = token;
+        done();
+      });
+  });
+
+  before((done) => {
+    chai.request(server)
+      .post(LOGIN_URL)
+      .send(seededUser5)
+      .end((err, res) => {
+        author2token = res.body.user.token;
         done();
       });
   });
@@ -88,7 +97,8 @@ describe('Test for novel CRUD', () => {
         .set('authorization', authToken)
         .end((err, res) => {
           const { novel: { slug } } = res.body;
-          endpoint = `/api/v1/novels/${slug}/like`;
+          endpointSlug = `/api/v1/novels/${slug}`;
+          endpointLike = `/api/v1/novels/${slug}/like`;
           expect(res).to.have.status(201);
           expect(res.body).to.have.property('novel');
           done();
@@ -211,7 +221,7 @@ describe('Test for novel CRUD', () => {
   describe('like and dislike functionalities', () => {
     it('should not be able to like or dislike without token', (done) => {
       chai.request(server)
-        .post(endpoint)
+        .post(endpointLike)
         .end((err, res) => {
           expect(res).status(401);
           expect(res.body).property('error').eq('you have to be signed in to continue');
@@ -221,7 +231,7 @@ describe('Test for novel CRUD', () => {
 
     it('should not be able to like or dislike without token if token is invalid', (done) => {
       chai.request(server)
-        .post(endpoint)
+        .post(endpointLike)
         .set('authorization', invalidToken)
         .end((err, res) => {
           expect(res).status(401);
@@ -243,7 +253,7 @@ describe('Test for novel CRUD', () => {
 
     it('should return if user does not exist', (done) => {
       chai.request(server)
-        .post(endpoint)
+        .post(endpointLike)
         .set('authorization', nonExistUserToken)
         .end((err, res) => {
           expect(res).status(500);
@@ -254,7 +264,7 @@ describe('Test for novel CRUD', () => {
 
     it('should return success message on successful like', (done) => {
       chai.request(server)
-        .post(endpoint)
+        .post(endpointLike)
         .set('authorization', authToken)
         .end((err, res) => {
           expect(res).status(201);
@@ -265,7 +275,7 @@ describe('Test for novel CRUD', () => {
 
     it('should return success message on successful unlike', (done) => {
       chai.request(server)
-        .post(endpoint)
+        .post(endpointLike)
         .set('authorization', authToken)
         .end((err, res) => {
           expect(res).status(201);
@@ -712,6 +722,117 @@ describe('POST /api/v1/novels/:noveId/bookmarks', () => {
         expect(response).to.have.status(500);
         expect(response.body).to.be.an('object');
         expect(response.body.error).to.equal('error occurred!');
+        stub.restore();
+        done();
+      });
+  });
+});
+
+describe('PATCH /api/v1/novels/:slug', () => {
+  it('should update novel', (done) => {
+    chai.request(server)
+      .patch(endpointSlug)
+      .send({
+        description: 'different'
+      })
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('novel');
+        done();
+      });
+  });
+
+  it('should not update novel if novel does not exist', (done) => {
+    chai.request(server)
+      .patch(`${endpointSlug}2`)
+      .send({
+        description: 'different'
+      })
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body).to.have.property('error').eq('Novel not found');
+        done();
+      });
+  });
+
+  it('should not update novel if novel does not belong to user', (done) => {
+    chai.request(server)
+      .patch(endpointSlug)
+      .send({
+        description: 'so different'
+      })
+      .set('authorization', author2token)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body).to.have.property('error').eq('You cannot edit this book');
+        done();
+      });
+  });
+
+  it('should return a failure response if a server error occurs', (done) => {
+    const stub = sinon.stub(Novel, 'findOne');
+    stub.throws(new Error('error occured!'));
+
+    chai.request(server)
+      .patch(endpointSlug)
+      .set('authorization', authToken)
+      .end((error, response) => {
+        expect(response).to.have.status(500);
+        expect(response.body).to.be.an('object');
+        expect(response.body.error).to.equal('error occured!');
+        stub.restore();
+        done();
+      });
+  });
+});
+
+describe('DELETE /api/v1/novels/:slug', () => {
+  it('should not delete novel if novel does not exist', (done) => {
+    chai.request(server)
+      .delete(`${endpointSlug}2`)
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body).to.have.property('error').eq('Novel not found');
+        done();
+      });
+  });
+
+  it('should not delete novel if novel does not belong to user', (done) => {
+    chai.request(server)
+      .delete(endpointSlug)
+      .set('authorization', author2token)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body).to.have.property('error').eq('You cannot delete this book');
+        done();
+      });
+  });
+
+  it('should delete novel', (done) => {
+    chai.request(server)
+      .delete(endpointSlug)
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('message').eq('Novel deleted successfully');
+        done();
+      });
+  });
+
+  it('should return a failure response if a server error occurs', (done) => {
+    const stub = sinon.stub(Novel, 'findOne');
+    stub.throws(new Error('error occured!'));
+
+    chai.request(server)
+      .delete(endpointSlug)
+      .set('authorization', authToken)
+      .end((error, response) => {
+        expect(response).to.have.status(500);
+        expect(response.body).to.be.an('object');
+        expect(response.body.error).to.equal('error occured!');
         stub.restore();
         done();
       });

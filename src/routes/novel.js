@@ -5,7 +5,8 @@ import novelController from '../controllers/novelController';
 
 const {
   novelValidator: {
-    createNovelValidator, getNovelBySlugValidator, getNovelValidator, genreValidator
+    createNovelValidator, getNovelBySlugValidator, getNovelValidator,
+    genreValidator, editNovelValidator
   },
   highlightValidator: { createHighlightValidator },
   verifyToken,
@@ -13,13 +14,19 @@ const {
 } = middlewares;
 const {
   createNovel, getNovels, createGenre,
-  getSingleNovel, highlightNovel, postBookmark, fetchBookmarks
+  getSingleNovel, highlightNovel, postBookmark, fetchBookmarks, editNovel, deleteNovel
 } = novelController;
 const novel = express.Router();
 const NOVEL_URL = '/novels';
 
 // Route to create a novel
 novel.post(`${NOVEL_URL}`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), createNovelValidator, createNovel);
+
+// Route to edit a novel
+novel.patch(`${NOVEL_URL}/:slug`, editNovelValidator, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), editNovel);
+
+// Route to delete a novel
+novel.delete(`${NOVEL_URL}/:slug`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), deleteNovel);
 
 // Route to like a novel
 novel.post(`${NOVEL_URL}/:slug/like`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), updateLikes);
