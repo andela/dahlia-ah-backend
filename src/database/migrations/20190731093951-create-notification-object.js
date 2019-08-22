@@ -1,24 +1,26 @@
-export const up = (queryInterface, Sequelize) => queryInterface.createTable('Followers', {
+export const up = (queryInterface, Sequelize) => queryInterface.createTable('NotificationObjects', {
   id: {
     allowNull: false,
     primaryKey: true,
     type: Sequelize.UUID,
   },
-  followeeId: {
-    allowNull: false,
+  entityId: {
     type: Sequelize.UUID,
+    onDelete: 'CASCADE',
+    allowNull: false,
+  },
+  actorId: {
+    type: Sequelize.UUID,
+    onDelete: 'CASCADE',
+    allowNull: false,
     references: {
       model: 'Users',
       key: 'id'
     },
   },
-  followerId: {
-    type: Sequelize.UUID,
+  entityTypeId: {
     allowNull: false,
-    references: {
-      model: 'Users',
-      key: 'id'
-    },
+    type: Sequelize.INTEGER
   },
   createdAt: {
     allowNull: false,
@@ -29,4 +31,5 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Fol
     type: Sequelize.DATE
   }
 });
-export const down = queryInterface => queryInterface.dropTable('Followers');
+
+export const down = queryInterface => queryInterface.dropTable('NotificationObjects');

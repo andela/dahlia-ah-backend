@@ -4,7 +4,7 @@ import services from '../services';
 
 const { novelServices: { findNovel, findNovelLike, removeNovelLike } } = services;
 const { successResponse, errorResponse } = helpers;
-const { Likes } = model;
+const { Like } = model;
 
 /**
  *
@@ -23,16 +23,18 @@ const updateLikes = async (req, res) => {
     return errorResponse(res, 404, 'user or novel does not exist');
   }
 
-  const likeExist = await findNovelLike(id, slug);
+  const novelId = novel.id;
+
+  const likeExist = await findNovelLike(id, novelId);
 
   if (likeExist) {
-    await removeNovelLike(id, slug);
+    await removeNovelLike(id, novelId);
     return successResponse(res, 201, { message: 'you\'ve succesfully unliked this book' });
   }
 
-  await Likes.create({
+  await Like.create({
     userId: id,
-    slug,
+    novelId,
   });
 
   return successResponse(res, 201, { message: 'you\'ve succesfully liked this book' });

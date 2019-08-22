@@ -22,7 +22,7 @@ describe('Test for base api base url', () => {
 describe('Test for endpoint not found(404)', () => {
   it('should return a status code of 404 when the endpoint supplied is not on our server', (done) => {
     chai.request(app)
-      .get('/404error')
+      .get('/404/error/hi')
       .end((err, res) => {
         expect(res).to.have.status(404);
         done();

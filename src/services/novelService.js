@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import models from '../database/models';
 
 const {
-  User, Genre, Novel, Likes
+  User, Genre, Novel, Like
 } = models;
 
 /**
@@ -35,9 +35,9 @@ const findNovelById = param => Novel.findOne({
  * @returns {object}
  */
 
-const findNovelLike = (userId, slug) => Likes.findOne({
+const findNovelLike = (userId, novelId) => Like.findOne({
   where: {
-    [Op.and]: [{ userId }, { slug }]
+    [Op.and]: [{ userId }, { novelId }]
   }
 });
 
@@ -48,9 +48,9 @@ const findNovelLike = (userId, slug) => Likes.findOne({
  * @returns {object}
  */
 
-const removeNovelLike = (userId, slug) => Likes.destroy({
+const removeNovelLike = (userId, novelId) => Like.destroy({
   where: {
-    [Op.and]: [{ userId }, { slug }]
+    [Op.and]: [{ userId }, { novelId }]
   }
 });
 

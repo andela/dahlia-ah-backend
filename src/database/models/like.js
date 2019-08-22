@@ -1,5 +1,5 @@
 export default (sequelize, DataTypes) => {
-  const Likes = sequelize.define('Likes', {
+  const Like = sequelize.define('Like', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -10,20 +10,20 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.UUID,
     },
-    slug: {
+    novelId: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
     }
   }, {});
-  Likes.associate = (models) => {
-    Likes.belongsTo(models.User, {
+  Like.associate = (models) => {
+    Like.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
-    Likes.belongsTo(models.Novel, {
-      foreignKey: 'slug',
+    Like.belongsTo(models.Novel, {
+      foreignKey: 'novelId',
       onDelete: 'CASCADE'
     });
   };
-  return Likes;
+  return Like;
 };

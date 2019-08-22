@@ -31,8 +31,6 @@ paths:
       tags:
         - Users
       summary: Creates a new user.
-      security:
-      - ApiKeyAuth: []
       requestBody:
         description: fields containing user data
         content:
@@ -70,6 +68,22 @@ paths:
                           example: the email address you supplied is invalid
         409:
           description: resource already exists
+        500:
+          description: internal server error 
+  /notifications:
+    get:
+      tags:
+        - Notification
+      summary: get all notification of the login user
+      security:
+      - ApiKeyAuth: []
+      responses:
+        200:
+          description: array of notification object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
         500:
           description: internal server error 
   /novels:
@@ -465,8 +479,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
-            example: '1'
+            type: string
+            example: '0ce36391-2c08-4703-bddb-a4ea8cccbbc5'
       responses:
         200:
           description: profile details of user
@@ -665,7 +679,6 @@ components:
       - firstName
       - lastName
       - email
-      - username
       type: object
       properties:
         firstName:
@@ -763,6 +776,29 @@ components:
           type: integer
         bio:
           type: string
+    Notification:
+      type: object
+      properties: 
+        notifications:
+          type: array
+          items:
+            type: object
+            properties:
+              actor:
+                type: string
+                example: eden hazard
+              message: 
+                type: string
+                example: created a novel with the title
+              novelTitle: 
+                type: string
+                example: Religion And Spirituality
+              novelUrl:
+                type: string
+                example: /api/v1/novels/1
+              createdAt: 
+                type: string
+                example: 2019-08-07 11:54:44.713+01
     ForgotPasswordUser:
       required:
       - email
@@ -825,7 +861,7 @@ components:
           type: boolean
           example: true
   securitySchemes:
-    bearerToken:
+    ApiKeyAuth:            
       type: apiKey
-      name: Authorization
       in: header
+      name: authorization   

@@ -59,6 +59,11 @@ export default (Sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    allowEmailNotification: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE
@@ -69,11 +74,25 @@ export default (Sequelize, DataTypes) => {
     }
   }, {});
   User.associate = (models) => {
-    User.hasMany(models.Novel, {
-      foreignKey: 'authorId',
+    User.hasMany(models.Comment, {
+      foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
-
+    User.hasMany(models.Notification, {
+      as: 'notifier',
+      foreignKey: 'notifierId',
+      onDelete: 'cascade'
+    });
+    User.hasMany(models.Follower, {
+      foreignKey: 'followeeId',
+      onDelete: 'CASCADE',
+      as: 'usersToBeNotified'
+    });
+    User.hasMany(models.Novel, {
+      foreignKey: 'authorId',
+      onDelete: 'CASCADE',
+      as: 'author',
+    });
     User.hasMany(models.Comment, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
@@ -93,7 +112,7 @@ export default (Sequelize, DataTypes) => {
       foreignKey: 'roleId',
     });
 
-    User.hasMany(models.Likes, {
+    User.hasMany(models.Like, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });

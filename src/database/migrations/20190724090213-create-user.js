@@ -61,7 +61,12 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Use
   },
   verifiedToken: {
     allowNull: true,
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
+  },
+  allowEmailNotification: {
+    allowNull: false,
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
   },
   createdAt: {
     allowNull: false,
