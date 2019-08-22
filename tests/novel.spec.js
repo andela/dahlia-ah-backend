@@ -2,9 +2,9 @@ import chai from 'chai';
 import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
 import sinon from 'sinon';
-import server from '../src/index';
-import mockData from './mockData';
+import server from '../src';
 import models from '../src/database/models';
+import mockData from './mockData';
 import helpers from '../src/helpers';
 
 chai.use(chaiHttp);
@@ -14,15 +14,22 @@ const { SECRET_KEY } = process.env;
 const { expect } = chai;
 const { Novel } = models;
 const { extractNovels } = helpers;
-const { userMock, novelMock } = mockData;
+const { Genre } = models;
+const {
+  userMock: { validProfileLogin, validReaderProfileLogin },
+  novelMock: {
+    validNovel, validGenre, invalidGenre, emptyGenre, existingGenre
+  }
+} = mockData;
 
-let authToken, authReaderToken;
-
-const endpointUser = '/api/v1/users/login';
-const endpointNovel = '/api/v1/novels';
-const nonexistNovelEndpoint = '/api/v1/novels/3c3b6226-b691-472e-babf-a96c6eb373f0/like';
+const API_VERSION = '/api/v1';
+const LOGIN_URL = `${API_VERSION}/users/login`;
+const NOVEL_URL = `${API_VERSION}/novels`;
+const GENRE_URL = `${API_VERSION}/genres`;
+const nonexistNovelEndpoint = `${NOVEL_URL}/3c3b6226-b691-472e-babf-a96c6eb373f0/like`;
 const invalidToken = 'ksjbvksvkerlgvdsbv.ergrpewgjperger.gergnkerl';
 const nonExistUserToken = jwt.sign({ id: '8b031dd76-7348-425c-98ea-7b4bd5812c6f' }, process.env.SECRET_KEY);
+let authToken, authReaderToken;
 let endpoint;
 
 // token of logged in user Eden Hazard in the database
@@ -30,21 +37,20 @@ const loggedInUserToken = jwt.sign({ id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456' 
 
 describe('Test for novel CRUD', () => {
   before((done) => {
-    const user = userMock.seededUser1;
     chai.request(server)
-      .post(endpointUser)
-      .send(user)
-      .end((err, res) => {
-        authToken = res.body.user.token;
+      .post(LOGIN_URL)
+      .send(validProfileLogin)
+      .end((error, response) => {
+        const { token } = response.body.user;
+        authToken = token;
         done();
       });
   });
 
   before((done) => {
-    const reader = userMock.validReaderProfileLogin;
     chai.request(server)
-      .post(endpointUser)
-      .send(reader)
+      .post(LOGIN_URL)
+      .send(validReaderProfileLogin)
       .end((err, res) => {
         authReaderToken = res.body.user.token;
         done();
@@ -53,8 +59,8 @@ describe('Test for novel CRUD', () => {
   describe('POST /api/v1/novels', () => {
     it('should create novel if all fields are valid', (done) => {
       chai.request(server)
-        .post(endpointNovel)
-        .send(novelMock.validNovel)
+        .post(NOVEL_URL)
+        .send(validNovel)
         .set('authorization', authToken)
         .end((err, res) => {
           const { novel: { slug } } = res.body;
@@ -67,8 +73,8 @@ describe('Test for novel CRUD', () => {
 
     it('should not create novel if user does not have required permission', (done) => {
       chai.request(server)
-        .post(endpointNovel)
-        .send(novelMock.validNovel)
+        .post(NOVEL_URL)
+        .send(validNovel)
         .set('authorization', authReaderToken)
         .end((err, res) => {
           expect(res).to.have.status(403);
@@ -79,8 +85,8 @@ describe('Test for novel CRUD', () => {
 
     it('should not create novel if user has a novel with the same title', (done) => {
       chai.request(server)
-        .post(endpointNovel)
-        .send(novelMock.validNovel)
+        .post(NOVEL_URL)
+        .send(validNovel)
         .set('authorization', authToken)
         .end((err, res) => {
           expect(res).to.have.status(409);
@@ -91,8 +97,8 @@ describe('Test for novel CRUD', () => {
 
     it('should not create novel if user is not logged in', (done) => {
       chai.request(server)
-        .post(endpointNovel)
-        .send(novelMock.validNovel)
+        .post(NOVEL_URL)
+        .send(validNovel)
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.error).to.equal('no token provided');
@@ -102,8 +108,8 @@ describe('Test for novel CRUD', () => {
 
     it('should not create novel if user token is wrong', (done) => {
       chai.request(server)
-        .post(endpointNovel)
-        .send(novelMock.validNovel)
+        .post(NOVEL_URL)
+        .send(validNovel)
         .set('authorization', 'wrong token')
         .end((err, res) => {
           expect(res).to.have.status(401);
@@ -183,7 +189,7 @@ describe('Test for novel CRUD', () => {
   describe('Pagination support for novels listing', () => {
     it('should return an error response if the page provided is not an integer', (done) => {
       chai.request(server)
-        .get(endpointNovel)
+        .get(NOVEL_URL)
         .query({ page: 'abc', limit: 20 })
         .set('authorization', loggedInUserToken)
         .end((error, response) => {
@@ -200,7 +206,7 @@ describe('Test for novel CRUD', () => {
 
     it('should return an error response if the limit provided is not an integer', (done) => {
       chai.request(server)
-        .get(endpointNovel)
+        .get(NOVEL_URL)
         .query({ page: 1, limit: 'abc' })
         .set('authorization', loggedInUserToken)
         .end((error, response) => {
@@ -217,7 +223,7 @@ describe('Test for novel CRUD', () => {
 
     it('should return an error response if the limit query provided is empty', (done) => {
       chai.request(server)
-        .get(endpointNovel)
+        .get(NOVEL_URL)
         .query({ page: 1, limit: '' })
         .set('authorization', loggedInUserToken)
         .end((error, response) => {
@@ -234,7 +240,7 @@ describe('Test for novel CRUD', () => {
 
     it('should return an error response if the page query provided is empty', (done) => {
       chai.request(server)
-        .get(endpointNovel)
+        .get(NOVEL_URL)
         .query({ page: '', limit: 10 })
         .set('authorization', loggedInUserToken)
         .end((error, response) => {
@@ -254,7 +260,7 @@ describe('Test for novel CRUD', () => {
       stub.returns({ count: 0 });
 
       chai.request(server)
-        .get(endpointNovel)
+        .get(NOVEL_URL)
         .query({ page: 1, limit: 10 })
         .set('authorization', loggedInUserToken)
         .end((error, response) => {
@@ -270,7 +276,7 @@ describe('Test for novel CRUD', () => {
 
     it('should return an error message if the page number supplied is more than the available pages', (done) => {
       chai.request(server)
-        .get(endpointNovel)
+        .get(NOVEL_URL)
         .query({ page: 1000, limit: 10 })
         .set('authorization', loggedInUserToken)
         .end((error, response) => {
@@ -287,7 +293,7 @@ describe('Test for novel CRUD', () => {
       stub.throws(new Error('error occured!'));
 
       chai.request(server)
-        .get(endpointNovel)
+        .get(NOVEL_URL)
         .query({ limit: 10 })
         .set('authorization', loggedInUserToken)
         .end((error, response) => {
@@ -302,8 +308,7 @@ describe('Test for novel CRUD', () => {
 
     it('should successfully return the novels for that page', (done) => {
       chai.request(server)
-        .get(endpointNovel)
-        .query({ page: 1, limit: 10 })
+        .get(NOVEL_URL)
         .set('authorization', loggedInUserToken)
         .end((error, response) => {
           expect(response).to.have.status(200);
@@ -328,5 +333,109 @@ describe('Test for novel CRUD', () => {
       expect(results).to.be.an('array');
       expect(results.length).to.equal(0);
     });
+  });
+});
+
+describe('Create a genre', () => {
+  it('should be able to create a genre', (done) => {
+    chai.request(server)
+      .post(`${GENRE_URL}`)
+      .set('authorization', authToken)
+      .send(validGenre)
+      .end((error, response) => {
+        expect(response).to.have.status(201);
+        expect(response.body).to.be.an('object');
+        expect(response.body.message).to.equal('genre successfully created');
+        done();
+      });
+  });
+
+  it('should not be able to create a genre if the genre already exist', (done) => {
+    chai.request(server)
+      .post(`${GENRE_URL}`)
+      .set('authorization', authToken)
+      .send(existingGenre)
+      .end((error, response) => {
+        expect(response).to.have.status(200);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+
+  it('should not be able to create a genre if the authorization token is invalid', (done) => {
+    chai.request(server)
+      .post(`${GENRE_URL}`)
+      .set('authorization', 'mklknjknljknklj')
+      .send(validGenre)
+      .end((error, response) => {
+        expect(response).to.have.status(401);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+
+  it('should return an error message if a server error occurs', (done) => {
+    const stub = sinon.stub(Genre, 'findOne');
+    stub.throws(new Error('error occurred!'));
+    chai.request(server)
+      .post(`${GENRE_URL}`)
+      .set('authorization', authToken)
+      .send(validGenre)
+      .end((error, response) => {
+        expect(response).to.have.status(500);
+        expect(response.body).to.haveOwnProperty('error');
+        expect(response.body.error).to.be.a('string');
+        expect(response.body.error).to.equal('error occurred!');
+        stub.restore();
+        done();
+      });
+  });
+
+  it('should not be able to create a genre if request body is empty', (done) => {
+    chai.request(server)
+      .post(`${GENRE_URL}`)
+      .set('authorization', authToken)
+      .send({})
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+
+  it('should not be able to create a genre if genre contains an empty string', (done) => {
+    chai.request(server)
+      .post(`${GENRE_URL}`)
+      .set('authorization', authToken)
+      .send(emptyGenre)
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+
+  it('should not be able to create a genre if genre contains invalid characters', (done) => {
+    chai.request(server)
+      .post(`${GENRE_URL}`)
+      .set('authorization', authToken)
+      .send(invalidGenre)
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+
+  it('should not be able to create a genre if authorization token is empty', (done) => {
+    chai.request(server)
+      .post(`${GENRE_URL}`)
+      .set('authorization', '')
+      .send({})
+      .end((error, response) => {
+        expect(response).to.have.status(401);
+        expect(response.body).to.be.an('object');
+        done();
+      });
   });
 });

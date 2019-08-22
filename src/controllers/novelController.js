@@ -1,14 +1,17 @@
+import models from '../database/models';
 import services from '../services';
 import helpers from '../helpers';
-import models from '../database/models';
 
-const {
-  errorResponse, successResponse, extractNovels, responseMessage
-} = helpers;
 const { Novel } = models;
 const {
-  novelServices: { createNewNovel, findAllNovels }, notificationServices: { addNotification }
+  novelServices: { addNovel, findGenre, findAllNovels },
+  notificationServices: { addNotification }
 } = services;
+const {
+  errorResponse, successResponse,
+  extractNovels, responseMessage
+} = helpers;
+const { Genre } = models;
 
 /**
  * createNovel
@@ -19,7 +22,7 @@ const {
  */
 const createNovel = async (req, res) => {
   const newNovel = req.body;
-  const createdNovel = await createNewNovel(newNovel, req.user);
+  const createdNovel = await addNovel(newNovel, req.user);
   if (createdNovel.error) {
     return errorResponse(res, createdNovel.status, createdNovel.error);
   }
@@ -72,4 +75,33 @@ const getNovels = async (request, response) => {
   }
 };
 
-export default { createNovel, getNovels };
+/**
+ * @description creates a genre
+ * @param {object} request express request object
+ * @param {object} response express response object
+ * @param {object} next express next argument
+ * @returns {json} json
+ */
+const createGenre = async (request, response) => {
+  try {
+    const { name } = request.body;
+    const nameValue = name.toLowerCase();
+    const existingGenre = await findGenre(nameValue);
+    if (existingGenre) {
+      const genreName = existingGenre.dataValues;
+      return responseMessage(response, 200, {
+        data: { genre: { name: genreName.name } }
+      });
+    }
+    const createdGenre = await Genre.create({ name: nameValue });
+    const { dataValues } = createdGenre;
+    return responseMessage(response, 201, {
+      message: 'genre successfully created',
+      data: { genre: { name: dataValues.name } }
+    });
+  } catch (error) {
+    return responseMessage(response, 500, { error: error.message });
+  }
+};
+
+export default { createNovel, getNovels, createGenre };

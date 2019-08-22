@@ -4,17 +4,27 @@ import updateLikes from '../controllers/likesController';
 import novelController from '../controllers/novelController';
 
 const novel = express.Router();
+const NOVEL_URL = '/novels';
 
-const { novelValidator, verifyToken, authorizeUser } = middlewares;
-const { createNovel, getNovels } = novelController;
-const validate = novelValidator.createNovel;
-
+const {
+  novelValidator: {
+    createNovelValidator, getNovelValidator, genreValidator
+  },
+  verifyToken,
+  authorizeUser
+} = middlewares;
+const { createNovel, getNovels, createGenre } = novelController;
 
 // Route to create a novel
-novel.post('/novels', validate, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), createNovel);
-novel.post('/novels/:slug/like', verifyToken, authorizeUser(['author', 'admin', 'superadmin']), updateLikes);
+novel.post(`${NOVEL_URL}`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), createNovelValidator, createNovel);
 
-// getNovels route
-novel.get('/novels', verifyToken, novelValidator.getNovels, getNovels);
+// Route to like a novel
+novel.post(`${NOVEL_URL}/:slug/like`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), updateLikes);
+
+// Route to create a genre
+novel.post('/genres', verifyToken, authorizeUser(['author', 'admin', 'superadmin']), genreValidator, createGenre);
+
+// Route to get novels
+novel.get(`${NOVEL_URL}`, verifyToken, getNovelValidator, getNovels);
 
 export default novel;

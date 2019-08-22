@@ -266,6 +266,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StandardServerResponse'
+        
+          description: internal server error                  
+  /genres:
+    post:
+      tags:
+        - Novels
+      summary: Creates a genre
+      requestBody:
+        description: fields containing novel data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenreInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GenreInput'
+        required: true
+      responses:
+        201:
+          description: genre successfully created
+        401:
+          description: Authentication failed
+        409:
+          description: resource already exists
+        500:
+          description: internal server error                  
   /users/login:
     post:
       tags:
@@ -768,6 +794,14 @@ components:
         avatarUrl:
           type: string
           example: ''
+    GenreInput:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: history
     AuthResponse:
       properties:
         token:
