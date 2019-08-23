@@ -70,6 +70,17 @@ paths:
           description: resource already exists
         500:
           description: internal server error 
+    get:
+      tags:
+        - Users
+      summary: Gets all users
+      responses:
+        200:
+          description: request successful
+        401:
+          description: Authentication failed
+      security:
+      - token: [] 
   /notifications:
     get:
       tags:
@@ -86,13 +97,14 @@ paths:
                 $ref: '#/components/schemas/Notification'
         500:
           description: internal server error 
+          description: internal server error
   /novels:
     post:
       tags:
         - Novels
       summary: Creates a new novel
       security:
-      - ApiKeyAuth: []
+      - token: []
       requestBody:
         description: fields containing novel data
         content:
@@ -267,7 +279,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/StandardServerResponse'
         
-          description: internal server error                  
+          description: internal server error  
+      security:
+      - token: []                   
   /genres:
     post:
       tags:
@@ -895,7 +909,7 @@ components:
           type: boolean
           example: true
   securitySchemes:
-    ApiKeyAuth:            
+    token:
       type: apiKey
       in: header
       name: authorization   

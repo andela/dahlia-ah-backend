@@ -5,7 +5,7 @@ import services from '../services';
 const {
   authHelper, successResponse, errorResponse, responseMessage, verifyUser
 } = helpers;
-const { userServices: { findUser, findFollower } } = services;
+const { userServices: { findUser, findFollower, getAllUsers } } = services;
 const { User } = models;
 
 /**
@@ -139,6 +139,25 @@ const editProfile = async (request, response) => {
   return responseMessage(response, 400, { error: `the ${errorField} field(s) entered are invalid` });
 };
 
+/**
+  *
+  * @name listUsers
+  * @param {Object} request
+  * @param {Object} response
+  * @return {Object} json response
+  */
+const listUsers = async (request, response) => {
+  try {
+    const users = await getAllUsers();
+    return successResponse(response, 200, {
+      message: 'Request successful',
+      users
+    });
+  } catch (error) {
+    return responseMessage(response, 500, { error: error.message });
+  }
+};
+
 export default {
-  getProfile, editProfile, signUp, login
+  getProfile, editProfile, signUp, login, listUsers
 };

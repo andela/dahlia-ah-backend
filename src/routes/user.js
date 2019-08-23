@@ -10,7 +10,7 @@ const {
   authorizeUser
 } = middlewares;
 const {
-  signUp, login, getProfile, editProfile
+  signUp, login, getProfile, editProfile, listUsers
 } = userController;
 const user = express.Router();
 
@@ -22,6 +22,9 @@ user.post(`${USER_URL}`, signUpValidator, signUp);
 
 // Route to login a user
 user.post(`${USER_URL}/login`, loginValidator, login);
+
+// Route to get all users
+user.get(`${USER_URL}`, verifyToken, listUsers);
 
 // Route to get user profile by userId
 user.get(`${PROFILE_URL}/:userId`, verifyToken, authorizeUser(['reader', 'author', 'admin', 'superadmin']), profileValidator, getProfile);
