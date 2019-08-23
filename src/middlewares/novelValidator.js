@@ -18,6 +18,10 @@ const novelValidator = {
   getNovelValidator: [
     isValidInt('page').optional(),
     isValidInt('limit').optional(),
+    isNotEmpty('title').optional(),
+    isNotEmpty('genre').optional(),
+    isNotEmpty('author').optional(),
+    isNotEmpty('keyword').optional(),
     validatorError
   ],
   genreValidator: [

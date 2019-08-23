@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import models from '../database/models';
 
 const {
-  User, Genre, Novel, Like
+  Genre, Novel, Like
 } = models;
 
 /**
@@ -103,13 +103,14 @@ const addNovel = async (novel, author) => {
  *
  * @param {object} offset
  * @param {object} limit
+ * @param {object} queryFilter
  * @returns {object} json
  */
-const findAllNovels = async (offset, limit) => {
+const findAllNovels = async (offset, limit, queryFilter) => {
   const novels = await Novel.findAll({
     offset,
     limit,
-    include: [{ model: User }, { model: Genre }]
+    ...queryFilter
   });
   return novels;
 };

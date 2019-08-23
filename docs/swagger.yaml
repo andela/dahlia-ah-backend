@@ -129,19 +129,33 @@ paths:
     get:
       tags:
         - Novels
-      summary: fetches novels with pagination
-      description: fetches novels from the database with pagination
+      summary: fetches novels with pagination and filters
+      description: fetches novels from the database with pagination and filters
       parameters:
         - name: page
           in: query
-          required: true
           schema:
             type: integer
         - name: limit
           in: query
-          required: true
           schema:
             type: integer
+        - name: title
+          in: query
+          schema:
+            type: string
+        - name: author
+          in: query
+          schema:
+            type: string
+        - name: genre
+          in: query
+          schema:
+            type: string
+        - name: keyword
+          in: query
+          schema:
+            type: string
       responses:
         200:
           description: succesfully fetched novels
