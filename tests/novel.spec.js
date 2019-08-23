@@ -101,7 +101,7 @@ describe('Test for novel CRUD', () => {
         .send(validNovel)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.error).to.equal('no token provided');
+          expect(res.body.error).to.equal('you have to be signed in to continue');
           done();
         });
     });
@@ -113,7 +113,7 @@ describe('Test for novel CRUD', () => {
         .set('authorization', 'wrong token')
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.error).to.equal('invalid token');
+          expect(res.body.error).to.equal('you have to be signed in to continue');
           done();
         });
     });
@@ -125,7 +125,7 @@ describe('Test for novel CRUD', () => {
         .post(endpoint)
         .end((err, res) => {
           expect(res).status(401);
-          expect(res.body).property('error').eq('no token provided');
+          expect(res.body).property('error').eq('you have to be signed in to continue');
           done();
         });
     });
@@ -136,7 +136,7 @@ describe('Test for novel CRUD', () => {
         .set('authorization', invalidToken)
         .end((err, res) => {
           expect(res).status(401);
-          expect(res.body).property('error').eq('invalid token');
+          expect(res.body).property('error').eq('you have to be signed in to continue');
           done();
         });
     });
