@@ -155,6 +155,15 @@ const isValidInt = field => check(field)
   .withMessage(`${field} cannot be empty`)
   .isInt()
   .withMessage(`${field} must be an integer`);
+const isNotTypeOfReport = () => check('type')
+  .trim()
+  .isIn(['badWords', 'general'])
+  .withMessage('type must be badWords or general');
+
+const isBoolean = field => check(field)
+  .isBoolean()
+  .optional()
+  .withMessage('isHandled must be a boolean ( true or false )');
 
 export default {
   isValidEmail,
@@ -168,5 +177,7 @@ export default {
   isValidProfileName,
   isValidProfilePassword,
   isValidAvatarUrl,
-  isValidInt
+  isValidInt,
+  isNotTypeOfReport,
+  isBoolean
 };

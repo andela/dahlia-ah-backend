@@ -32,6 +32,11 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.TEXT
     },
+    isBanned: {
+      allowNull: false,
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE
