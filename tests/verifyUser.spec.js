@@ -67,7 +67,7 @@ describe('Test for base api base url', () => {
       .patch(`${invalidTokenUrl}`)
       .end((err, res) => {
         expect(res).to.have.status(401);
-        expect(res.body.error).to.equal('invalid token');
+        expect(res.body.error).to.equal('you have to be signed in to continue');
       });
   });
 
@@ -120,7 +120,7 @@ describe('Test for base api base url', () => {
       .patch(`${expiredTokenUrl}`)
       .end((err, res) => {
         expect(res).to.have.status(401);
-        expect(res.body.error).to.equal('token expired');
+        expect(res.body.error).to.equal('token expired, you have to be signed in to continue');
         done();
       });
   });

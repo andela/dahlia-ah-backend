@@ -21,13 +21,13 @@ export default (request, response, next) => {
   const token = request.headers.authorization || request.query.token || request.params.token;
   const { route: { path } } = request;
   if (!token) {
-    return responseMessage(response, 401, { error: 'no token provided' });
+    return responseMessage(response, 401, { error: 'you have to be signed in to continue' });
   }
   const secret = (path === verifyPath) ? ACCOUNT_VERIFICATION_SECRET : SECRET_KEY;
 
   jwt.verify(token, secret, async (error, decoded) => {
     if (error) {
-      const message = (error.name === 'TokenExpiredError') ? 'token expired' : 'invalid token';
+      const message = (error.name === 'TokenExpiredError') ? 'token expired, you have to be signed in to continue' : 'you have to be signed in to continue';
       return responseMessage(response, 401, { error: message });
     }
     try {
