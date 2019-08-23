@@ -5,10 +5,10 @@ const { validators, emptyBody } = helpers;
 const {
   isValidEmail, isValidName, isValidUUID, isValidPassword,
   isValidProfileName, isValidProfilePassword,
-  isValidAvatarUrl
+  isValidAvatarUrl, isValidUUIDParam
 } = validators;
 
-const { validatorError } = errorHandler;
+const { validatorError, paramsValidatorError } = errorHandler;
 
 const userValidator = {
   signUpValidator: [
@@ -43,6 +43,10 @@ const userValidator = {
     isValidPassword('newPassword'),
     validatorError
   ],
+  followUserValidator: [
+    isValidUUIDParam('userId'),
+    paramsValidatorError
+  ]
 };
 
 export default userValidator;

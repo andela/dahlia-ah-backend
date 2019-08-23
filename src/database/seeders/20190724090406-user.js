@@ -118,5 +118,20 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   isSubscribed: true,
   createdAt: new Date(),
   updatedAt: new Date()
+},
+{
+  id: '6dd5a28c-ce96-4866-b3e7-b29aa69aef97',
+  firstName: 'Anakin',
+  lastName: 'Skywalker',
+  email: 'anakin@gmail.com',
+  password: bcrypt.hashSync('skywalker', 10),
+  bio: 'Force weilder',
+  avatarUrl: null,
+  phoneNo: null,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  isVerified: true,
+  isSubscribed: true,
+  createdAt: new Date(),
+  updatedAt: new Date()
 }], {});
 export const down = queryInterface => queryInterface.bulkDelete('Users', null, {});

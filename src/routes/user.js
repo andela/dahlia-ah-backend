@@ -4,13 +4,13 @@ import userController from '../controllers/userController';
 
 const {
   userValidator: {
-    signUpValidator, loginValidator, profileValidator, editProfileValidator
+    signUpValidator, loginValidator, profileValidator, editProfileValidator, followUserValidator
   },
   verifyToken,
   authorizeUser
 } = middlewares;
 const {
-  signUp, login, getProfile, editProfile, listUsers
+  signUp, login, getProfile, editProfile, listUsers, follow, unfollow
 } = userController;
 const user = express.Router();
 
@@ -31,5 +31,8 @@ user.get(`${PROFILE_URL}/:userId`, verifyToken, authorizeUser(['reader', 'author
 
 // Route to edit a user profile
 user.patch(`${PROFILE_URL}`, verifyToken, authorizeUser(['reader', 'author', 'admin', 'superadmin']), editProfileValidator, editProfile);
+
+user.post('/profiles/:userId/follow', followUserValidator, verifyToken, follow);
+user.delete('/profiles/:userId/follow', followUserValidator, verifyToken, unfollow);
 
 export default user;

@@ -39,7 +39,6 @@ const updateUser = async (newValue, userId) => {
  * @param {string} followerId
  * @returns {object} a user object
  */
-
 const findFollower = async (followeeId, followerId) => {
   const follower = await Follower.findOne({ where: { followeeId, followerId } });
   return follower;

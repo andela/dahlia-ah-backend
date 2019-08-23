@@ -1,4 +1,5 @@
-import { check } from 'express-validator';
+import { check, param } from 'express-validator';
+
 /**
    *  @param {String} field
    *  @returns {Object} - Express-validator
@@ -165,6 +166,15 @@ const isBoolean = field => check(field)
   .optional()
   .withMessage('isHandled must be a boolean ( true or false )');
 
+/**
+   * @param {String} paramName
+   * @returns {Object} - Express-validator
+   */
+const isValidUUIDParam = paramName => param(paramName)
+  .trim()
+  .isUUID()
+  .withMessage('invalid request');
+
 export default {
   isValidEmail,
   isValidName,
@@ -179,5 +189,6 @@ export default {
   isValidAvatarUrl,
   isValidInt,
   isNotTypeOfReport,
-  isBoolean
+  isBoolean,
+  isValidUUIDParam
 };

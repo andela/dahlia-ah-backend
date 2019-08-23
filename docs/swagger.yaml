@@ -97,7 +97,6 @@ paths:
                 $ref: '#/components/schemas/Notification'
         500:
           description: internal server error 
-          description: internal server error
   /novels:
     post:
       tags:
@@ -293,7 +292,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/StandardServerResponse'
         
-          description: internal server error  
       security:
       - token: []                   
   /genres:
@@ -1057,7 +1055,111 @@ paths:
           description: unauthorised request
         500:
           description: internal server error
-                  
+
+  /profiles/{userId}/follow:
+    post:
+      tags:
+        - Users
+      summary: Follow a user
+      description: Add user to list of followers
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: fb94de4d-47ff-4079-89e8-b0186c0a3be8
+
+      responses:
+        201:
+          description: user followed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: you cannot follow yourself
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: error occured
+    
+    delete:
+      tags:
+        - Users
+      summary: Unfollow a user
+      description: Remove user from list of followers
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: fb94de4d-47ff-4079-89e8-b0186c0a3be8
+
+      responses:
+        201:
+          description: user followed
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 'successfully unfollowed'
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: you cannot follow yourself
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: error occured
+
 components:
   schemas:
     token:
