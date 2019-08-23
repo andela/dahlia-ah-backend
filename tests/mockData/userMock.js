@@ -84,6 +84,30 @@ export default {
   wrongForgotPasswordEmail: {
     email: 'example@gmail.com'
   },
+  wrongCurrentPassword: {
+    currentPassword: 'abcdefgh',
+    newPassword: 'newnewnewnew'
+  },
+  sameCurentAndNewPassword: {
+    currentPassword: 'newnewnewnew',
+    newPassword: 'newnewnewnew'
+  },
+  usingPreviousPassword: {
+    currentPassword: 'newnewnewnew',
+    newPassword: 'richardCroft'
+  },
+  userWithoutPreviousPassword: {
+    currentPassword: 'williamsBrook',
+    newPassword: 'willywilly'
+  },
+  withoutFivePreviousPassword: {
+    currentPassword: 'bruceClifford',
+    newPassword: 'bigBruce'
+  },
+  validChangePasswordInput: {
+    currentPassword: 'richardCroft',
+    newPassword: 'newnewnewnew'
+  },
   seededUser1: {
     firstName: 'Eden',
     lastName: 'Hazard',

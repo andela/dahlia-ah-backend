@@ -98,6 +98,11 @@ export default (Sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
 
+    User.hasMany(models.PreviousPassword, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
+
     User.hasMany(models.Follower, {
       foreignKey: 'followerId',
       onDelete: 'CASCADE'
