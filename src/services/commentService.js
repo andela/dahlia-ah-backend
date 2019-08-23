@@ -1,6 +1,6 @@
 import models from '../database/models';
 
-const { Comment } = models;
+const { Comment, CommentHistory } = models;
 
 /**
  * Finds a comment from the database by id
@@ -28,6 +28,42 @@ const createComment = async (commentBody, userId, parentId, novelId) => {
   return createdComment;
 };
 
+/**
+ * Update a comment in the database
+ * @param {string} param
+ * @returns {object} a user object
+ */
+
+const updateComment = async (commentId, commentBody) => {
+  const updatedComment = await Comment.update(
+    { commentBody },
+    {
+      where: { id: commentId },
+      returning: true,
+      raw: true
+    }
+  );
+  const commentUpdate = updatedComment[1][0];
+  return commentUpdate;
+};
+
+/**
+ * insert edited comment in the database
+ * @param {string} commentId
+* @param {string} commentBody
+ * @returns {object} a user object
+ */
+const insertEditedComment = async (commentId, commentBody) => {
+  const insertedComment = await CommentHistory.create({ commentId, commentBody });
+  return insertedComment;
+};
+
+/**
+ * @param {string} commentId
+ * @returns {object} json
+ */
+const getOldComments = commentId => CommentHistory.findAll({ where: { commentId } });
+
 export default {
-  findComment, createComment
+  findComment, createComment, updateComment, getOldComments, insertEditedComment
 };

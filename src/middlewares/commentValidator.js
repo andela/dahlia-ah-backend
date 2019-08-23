@@ -20,6 +20,15 @@ const commentValidator = {
     isValidUUID('parentId'),
     isValidComment(),
     validatorError
+  ],
+  editComment: [
+    isValidComment(),
+    isValidUUID('commentId'),
+    validatorError
+  ],
+  getEditedComment: [
+    isValidUUID('commentId'),
+    validatorError
   ]
 };
 

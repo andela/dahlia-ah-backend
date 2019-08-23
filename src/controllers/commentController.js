@@ -4,8 +4,10 @@ import services from '../services';
 const { responseMessage } = helpers;
 const {
   novelServices: { findNovel },
-  commentServices: { findComment, createComment },
-  notificationServices: { addNotification }
+  notificationServices: { addNotification },
+  commentServices: {
+    findComment, createComment, updateComment, getOldComments, insertEditedComment
+  },
 } = services;
 
 /**
@@ -93,6 +95,49 @@ const replyComment = async (request, response) => {
   }
 };
 
+/**
+ * Finds a comment from the database by commentId
+ * @param {string} req
+ * @param {string} res
+ * @returns {object} json
+ */
+
+const fetchCommentHistory = async (req, res) => {
+  const { commentId } = req.params;
+  const comment = await findComment(commentId);
+  if (!comment) {
+    return responseMessage(res, 404, { error: 'no comment found with the provided id' });
+  }
+  const commentHistory = await getOldComments(commentId);
+  res.status(200).json({
+    commentHistory
+  });
+};
+
+
+const editComment = async (req, res) => {
+  const { commentId } = req.params;
+  const { commentBody } = req.body;
+  try {
+    const previousComment = await findComment(commentId);
+    if (!previousComment) {
+      return responseMessage(res, 404, { error: 'previous comment not found' });
+    }
+    const newComment = await updateComment(commentId, commentBody);
+    insertEditedComment(previousComment.id, previousComment.commentBody);
+    res.status(200).json({
+      message: 'Your comment has been updated successfully',
+      comment: {
+        commentBody: newComment.commentBody,
+        updatedAt: newComment.updatedAt
+      }
+    });
+  } catch (error) {
+    responseMessage(res, 500, { error: error.message });
+  }
+};
+
+
 export default {
-  postComment, replyComment
+  postComment, replyComment, fetchCommentHistory, editComment
 };

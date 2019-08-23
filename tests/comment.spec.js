@@ -14,13 +14,14 @@ const { SECRET_KEY } = process.env;
 chai.use(chaiHttp);
 const { expect } = chai;
 
-const { User, Novel } = models;
+const { User, Novel, Comment } = models;
 const { commentMock } = mockData;
 const { validComment, invalidComment } = commentMock;
 
 const BASE_URL = '/api/v1';
 const COMMENT_URL = `${BASE_URL}/novels/hancock/comments`;
 const REPLY_URL = `${BASE_URL}/novels/hancock/comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
+const EDIT_URL = `${BASE_URL}/novels/hancock/comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
 
 const wrongSlugUrlForComment = `${BASE_URL}/novels/no-slug-like-this-in-database/comments`;
 const wrongSlugUrlForReply = `${BASE_URL}/novels/no-slug-like-this-in-database/comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
@@ -29,6 +30,11 @@ const nonParentCommentUrl = `${BASE_URL}/novels/hancock/comments/b84f246f-ba18-4
 const emptySlugUrl = `${BASE_URL}/novels/ /comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
 const whitespaceSlugUrl = `${BASE_URL}/novels/best-book in-the-world/comments/1`;
 const invalidParentIdUrl = `${BASE_URL}/novels/religion-versus-spirituality/comments/g`;
+
+const emptyCommentBody = '';
+const wrongCommentId = `${BASE_URL}/novels/hancock/comments/394d6e2b-5217-476f-866e-8fba89527a45`;
+const validEmptyComment = `${BASE_URL}/novels/hancock/comments/be145307-1763-459f-8ea0-aff7bf84a078`;
+const noComment = `${BASE_URL}/novels/hancock/comments/5de099c5-22d4-4e88-885b-1fd7374d7d5c`;
 
 // token of subscribed user Eden Hazard in the database
 const subscribedUserToken = jwt.sign({ id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456' }, SECRET_KEY, { expiresIn: '60s' });
@@ -324,4 +330,101 @@ describe('COMMENT ROUTES', () => {
         });
     });
   });
+
+  // Edit comment history
+
+  describe('Update comment', () => {
+    it('should update a comment', (done) => {
+      chai.request(server)
+        .patch(EDIT_URL)
+        .send({ commentBody: 'Hello' })
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body.message).to.equal('Your comment has been updated successfully');
+          done();
+        });
+    });
+  });
+
+  it('should return an error if the comment body is empty', (done) => {
+    chai.request(server)
+      .patch(EDIT_URL)
+      .send(emptyCommentBody)
+      .set('authorization', subscribedUserToken)
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        expect(response.body).to.be.an('object');
+        expect(response.body.errors[0].message).to.equal('commentBody is a required field');
+        done();
+      });
+  });
+});
+
+it('should return a failure response if a server error occurs', (done) => {
+  const stub = sinon.stub(Comment, 'findOne');
+  stub.throws(new Error('error occured!'));
+
+  chai.request(server)
+    .patch(EDIT_URL)
+    .send(validComment)
+    .set('authorization', subscribedUserToken)
+    .end((error, response) => {
+      expect(response).to.have.status(500);
+      expect(response.body).to.be.an('object');
+      expect(response.body.error).to.equal('error occured!');
+      stub.restore();
+      done();
+    });
+});
+
+
+it('should return an error response if the provided id does not exist for a particular comment', (done) => {
+  chai.request(server)
+    .patch(wrongCommentId)
+    .send(validComment)
+    .set('authorization', subscribedUserToken)
+    .end((error, response) => {
+      expect(response).to.have.status(404);
+      expect(response.body).to.be.an('object');
+      expect(response.body.error).to.equal('previous comment not found');
+      done();
+    });
+});
+
+it('should get all the comment edit history for a comment', (done) => {
+  chai.request(server)
+    .get(EDIT_URL)
+    .set('authorization', subscribedUserToken)
+    .end((error, response) => {
+      expect(response).to.have.status(200);
+      expect(response.body).to.be.an('object');
+      expect(response.body).to.have.property('commentHistory');
+      done();
+    });
+});
+
+it('should return an error reponse if there\'s no comment with the given id', (done) => {
+  chai.request(server)
+    .get(validEmptyComment)
+    .set('authorization', subscribedUserToken)
+    .end((error, response) => {
+      expect(response).to.have.status(404);
+      expect(response.body).to.be.an('object');
+      expect(response.body.error).to.equal('no comment found with the provided id');
+      done();
+    });
+});
+
+it('should return an error reponse if no there\'s no comment history', (done) => {
+  chai.request(server)
+    .get(noComment)
+    .set('authorization', subscribedUserToken)
+    .end((error, response) => {
+      expect(response).to.have.status(200);
+      expect(response.body).to.be.an('object');
+      expect(response.body.commentHistory.length).to.equal(0);
+      done();
+    });
 });
