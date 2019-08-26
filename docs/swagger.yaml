@@ -682,6 +682,67 @@ paths:
                       message:
                           type: string
                           example: 'user not found'
+  /novels/{commentId}/like:
+    post:
+      summary: Creates a comment
+      description: Post a comment on a novel
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: succesful request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: you've successfully liked comment
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        403:
+          description: forbidden access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: you have to be subscribed to like a comment
+        404:
+          description: entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: comment not found
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: error occured
   /novels/{slug}/comments/{parentId}:
     post:
       summary: Creates a reply

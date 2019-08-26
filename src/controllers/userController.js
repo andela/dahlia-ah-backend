@@ -40,6 +40,7 @@ const signUp = async (req, res) => {
   };
 
   const createdUser = await User.create(user);
+
   await verifyUser({
     id: createdUser.id,
     email: createdUser.email,

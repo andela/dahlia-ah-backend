@@ -43,6 +43,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'parentId',
       onDelete: 'CASCADE'
     });
+    Comment.hasMany(models.CommentLike, {
+      foreignKey: 'commentId',
+      onDelete: 'CASCADE'
+    });
   };
   return Comment;
 };

@@ -1,6 +1,7 @@
+import { Op } from 'sequelize';
 import models from '../database/models';
 
-const { Comment, CommentHistory } = models;
+const { Comment, CommentHistory, CommentLike } = models;
 
 /**
  * Finds a comment from the database by id
@@ -64,6 +65,32 @@ const insertEditedComment = async (commentId, commentBody) => {
  */
 const getOldComments = commentId => CommentHistory.findAll({ where: { commentId } });
 
+const createCommentLike = async (userId, commentId) => {
+  await CommentLike.create({
+    userId,
+    commentId
+  });
+};
+
+const findCommentLike = async (userId, commentId) => CommentLike.findOne({
+  where: {
+    [Op.and]: [{ userId }, { commentId }]
+  }
+});
+
+const deleteCommentLike = async (userId, commentId) => CommentLike.destroy({
+  where: {
+    [Op.and]: [{ userId }, { commentId }]
+  }
+});
+
 export default {
-  findComment, createComment, updateComment, getOldComments, insertEditedComment
+  findComment,
+  createComment,
+  createCommentLike,
+  findCommentLike,
+  deleteCommentLike,
+  updateComment,
+  getOldComments,
+  insertEditedComment
 };

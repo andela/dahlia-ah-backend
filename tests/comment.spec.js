@@ -6,6 +6,11 @@ import jwt from 'jsonwebtoken';
 import server from '../src';
 import models from '../src/database/models';
 import mockData from './mockData';
+import services from '../src/services';
+import commentCrontroller from '../src/controllers/commentController';
+
+const { commentServices: { findCommentLike } } = services;
+const { likeComment } = commentCrontroller;
 
 dotenv.config();
 
@@ -20,6 +25,9 @@ const { validComment, invalidComment } = commentMock;
 
 const BASE_URL = '/api/v1';
 const COMMENT_URL = `${BASE_URL}/novels/hancock/comments`;
+const VALID_COMMENT_LIKE_URL = `${BASE_URL}/comment/6a7b986e-1102-4e9a-83b0-cad7df993e1c/like`;
+const INVALID_COMMENT_LIKE_URL = `${BASE_URL}/comment/6a7b986e-1102-4e9a-83b30-cad7df993e1c/like`;
+const NOTFOUND_COMMENT_LIKE_URL = `${BASE_URL}/comment/fa35c754-59e1-4c16-b954-aecb97cd139e/like`;
 const REPLY_URL = `${BASE_URL}/novels/hancock/comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
 const EDIT_URL = `${BASE_URL}/novels/hancock/comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
 
@@ -38,6 +46,8 @@ const noComment = `${BASE_URL}/novels/hancock/comments/5de099c5-22d4-4e88-885b-1
 
 // token of subscribed user Eden Hazard in the database
 const subscribedUserToken = jwt.sign({ id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456' }, SECRET_KEY, { expiresIn: '60s' });
+// token of unSubscribed user James Bond in the database
+const unSubscribedUserToken = jwt.sign({ id: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8' }, SECRET_KEY, { expiresIn: '60s' });
 
 describe('COMMENT ROUTES', () => {
   // Create A Comment On A Post
@@ -150,9 +160,6 @@ describe('COMMENT ROUTES', () => {
     });
 
     it('should return an error if an unSubscribed user tries to access this endpoint', (done) => {
-      // token of unSubscribed user James Bond in the database
-      const unSubscribedUserToken = jwt.sign({ id: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8' }, SECRET_KEY, { expiresIn: '60s' });
-
       chai.request(server)
         .post(COMMENT_URL)
         .send(validComment)
@@ -244,9 +251,6 @@ describe('COMMENT ROUTES', () => {
     });
 
     it('should return an error if an unSubscribed user tries to access this endpoint', (done) => {
-      // token of unSubscribed user James Bond in the database
-      const unSubscribedUserToken = jwt.sign({ id: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8' }, SECRET_KEY, { expiresIn: '60s' });
-
       chai.request(server)
         .post(REPLY_URL)
         .send(validComment)
@@ -427,4 +431,65 @@ it('should return an error reponse if no there\'s no comment history', (done) =>
       expect(response.body.commentHistory.length).to.equal(0);
       done();
     });
+});
+describe('Test comment like and unlike', () => {
+  it('should return error if commentId is invalid', (done) => {
+    chai.request(server)
+      .post(INVALID_COMMENT_LIKE_URL)
+      .set('authorization', subscribedUserToken)
+      .end((error, response) => {
+        expect(response).to.have.status(500);
+        expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+  it('should return success message on sucessful comment like', (done) => {
+    chai.request(server)
+      .post(VALID_COMMENT_LIKE_URL)
+      .set('authorization', subscribedUserToken)
+      .end((error, response) => {
+        expect(response).to.have.status(200);
+        expect(response.body).to.be.an('object');
+        expect(response.body.message).to.equal('you\'ve successfully liked this comment');
+        done();
+      });
+  });
+  it('should return success message on sucessful comment unlike', (done) => {
+    chai.request(server)
+      .post(VALID_COMMENT_LIKE_URL)
+      .set('authorization', subscribedUserToken)
+      .end((error, response) => {
+        expect(response).to.have.status(200);
+        expect(response.body).to.be.an('object');
+        expect(response.body.message).to.equal('you\'ve successfully unliked this comment');
+        done();
+      });
+  });
+  // test create likeComment controller
+  it('should update database commentLike table', async () => {
+    const req = {
+      params: { commentId: '6a7b986e-1102-4e9a-83b0-cad7df993e1c' },
+      user: { id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456', isSubscribed: true },
+    };
+    const { params: { commentId }, user: { id } } = req;
+    const res = {
+      status() {
+        return { json() {} };
+      }
+    };
+    await likeComment(req, res);
+    const found = findCommentLike(id, commentId);
+    expect(found).to.not.equal(null);
+  });
+  it('should return error comment if comment not found', (done) => {
+    chai.request(server)
+      .post(NOTFOUND_COMMENT_LIKE_URL)
+      .set('authorization', subscribedUserToken)
+      .end((error, response) => {
+        expect(response).to.have.status(404);
+        expect(response.body).to.be.an('object');
+        expect(response.body.error).to.equal('comment does not exist');
+        done();
+      });
+  });
 });

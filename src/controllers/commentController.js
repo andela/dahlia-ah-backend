@@ -6,7 +6,8 @@ const {
   novelServices: { findNovel },
   notificationServices: { addNotification },
   commentServices: {
-    findComment, createComment, updateComment, getOldComments, insertEditedComment
+    findComment, createComment, updateComment, getOldComments,
+    insertEditedComment, createCommentLike, findCommentLike, deleteCommentLike
   },
 } = services;
 
@@ -137,7 +138,25 @@ const editComment = async (req, res) => {
   }
 };
 
+const likeComment = async (request, response) => {
+  const { user: { id: userId }, params: { commentId } } = request;
+  try {
+    const commentExist = await findComment(commentId);
+    if (!commentExist) {
+      return responseMessage(response, 404, { error: 'comment does not exist' });
+    }
+    const likeExist = await findCommentLike(userId, commentId);
+    if (likeExist) {
+      await deleteCommentLike(userId, commentId);
+      return responseMessage(response, 200, { message: 'you\'ve successfully unliked this comment' });
+    }
+    await createCommentLike(userId, commentId);
+    return responseMessage(response, 200, { message: 'you\'ve successfully liked this comment' });
+  } catch (error) {
+    return responseMessage(response, 500, { error: error.message });
+  }
+};
 
 export default {
-  postComment, replyComment, fetchCommentHistory, editComment
+  postComment, replyComment, likeComment, fetchCommentHistory, editComment
 };
