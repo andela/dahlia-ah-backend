@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
 import sinon from 'sinon';
 import server from '../src';
-import models from '../src/database/models';
 import mockData from './mockData';
+import models from '../src/database/models';
 import helpers from '../src/helpers';
 
 chai.use(chaiHttp);
@@ -17,12 +17,10 @@ const { Genre } = models;
 const {
   userMock: { validProfileLogin, validReaderProfileLogin },
   novelMock: {
-    validNovel, validGenre, invalidGenre, emptyGenre, existingGenre
+    validNovel, validNovel2, validGenre, invalidGenre, emptyGenre, existingGenre
   }
 } = mockData;
 const { novelHelpers: { extractNovels } } = helpers;
-
-let authToken, authReaderToken;
 
 const API_VERSION = '/api/v1';
 const LOGIN_URL = `${API_VERSION}/users/login`;
@@ -31,6 +29,9 @@ const GENRE_URL = `${API_VERSION}/genres`;
 const nonexistNovelEndpoint = `${NOVEL_URL}/3c3b6226-b691-472e-babf-a96c6eb373f0/like`;
 const invalidToken = 'ksjbvksvkerlgvdsbv.ergrpewgjperger.gergnkerl';
 const nonExistUserToken = jwt.sign({ id: '8b031dd76-7348-425c-98ea-7b4bd5812c6f' }, process.env.SECRET_KEY);
+const validSlug = 'hancock';
+const invalidSlug = 'this-is-the-first-9a5f3850-c53b-4450-8ce4-d560aa2ca736';
+let authToken, authReaderToken;
 let endpoint;
 
 // token of logged in user Eden Hazard in the database
@@ -62,6 +63,18 @@ describe('Test for novel CRUD', () => {
       chai.request(server)
         .post(NOVEL_URL)
         .send(validNovel)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res.body).to.have.property('novel');
+          done();
+        });
+    });
+
+    it('should create another novel if all fields are valid', (done) => {
+      chai.request(server)
+        .post(NOVEL_URL)
+        .send(validNovel2)
         .set('authorization', authToken)
         .end((err, res) => {
           const { novel: { slug } } = res.body;
@@ -115,6 +128,71 @@ describe('Test for novel CRUD', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.error).to.equal('invalid token');
+          done();
+        });
+    });
+  });
+
+  describe('GETs /api/v1/novels/:slug', () => {
+    it('should be able to view a novel details', (done) => {
+      chai.request(server)
+        .get(`${NOVEL_URL}/${validSlug}`)
+        .set('authorization', authToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body).to.have.property('novel');
+          done();
+        });
+    });
+
+    it('should not be able to view a novel details if the novel does exist in the database', (done) => {
+      chai.request(server)
+        .get(`${NOVEL_URL}/${invalidSlug}`)
+        .set('authorization', authToken)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('novel not found');
+          done();
+        });
+    });
+
+    it('should not be able to view a novel details if the token is missing', (done) => {
+      chai.request(server)
+        .get(`${NOVEL_URL}/${validSlug}`)
+        .set('authorization', '')
+        .end((error, response) => {
+          expect(response).to.have.status(401);
+          expect(response.body).to.be.an('object');
+          done();
+        });
+    });
+
+    it('should not be able to view a novel details if the token is invalid', (done) => {
+      chai.request(server)
+        .get(`${NOVEL_URL}/${validSlug}`)
+        .set('authorization', '29327y37grug9')
+        .end((error, response) => {
+          expect(response).to.have.status(401);
+          expect(response.body).to.be.an('object');
+          done();
+        });
+    });
+
+    it('should return an error message if a server error occurs', (done) => {
+      const stub = sinon.stub(Novel, 'findOne');
+      stub.throws(new Error('error occurred!'));
+
+      chai.request(server)
+        .get(`${NOVEL_URL}/${validSlug}`)
+        .set('authorization', authToken)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.haveOwnProperty('error');
+          expect(response.body.error).to.be.a('string');
+          expect(response.body.error).to.equal('error occurred!');
+          stub.restore();
           done();
         });
     });

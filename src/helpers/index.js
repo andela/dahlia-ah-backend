@@ -8,6 +8,7 @@ import verifyUser from './verifyUser';
 import notificationConfig from './notificationConfig';
 import novelHelpers from './novelHelpers';
 import reportHelper from './reportHelper';
+import generateReadTime from './generateReadTime';
 
 const { forgotPasswordMessage, emailNotificationMessage } = emailMessages;
 
@@ -23,5 +24,6 @@ export default {
   emailNotificationMessage,
   notificationConfig,
   novelHelpers,
-  reportHelper
+  reportHelper,
+  generateReadTime
 };

@@ -2,7 +2,7 @@ import validator from '../helpers/validator';
 import errorHandler from './errorHandler';
 
 const {
-  isNotEmpty, isValidGenre, isValidInt, isValidName
+  isNotEmpty, isValidGenre, isValidInt, isValidName, isNotEmptySlug
 } = validator;
 
 const { validatorError } = errorHandler;
@@ -26,6 +26,10 @@ const novelValidator = {
   ],
   genreValidator: [
     isValidName('name'),
+    validatorError
+  ],
+  getNovelBySlugValidator: [
+    isNotEmptySlug(),
     validatorError
   ]
 };

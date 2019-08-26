@@ -2,7 +2,13 @@ const novelMock = {
   validNovel: {
     title: 'This is the first',
     description: 'The very first description',
-    body: 'The body contains text that is really long',
+    body: 'The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read',
+    genre: 'action'
+  },
+  validNovel2: {
+    title: 'This is the second',
+    description: 'The very second description',
+    body: 'The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read',
     genre: 'action'
   },
   validGenre: {

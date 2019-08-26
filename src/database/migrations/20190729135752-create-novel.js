@@ -38,6 +38,10 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Novels', {
     allowNull: false,
     type: Sequelize.TEXT
   },
+  readTime: {
+    allowNull: false,
+    type: Sequelize.INTEGER
+  },
   createdAt: {
     allowNull: false,
     type: Sequelize.DATE
