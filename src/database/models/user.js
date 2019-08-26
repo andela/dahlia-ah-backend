@@ -125,6 +125,11 @@ export default (Sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
+
+    User.hasOne(models.CommentLike, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
   };
   return User;
 };

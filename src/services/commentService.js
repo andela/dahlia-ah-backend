@@ -1,7 +1,10 @@
-import { Op } from 'sequelize';
+import Sequelize from 'sequelize';
 import models from '../database/models';
 
-const { Comment, CommentHistory, CommentLike } = models;
+const { Op } = Sequelize;
+const {
+  Comment, CommentHistory, CommentLike, User
+} = models;
 
 /**
  * Finds a comment from the database by id
@@ -12,6 +15,41 @@ const { Comment, CommentHistory, CommentLike } = models;
 const findComment = async (param) => {
   const comment = await Comment.findOne({
     where: { id: param }
+  });
+  return comment;
+};
+
+/**
+ * Finds all comment from the database by novel id
+ * @param {string} novelId
+ * @returns {object} a comment object
+ */
+
+const findComments = async (novelId) => {
+  const comment = await Comment.findAll({
+    where: { novelId },
+    attributes: {
+      include: [[Sequelize.fn('COUNT', Sequelize.col('CommentLikes.commentId')), 'likesCount']],
+      exclude: ['parentId', 'novelId', 'userId']
+    },
+    include: [
+      { model: User, as: 'commentAuthor', attributes: ['firstName', 'lastName'] },
+      { model: CommentLike, attributes: [] },
+      {
+        model: Comment,
+        as: 'replies',
+        attributes: {
+          include: [[Sequelize.fn('COUNT', Sequelize.col('CommentLikes.commentId')), 'likesCount']],
+          exclude: ['parentId', 'novelId', 'userId']
+        },
+        include: [
+          { model: User, as: 'commentAuthor', attributes: ['firstName', 'lastName'] },
+          { model: CommentLike, attributes: [] }],
+        separate: true,
+        group: ['Comment.id', 'commentAuthor.id']
+      }
+    ],
+    group: ['Comment.id', 'commentAuthor.id']
   });
   return comment;
 };
@@ -86,6 +124,7 @@ const deleteCommentLike = async (userId, commentId) => CommentLike.destroy({
 
 export default {
   findComment,
+  findComments,
   createComment,
   createCommentLike,
   findCommentLike,

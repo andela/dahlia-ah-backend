@@ -24,5 +24,13 @@ export const up = queryInterface => queryInterface.bulkInsert('Comments', [{
   parentId: null,
   createdAt: new Date(),
   updatedAt: new Date()
+}, {
+  id: '8a97e8da-78a6-4352-b32b-7e033bffb664',
+  commentBody: 'Yeah I think the same too',
+  userId: 'be84f364-36fd-466d-a892-54dee6cc09d7',
+  novelId: null,
+  parentId: '6a7b986e-1102-4e9a-83b0-cad7df993e1c',
+  createdAt: new Date(),
+  updatedAt: new Date()
 }], {});
 export const down = queryInterface => queryInterface.bulkDelete('Comments', null, {});

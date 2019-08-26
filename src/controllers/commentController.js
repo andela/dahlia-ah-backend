@@ -6,10 +6,31 @@ const {
   novelServices: { findNovel },
   notificationServices: { addNotification },
   commentServices: {
-    findComment, createComment, updateComment, getOldComments,
+    findComment, findComments, createComment, updateComment, getOldComments,
     insertEditedComment, createCommentLike, findCommentLike, deleteCommentLike
   },
 } = services;
+
+/**
+ *
+ * @param {object} request
+ * @param {object} response
+ * @returns {json} - json
+ */
+const getComment = async (request, response) => {
+  try {
+    const { slug } = request.params;
+    const novel = await findNovel(slug);
+    if (!novel) {
+      return responseMessage(response, 404, { error: 'novel not found' });
+    }
+    const novelId = novel.id;
+    const comments = await findComments(novelId);
+    responseMessage(response, 200, { comments });
+  } catch (error) {
+    responseMessage(response, 500, { error: error.message });
+  }
+};
 
 /**
  *
@@ -158,5 +179,5 @@ const likeComment = async (request, response) => {
 };
 
 export default {
-  postComment, replyComment, likeComment, fetchCommentHistory, editComment
+  getComment, postComment, replyComment, likeComment, fetchCommentHistory, editComment
 };

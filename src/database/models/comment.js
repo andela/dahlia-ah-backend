@@ -26,6 +26,7 @@ export default (sequelize, DataTypes) => {
   Comment.associate = (models) => {
     Comment.belongsTo(models.User, {
       foreignKey: 'userId',
+      as: 'commentAuthor',
       onDelete: 'CASCADE'
     });
 
@@ -41,6 +42,12 @@ export default (sequelize, DataTypes) => {
 
     Comment.hasMany(models.Comment, {
       foreignKey: 'parentId',
+      as: 'replies',
+      onDelete: 'CASCADE'
+    });
+
+    Comment.hasMany(models.CommentLike, {
+      foreignKey: 'commentId',
       onDelete: 'CASCADE'
     });
     Comment.hasMany(models.CommentLike, {

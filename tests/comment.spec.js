@@ -35,7 +35,9 @@ const wrongSlugUrlForComment = `${BASE_URL}/novels/no-slug-like-this-in-database
 const wrongSlugUrlForReply = `${BASE_URL}/novels/no-slug-like-this-in-database/comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
 const wrongParentIdUrl = `${BASE_URL}/novels/hancock/comments/394d6e2b-5217-476f-866e-8fba89527a45`;
 const nonParentCommentUrl = `${BASE_URL}/novels/hancock/comments/b84f246f-ba18-4f83-876d-145be90b494d`;
+const emptyCommentSlugUrl = `${BASE_URL}/novels/ /comments`;
 const emptySlugUrl = `${BASE_URL}/novels/ /comments/6a7b986e-1102-4e9a-83b0-cad7df993e1c`;
+const whitespaceCommentSlugUrl = `${BASE_URL}/novels/best-book in-the-world/comments`;
 const whitespaceSlugUrl = `${BASE_URL}/novels/best-book in-the-world/comments/1`;
 const invalidParentIdUrl = `${BASE_URL}/novels/religion-versus-spirituality/comments/g`;
 
@@ -335,8 +337,126 @@ describe('COMMENT ROUTES', () => {
     });
   });
 
-  // Edit comment history
+  // Get All Comments
+  describe('Get All Comments', () => {
+    it('should return an error if the user\'s token is expired', (done) => {
+      const expiredToken = jwt.sign({ id: 1 }, SECRET_KEY, { expiresIn: '0.01s' });
+      chai.request(server)
+        .get(emptyCommentSlugUrl)
+        .set('authorization', expiredToken)
+        .end((error, response) => {
+          expect(response).to.have.status(401);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('token expired');
+          done();
+        });
+    });
 
+    it('should return an error if the token provided is invalid', (done) => {
+      chai.request(server)
+        .get(emptyCommentSlugUrl)
+        .set('authorization', '134invalid34324token')
+        .end((error, response) => {
+          expect(response).to.have.status(401);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('invalid token');
+          done();
+        });
+    });
+
+    it('should return an error if no token is provided', (done) => {
+      chai.request(server)
+        .get(emptyCommentSlugUrl)
+        .end((error, response) => {
+          expect(response).to.have.status(401);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('you have to be signed in to continue');
+          done();
+        });
+    });
+
+    it('should return an error if the slug in the Url param is empty', (done) => {
+      chai.request(server)
+        .get(emptyCommentSlugUrl)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.be.an('object');
+          expect(response.body.errors[0].message).to.equal('slug cannot be empty');
+          done();
+        });
+    });
+
+    it('should return an error if the slug in the Url param contains a whitespace', (done) => {
+      chai.request(server)
+        .get(whitespaceCommentSlugUrl)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.be.an('object');
+          expect(response.body.errors[0].message).to.equal('slug cannot contain whitespace');
+          done();
+        });
+    });
+
+    it('should return an error if an unfound user tries to access the account', (done) => {
+      // token of unfound user
+      const notFoundUserToken = jwt.sign({ id: '0e8d9f25-ce70-4037-96cd-1e115bc676ea' }, SECRET_KEY, { expiresIn: '60s' });
+
+      chai.request(server)
+        .get(COMMENT_URL)
+        .set('authorization', notFoundUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('user not found');
+          done();
+        });
+    });
+
+    it('should return an error if there\'s no novel with the provided slug', (done) => {
+      chai.request(server)
+        .get(wrongSlugUrlForComment)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('novel not found');
+          done();
+        });
+    });
+
+    it('should successfully get all comments', (done) => {
+      chai.request(server)
+        .get(COMMENT_URL)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body).to.haveOwnProperty('comments');
+          expect(response.body.comments[0]).to.have.keys(['id', 'commentBody', 'createdAt', 'updatedAt', 'likesCount', 'commentAuthor', 'replies']);
+          done();
+        });
+    });
+
+    it('should return a failure response if a server error occurs', (done) => {
+      const stub = sinon.stub(Comment, 'findAll');
+      stub.throws(new Error('error occurred!'));
+
+      chai.request(server)
+        .get(COMMENT_URL)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('error occurred!');
+          stub.restore();
+          done();
+        });
+    });
+  });
+
+  // Edit comment history
   describe('Update comment', () => {
     it('should update a comment', (done) => {
       chai.request(server)
@@ -350,87 +470,86 @@ describe('COMMENT ROUTES', () => {
           done();
         });
     });
+
+    it('should return an error if the comment body is empty', (done) => {
+      chai.request(server)
+        .patch(EDIT_URL)
+        .send(emptyCommentBody)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.be.an('object');
+          expect(response.body.errors[0].message).to.equal('commentBody is a required field');
+          done();
+        });
+    });
+
+    it('should return a failure response if a server error occurs', (done) => {
+      const stub = sinon.stub(Comment, 'findOne');
+      stub.throws(new Error('error occured!'));
+
+      chai.request(server)
+        .patch(EDIT_URL)
+        .send(validComment)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('error occured!');
+          stub.restore();
+          done();
+        });
+    });
+
+    it('should return an error response if the provided id does not exist for a particular comment', (done) => {
+      chai.request(server)
+        .patch(wrongCommentId)
+        .send(validComment)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('previous comment not found');
+          done();
+        });
+    });
+
+    it('should get all the comment edit history for a comment', (done) => {
+      chai.request(server)
+        .get(EDIT_URL)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body).to.have.property('commentHistory');
+          done();
+        });
+    });
+
+    it('should return an error reponse if there\'s no comment with the given id', (done) => {
+      chai.request(server)
+        .get(validEmptyComment)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('no comment found with the provided id');
+          done();
+        });
+    });
+
+    it('should return an error reponse if no there\'s no comment history', (done) => {
+      chai.request(server)
+        .get(noComment)
+        .set('authorization', subscribedUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body.commentHistory.length).to.equal(0);
+          done();
+        });
+    });
   });
-
-  it('should return an error if the comment body is empty', (done) => {
-    chai.request(server)
-      .patch(EDIT_URL)
-      .send(emptyCommentBody)
-      .set('authorization', subscribedUserToken)
-      .end((error, response) => {
-        expect(response).to.have.status(400);
-        expect(response.body).to.be.an('object');
-        expect(response.body.errors[0].message).to.equal('commentBody is a required field');
-        done();
-      });
-  });
-});
-
-it('should return a failure response if a server error occurs', (done) => {
-  const stub = sinon.stub(Comment, 'findOne');
-  stub.throws(new Error('error occured!'));
-
-  chai.request(server)
-    .patch(EDIT_URL)
-    .send(validComment)
-    .set('authorization', subscribedUserToken)
-    .end((error, response) => {
-      expect(response).to.have.status(500);
-      expect(response.body).to.be.an('object');
-      expect(response.body.error).to.equal('error occured!');
-      stub.restore();
-      done();
-    });
-});
-
-
-it('should return an error response if the provided id does not exist for a particular comment', (done) => {
-  chai.request(server)
-    .patch(wrongCommentId)
-    .send(validComment)
-    .set('authorization', subscribedUserToken)
-    .end((error, response) => {
-      expect(response).to.have.status(404);
-      expect(response.body).to.be.an('object');
-      expect(response.body.error).to.equal('previous comment not found');
-      done();
-    });
-});
-
-it('should get all the comment edit history for a comment', (done) => {
-  chai.request(server)
-    .get(EDIT_URL)
-    .set('authorization', subscribedUserToken)
-    .end((error, response) => {
-      expect(response).to.have.status(200);
-      expect(response.body).to.be.an('object');
-      expect(response.body).to.have.property('commentHistory');
-      done();
-    });
-});
-
-it('should return an error reponse if there\'s no comment with the given id', (done) => {
-  chai.request(server)
-    .get(validEmptyComment)
-    .set('authorization', subscribedUserToken)
-    .end((error, response) => {
-      expect(response).to.have.status(404);
-      expect(response.body).to.be.an('object');
-      expect(response.body.error).to.equal('no comment found with the provided id');
-      done();
-    });
-});
-
-it('should return an error reponse if no there\'s no comment history', (done) => {
-  chai.request(server)
-    .get(noComment)
-    .set('authorization', subscribedUserToken)
-    .end((error, response) => {
-      expect(response).to.have.status(200);
-      expect(response.body).to.be.an('object');
-      expect(response.body.commentHistory.length).to.equal(0);
-      done();
-    });
 });
 describe('Test comment like and unlike', () => {
   it('should return error if commentId is invalid', (done) => {
