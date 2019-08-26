@@ -10,7 +10,8 @@ const {
   novelServices: {
     addNovel, findGenre, findNovel, findAllNovels,
     highlightNovelText, getNovelHighlights,
-    findNovelById, bookmarkNovel, getAllBookmark
+    findNovelById, bookmarkNovel, getAllBookmark,
+    updateNovel, removeNovel
   },
   notificationServices: { addNotification }
 } = services;
@@ -119,6 +120,36 @@ const getSingleNovel = async (request, response) => {
     });
   } catch (error) {
     return responseMessage(response, 500, { error: error.message });
+  }
+};
+
+/**
+ *
+ *
+ * @name editNovel
+ * @param {object} request
+ * @param {object} response
+ * @returns {object} json
+ */
+const editNovel = async (request, response) => {
+  const {
+    body,
+    params: slug,
+    user
+  } = request;
+  try {
+    const editedNovel = await updateNovel(slug, body, user);
+    if (editedNovel.error) {
+      return responseMessage(response, editedNovel.status, { error: editedNovel.error });
+    }
+    return responseMessage(response, 200, {
+      message: 'Novel updated successfully',
+      novel: {
+        ...editedNovel
+      }
+    });
+  } catch (error) {
+    responseMessage(response, 500, { error: error.message });
   }
 };
 
@@ -235,6 +266,31 @@ const fetchBookmarks = async (req, res) => {
   }
 };
 
+/**
+ *
+ * @name deleteNovel
+ * @param {object} request
+ * @param {object} response
+ * @returns {object} json
+ */
+const deleteNovel = async (request, response) => {
+  const {
+    params: slug,
+    user
+  } = request;
+  try {
+    const deletedNovel = await removeNovel(slug, user);
+    if (deletedNovel.error) {
+      return responseMessage(response, deletedNovel.status, { error: deletedNovel.error });
+    }
+    return responseMessage(response, 200, {
+      message: 'Novel deleted successfully'
+    });
+  } catch (error) {
+    responseMessage(response, 500, { error: error.message });
+  }
+};
+
 export default {
   createNovel,
   getNovels,
@@ -242,5 +298,7 @@ export default {
   highlightNovel,
   getSingleNovel,
   postBookmark,
-  fetchBookmarks
+  fetchBookmarks,
+  editNovel,
+  deleteNovel
 };

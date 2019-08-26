@@ -133,6 +133,10 @@ export default {
     email: 'jamiefoxx@gmail.com',
     password: 'jamiefoxx'
   },
+  seededUser5: {
+    email: 'zendaya@gmail.com',
+    password: 'zendaya'
+  },
   validProfileLogin: {
     email: 'jamesbond@gmail.com',
     password: 'jamesbond'

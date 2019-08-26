@@ -208,5 +208,19 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   isSubscribed: true,
   createdAt: new Date(),
   updatedAt: new Date()
+}, {
+  id: 'f4be7c34-7dcf-46b1-af21-95a2f34a4b0c',
+  firstName: 'Zen',
+  lastName: 'Daya',
+  email: 'zendaya@gmail.com',
+  password: bcrypt.hashSync('zendaya', 10),
+  bio: 'My name is Zen, Zen Daya',
+  avatarUrl: null,
+  phoneNo: null,
+  isVerified: true,
+  isSubscribed: false,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  createdAt: new Date(),
+  updatedAt: new Date()
 }], {});
 export const down = queryInterface => queryInterface.bulkDelete('Users', null, {});

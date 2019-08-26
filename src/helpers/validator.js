@@ -105,6 +105,17 @@ const isNotEmpty = field => check(field)
   .withMessage(`${field} cannot be empty`);
 
 /**
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
+const isOptional = field => check(field)
+  .optional()
+  .trim()
+  .not()
+  .isEmpty()
+  .withMessage(`${field} cannot be empty`);
+
+/**
    * @returns {Object} - Express-validator
    */
 const isNotEmptySlug = () => check('slug')
@@ -219,6 +230,7 @@ export default {
   isValidName,
   isValidPassword,
   isNotEmpty,
+  isOptional,
   isValidGenre,
   isNotEmptySlug,
   isValidComment,

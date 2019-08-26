@@ -364,6 +364,65 @@ paths:
                   error:
                     type: string
                     example: error occured
+  /novels/{slug}:
+    patch:
+      tags:
+        - Novels
+      summary: Update novel
+      parameters:
+      - name: "slug"
+        in: "path"
+        description: "slug of novel being updated"
+        required: true
+        schema:
+          $ref: '#/components/schemas/novelId'
+      security:
+      - token: []
+      requestBody:
+        description: fields containing novel data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovelInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NovelInput'
+        required: true
+      responses:
+        200:
+          description: novel updated successfully
+        401:
+          description: Authentication failed
+        403:
+          description: you need permission
+        404:
+          description: Novel not found
+        500:
+          description: internal server error
+    delete:
+      tags:
+        - Novels
+      summary: Update novel
+      parameters:
+      - name: "slug"
+        in: "path"
+        description: "slug of novel being updated"
+        required: true
+        schema:
+          $ref: '#/components/schemas/novelId'
+      security:
+      - token: []
+      responses:
+        200:
+          description: novel deleted successfully
+        401:
+          description: Authentication failed
+        403:
+          description: you need permission
+        404:
+          description: Novel not found
+        500:
+          description: internal server error
   /novels/{slug}/like:
     post:
       tags:
@@ -410,7 +469,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardServerResponse'          
+                $ref: '#/components/schemas/StandardServerResponse'   
+      security:
+      - token: []                   
   /genres:
     post:
       tags:

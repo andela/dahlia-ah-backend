@@ -209,11 +209,71 @@ const findGenre = async (name) => {
   return genre;
 };
 
+/**
+ * @name updateNovel
+ * @param {string} slug
+ * @param {object} fields
+ * @param {object} user
+ * @returns {object} updated novel
+ */
+const updateNovel = async ({ slug }, fields, user) => {
+  const novel = await findNovel(slug);
+  if (!novel) {
+    return {
+      status: 404,
+      error: 'Novel not found'
+    };
+  }
+  if (novel.authorId !== user.id) {
+    return {
+      status: 403,
+      error: 'You cannot edit this book'
+    };
+  }
+  const updatedNovel = await Novel.update({
+    ...fields
+  }, {
+    where: { slug },
+    returning: true,
+    raw: true
+  });
+  return updatedNovel[1][0];
+};
+
+/**
+ *
+ * @name removeNovel
+ * @param {string} slug
+ * @param {object} user
+ * @returns {object} deleted novel
+ */
+const removeNovel = async ({ slug }, user) => {
+  const novel = await findNovel(slug);
+  if (!novel) {
+    return {
+      status: 404,
+      error: 'Novel not found'
+    };
+  }
+  if (novel.authorId !== user.id) {
+    return {
+      status: 403,
+      error: 'You cannot delete this book'
+    };
+  }
+  await Novel.destroy({
+    where: { slug }
+  });
+  return true;
+};
+
 export default {
   findGenre,
   findNovel,
   addNovel,
   findNovelById,
+  updateNovel,
+  removeNovel,
   findNovelLike,
   removeNovelLike,
   findAllNovels,
