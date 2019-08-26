@@ -1,9 +1,9 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import bcrypt from 'bcrypt';
 import sinon from 'sinon';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import bcrypt from 'bcrypt';
 import sendgridMail from '@sendgrid/mail';
 import server from '../src';
 import mockData from './mockData';
@@ -29,6 +29,7 @@ const { BlacklistedToken } = models;
 const BASE_URL = '/api/v1';
 const FORGOT_PASSWORD_URL = `${BASE_URL}/auth/forgotPassword`;
 const CHANGE_PASSWORD_URL = `${BASE_URL}/auth/changepassword`;
+const RESET_PASSWORD_URL = `${BASE_URL}/auth/passwordreset`;
 
 // token of loggedIn user Richard Croft in the database
 const loggedInUserToken = jwt.sign({ id: '11fb0350-5b46-4ace-9a5b-e3b788167915' }, SECRET_KEY, { expiresIn: '60s' });
@@ -287,6 +288,152 @@ describe('AUTH', () => {
           expect(response.body).to.be.an('object');
           expect(response.body.error).to.equal('error occured!');
           stub.restore();
+          done();
+        });
+    });
+  });
+  describe('POST /api/users/login', () => {
+    const loginsignupEndpoint = `${BASE_URL}/auth/login`;
+    const authErrorMessage = 'email or password is incorrect';
+    it('should #login a user and #generate jwt', (done) => {
+      chai
+        .request(server)
+        .post(loginsignupEndpoint)
+        .type('form')
+        .send(userMock.seededUser1)
+        .end((err, res) => {
+          const { user } = res.body;
+          expect(res).status(200);
+          expect(user).property('token');
+          expect(user).property('email');
+          expect(user).property('bio');
+          done(err);
+        });
+    });
+    it('should return authorized error on incorrect email', (done) => {
+      const incorrectEmail = { ...userMock.validUser };
+      incorrectEmail.email = 'wrong@email.com';
+      chai
+        .request(server)
+        .post(loginsignupEndpoint)
+        .type('form')
+        .send(incorrectEmail)
+        .end((err, res) => {
+          expect(res).status(401);
+          expect(res.body).property('errors').eq(authErrorMessage);
+          done(err);
+        });
+    });
+    it('should return authorized error on incorrect email', (done) => {
+      const incorrectPassword = { ...userMock.validUser };
+      incorrectPassword.password = 'WrongPassword1';
+      chai
+        .request(server)
+        .post(loginsignupEndpoint)
+        .type('form')
+        .send(incorrectPassword)
+        .end((err, res) => {
+          expect(res).status(401);
+          expect(res.body).property('errors').eq(authErrorMessage);
+          done(err);
+        });
+    });
+    it('should return error if password id not correct', (done) => {
+      chai
+        .request(server)
+        .post(loginsignupEndpoint)
+        .type('form')
+        .send(userMock.seededUser2)
+        .end((err, res) => {
+          expect(res).status(401);
+          expect(res.body).property('errors').eq('email or password is incorrect');
+          done(err);
+        });
+    });
+    it('should return error if user is not verified', (done) => {
+      chai
+        .request(server)
+        .post(loginsignupEndpoint)
+        .type('form')
+        .send(userMock.validUser2)
+        .end((err, res) => {
+          expect(res).status(401);
+          expect(res.body).property('errors').eq('please verify your email');
+          done(err);
+        });
+    });
+  });
+
+  describe('reset password route', () => {
+    const PasswordAuthToken1 = jwt.sign({ id: '857cb13a-8437-4e8e-bf7a-468c619a9af3' }, process.env.SECRET_KEY);
+    const PasswordAuthToken2 = jwt.sign({ id: 'ffd2e717-a092-4dc0-9d81-b50e2f1226e2' }, process.env.SECRET_KEY);
+    const PasswordAuthToken3 = jwt.sign({ id: '558999b2-0f22-4e6a-ad28-e4394e5082fd' }, process.env.SECRET_KEY);
+
+    it('should return 500 error for any database error', (done) => {
+      const stub = sinon.stub(bcrypt, 'hashSync');
+      stub.throws(new Error('error occured'));
+      chai.request(server)
+        .patch(`${RESET_PASSWORD_URL}?token=${PasswordAuthToken1}`)
+        .send({
+          newPassword: 'fghjknmvbngh'
+        })
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.be.an('object');
+          expect(response.body).to.have.property('error');
+          stub.restore();
+          done();
+        });
+    });
+    it('should return success message on sucessful password change', (done) => {
+      chai.request(server)
+        .patch(`${RESET_PASSWORD_URL}?token=${PasswordAuthToken1}`)
+        .send({
+          newPassword: 'jamesbondy'
+        })
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body.message).to.equal('password succesfully changed');
+          done();
+        });
+    });
+    it('should return success message on sucessful password change for user reseting password for not up to 5 times', (done) => {
+      chai.request(server)
+        .patch(`${RESET_PASSWORD_URL}?token=${PasswordAuthToken2}`)
+        .send({
+          newPassword: 'jamesbondy'
+        })
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body.message).to.equal('password succesfully changed');
+          done();
+        });
+    });
+    it('should return success message on sucessful password change for user reseting password for first time', (done) => {
+      chai.request(server)
+        .patch(`${RESET_PASSWORD_URL}?token=${PasswordAuthToken3}`)
+        .send({
+          newPassword: 'jamesbondy'
+        })
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.an('object');
+          expect(response.body.message).to.equal('password succesfully changed');
+          done();
+        });
+    });
+    it('should return error message if old password is same with new password', (done) => {
+      chai.request(server)
+        .patch(`${RESET_PASSWORD_URL}?token=${PasswordAuthToken1}`)
+        .send({
+          newPassword: 'jamesbondy'
+        })
+        .end((error, response) => {
+          expect(response).to.have.status(403);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('new password is too similar to previous password');
           done();
         });
     });

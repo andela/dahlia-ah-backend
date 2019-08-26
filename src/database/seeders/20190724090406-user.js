@@ -147,7 +147,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   isSubscribed: false,
   createdAt: new Date(),
   updatedAt: new Date()
-}, {
+},
+{
   id: 'be84f364-36fd-466d-a892-54dee6cc09d7',
   firstName: 'marvin',
   lastName: 'adams',
@@ -159,6 +160,52 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   isVerified: true,
   isSubscribed: true,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  createdAt: new Date(),
+  updatedAt: new Date()
+
+},
+{
+  id: '857cb13a-8437-4e8e-bf7a-468c619a9af3',
+  firstName: 'Benny',
+  lastName: 'Who knows',
+  email: 'bennyc@gmail.com',
+  password: bcrypt.hashSync('benny', 10),
+  bio: 'Just love spantenousity',
+  avatarUrl: null,
+  phoneNo: null,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  isVerified: true,
+  isSubscribed: true,
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'ffd2e717-a092-4dc0-9d81-b50e2f1226e2',
+  firstName: 'Benny',
+  lastName: 'Who knows',
+  email: 'bennyt@gmail.com',
+  password: bcrypt.hashSync('benny', 10),
+  bio: 'Just love spantenousity',
+  avatarUrl: null,
+  phoneNo: null,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  isVerified: true,
+  isSubscribed: true,
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '558999b2-0f22-4e6a-ad28-e4394e5082fd',
+  firstName: 'Benny',
+  lastName: 'Who knows',
+  email: 'bennye@gmail.com',
+  password: bcrypt.hashSync('benny', 10),
+  bio: 'Just love spantenousity',
+  avatarUrl: null,
+  phoneNo: null,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  isVerified: true,
+  isSubscribed: true,
   createdAt: new Date(),
   updatedAt: new Date()
 }], {});

@@ -5,7 +5,7 @@ import services from '../services';
 import models from '../database/models';
 
 const {
-  forgotPasswordMessage, responseMessage, errorResponse, successResponse,
+  forgotPasswordMessage, responseMessage, errorResponse, successResponse, authHelper
 } = helpers;
 const {
   sendMail,
@@ -131,9 +131,55 @@ const logOut = (req, res) => {
   }
 };
 
+const resetPassword = async (request, response) => {
+  const { user: { id, password }, body: { newPassword } } = request;
+  const previousPasswords = await getPreviousPasswords(id);
+
+  try {
+    const { length } = previousPasswords;
+    let passCount;
+    let passwordExist;
+
+    if (length) {
+      passwordExist = previousPasswords
+        .find(item => bcrypt.compareSync(newPassword, item.password));
+      const { passwordCount } = previousPasswords[length - 1];
+      passCount = passwordCount + 1;
+    } else {
+      passwordExist = bcrypt.compareSync(newPassword, password);
+      passCount = 1;
+    }
+
+    if (passwordExist) {
+      return responseMessage(response, 403, {
+        error: 'new password is too similar to previous password'
+      });
+    }
+
+    let prevPasswordId;
+    if (length === 5) {
+      prevPasswordId = previousPasswords[0].id;
+      await deletePreviousPassword(prevPasswordId);
+    }
+    const hashedPassword = authHelper.hashedPassword(newPassword);
+    await createPreviousPassword(id, hashedPassword, passCount);
+    await updateUser({ password: hashedPassword }, id);
+
+    return responseMessage(response, 200, {
+      token: jwt.sign({ id }, process.env.SECRET_KEY, { expiresIn: '5d' }),
+      message: 'password succesfully changed'
+    });
+  } catch (error) {
+    return responseMessage(response, 500, {
+      error: error.message
+    });
+  }
+};
+
 export default {
   forgotPassword,
   updateStatus,
   logOut,
-  changePassword
+  changePassword,
+  resetPassword
 };

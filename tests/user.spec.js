@@ -15,6 +15,7 @@ const REGISTER_URL = `${API_VERSION}/auth/register`;
 const endpointUser = `${API_VERSION}/users`;
 const validId = '122a0d86-8b78-4bb8-b28f-8e5f7811c456';
 const invalidId = '9a5f3850-c53b-4450-8ce4-d560aa2ca736';
+
 const {
   userMock: {
     validProfileLogin, validProfile, invalidProfile1, invalidProfile2,
@@ -423,6 +424,7 @@ describe('USER ROUTES', () => {
         .set('authorization', authToken)
         .end((err, res) => {
           expect(res).status(500);
+          stub.restore();
           done(err);
         });
     });
@@ -437,6 +439,7 @@ describe('USER ROUTES', () => {
         .set('authorization', authToken)
         .end((err, res) => {
           expect(res).status(500);
+          stub.restore();
           done(err);
         });
     });

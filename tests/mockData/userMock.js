@@ -72,6 +72,12 @@ export default {
     email: 'lordvader@order66.com',
     password: 'Password'
   },
+  validUser3: {
+    firstName: 'Annie',
+    lastName: 'Skywalker',
+    email: 'lordvadser@order66.com',
+    password: 'Password'
+  },
   duplicateEmail: {
     firstName: 'Hondo',
     lastName: 'Onaka',

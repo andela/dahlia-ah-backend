@@ -8,11 +8,13 @@ export default (sequelize, DataTypes) => {
     },
     userId: {
       allowNull: false,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      onDelete: 'CASCADE',
     },
     novelId: {
       allowNull: false,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      onDelete: 'CASCADE',
     }
   }, {});
   Bookmark.associate = (models) => {
