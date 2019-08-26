@@ -44,8 +44,8 @@ const logoutToken = jwt.sign({ id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456' }, pro
 const logoutTokenTwo = jwt.sign({ id: 'ce87299b-0dfa-44ed-bb53-45d434647eb2' }, process.env.SECRET_KEY, { expiresIn: '60 minutes' });
 
 describe('AUTH', () => {
-  describe('POST /auth/signup', () => {
-    const signupEndpoint = `${BASE_URL}/users`;
+  describe('POST /auth/register', () => {
+    const signupEndpoint = `${BASE_URL}/auth/register`;
     it('should #create a user and #generate jwt', (done) => {
       chai
         .request(server)
@@ -76,7 +76,7 @@ describe('AUTH', () => {
   });
 
   describe('POST /api/users/login', () => {
-    const loginsignupEndpoint = `${BASE_URL}/users/login`;
+    const loginsignupEndpoint = `${BASE_URL}/auth/login`;
     const authErrorMessage = 'email or password is incorrect';
     it('should #login a user and #generate jwt', (done) => {
       chai
@@ -349,6 +349,78 @@ describe('GET api/v1/auth/logout', () => {
         expect(response.body.error).to.equal('Something went wrong');
         stub.restore();
         done();
+      });
+  });
+});
+
+describe('POST /api/v1/auth/login', () => {
+  const loginsignupEndpoint = `${BASE_URL}/auth/login`;
+  const authErrorMessage = 'email or password is incorrect';
+  it('should #login a user and #generate jwt', (done) => {
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(userMock.seededUser1)
+      .end((err, res) => {
+        const { user } = res.body;
+        expect(res).status(200);
+        expect(user).property('token');
+        expect(user).property('email');
+        expect(user).property('bio');
+        done(err);
+      });
+  });
+  it('should return authorized error on incorrect email', (done) => {
+    const incorrectEmail = { ...userMock.validUser };
+    incorrectEmail.email = 'wrong@email.com';
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(incorrectEmail)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body).property('errors').eq(authErrorMessage);
+        done(err);
+      });
+  });
+  it('should return authorized error on incorrect email', (done) => {
+    const incorrectPassword = { ...userMock.validUser };
+    incorrectPassword.password = 'WrongPassword1';
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(incorrectPassword)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body).property('errors').eq(authErrorMessage);
+        done(err);
+      });
+  });
+  it('should return error if password id not correct', (done) => {
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(userMock.seededUser2)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body).property('errors').eq('email or password is incorrect');
+        done(err);
+      });
+  });
+  it('should return error if user is not verified', (done) => {
+    chai
+      .request(server)
+      .post(loginsignupEndpoint)
+      .type('form')
+      .send(userMock.validUser2)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body).property('errors').eq('please verify your email');
+        done(err);
       });
   });
 });

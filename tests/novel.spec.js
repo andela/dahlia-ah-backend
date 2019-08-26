@@ -23,7 +23,7 @@ const {
 const { novelHelpers: { extractNovels } } = helpers;
 
 const API_VERSION = '/api/v1';
-const LOGIN_URL = `${API_VERSION}/users/login`;
+const LOGIN_URL = `${API_VERSION}/auth/login`;
 const NOVEL_URL = `${API_VERSION}/novels`;
 const GENRE_URL = `${API_VERSION}/genres`;
 const nonexistNovelEndpoint = `${NOVEL_URL}/3c3b6226-b691-472e-babf-a96c6eb373f0/like`;

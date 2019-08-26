@@ -151,5 +151,30 @@ export default {
   validReaderProfileLogin: {
     email: 'jamiefoxx@gmail.com',
     password: 'jamiefoxx'
+  },
+  seededUser: {
+    id: 'ca849dff-da64-424a-a336-8bf1b59c5105',
+    email: 'jamesbond@gmail.com',
+    password: 'jamesbond'
+  },
+  seededSuperAdmin: {
+    firstName: 'Sheev',
+    lastName: 'Palpatine',
+    email: 'theemperor@empire.com',
+    password: 'theEmperor'
+  },
+  newUserByAdmin: {
+    firstName: 'Maul',
+    lastName: 'Maul',
+    email: 'darthmaul@empire.com',
+    password: 'darthmaul',
+    roleName: 'admin'
+  },
+  newUser2ByAdmin: {
+    firstName: 'Savage',
+    lastName: 'Opress',
+    email: 'savage@empire.com',
+    password: 'savageopress',
+    roleName: 'reader'
   }
 };

@@ -13,7 +13,7 @@ const { Novel, Report } = models;
 
 let authToken;
 
-const endpointUser = '/api/v1/users/login';
+const endpointUser = '/api/v1/auth/login';
 const endpointReport = '/api/v1/novels/hancock/report';
 const invalidReportEnpoint = '/api/v1/novels/invalid/report';
 const getAllReportUrl = '/api/v1/report';

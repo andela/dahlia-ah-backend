@@ -1,8 +1,11 @@
 import express from 'express';
 import AuthController from '../controllers/AuthController';
+import userController from '../controllers/userController';
 import middlewares from '../middlewares';
 
 const auth = express.Router();
+
+const { signUp, login } = userController;
 const AUTH_URL = '/auth';
 
 const { userValidator, verifyToken } = middlewares;
@@ -18,6 +21,8 @@ auth.post(`${AUTH_URL}/changepassword`, verifyToken, userValidator.changePasswor
 
 // verifyUser route
 auth.patch(`${AUTH_URL}/verify/:token`, verifyToken, updateStatus);
+auth.post(`${AUTH_URL}/register`, userValidator.signUpValidator, signUp);
+auth.post(`${AUTH_URL}/login`, userValidator.loginValidator, login);
 
 auth.get(`${AUTH_URL}/logout`, verifyToken, logOut);
 

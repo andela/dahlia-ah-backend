@@ -1,6 +1,8 @@
 import models from '../database/models';
+import helpers from '../helpers';
 
 const { User, Role, Follower } = models;
+const { authHelper: { generateRandomPassword } } = helpers;
 
 /**
  * @description Finds a user from the database by id or email
@@ -55,9 +57,38 @@ const getAllUsers = async () => {
   return allUsers;
 };
 
+/**
+ * Retrieves all users from the database
+ * @param {Object} requestBody - body of request
+ * @returns {Object} rows - array of objects
+ */
+const addUser = async (requestBody) => {
+  const {
+    firstName, lastName, email, roleName
+  } = requestBody;
+
+  const { hashedRandomPassword } = generateRandomPassword();
+
+  const roles = await Role.findAll();
+  let roleId;
+
+  if (roleName) {
+    const role = roles.find(roleObject => roleObject.roleName === roleName);
+    roleId = role.id;
+  }
+
+  const user = {
+    firstName, lastName, email, password: hashedRandomPassword, roleId
+  };
+
+  const createdUser = await User.create(user);
+  return createdUser;
+};
+
 export default {
   findUser,
   findFollower,
   getAllUsers,
-  updateUser
+  updateUser,
+  addUser
 };

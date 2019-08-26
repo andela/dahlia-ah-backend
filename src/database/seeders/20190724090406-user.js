@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 
+const superAdminRoleId = '2c4dfb3f-1798-43d4-8eb6-1c125994a263';
+
 export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   firstName: 'Eden',
@@ -131,6 +133,18 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   isVerified: true,
   isSubscribed: true,
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'ca849dff-da64-424a-a336-8bf1b59c5105',
+  firstName: 'Sheev',
+  lastName: 'Palpatine',
+  email: 'theemperor@empire.com',
+  password: bcrypt.hashSync('theEmperor', 5),
+  roleId: superAdminRoleId,
+  isVerified: true,
+  isSubscribed: false,
   createdAt: new Date(),
   updatedAt: new Date()
 }], {});

@@ -10,7 +10,7 @@ should();
 
 const { userMock } = mockData;
 
-const url = '/api/v1/users';
+const url = '/api/v1/auth/register';
 
 describe('A test to check for user email address during signup validations', () => {
   it('should return a status 400 on invalid email', (done) => {
