@@ -3,7 +3,7 @@ import models from '../database/models';
 import helpers from '../helpers';
 
 const {
-  Genre, Novel, Like, User
+  Genre, Novel, Like, User, Highlight
 } = models;
 const { generateReadTime } = helpers;
 
@@ -112,6 +112,51 @@ const findAllNovels = async (offset, limit, queryFilter) => {
   return novels;
 };
 
+/**
+ * @name highlightNovelText
+ * @param {Integer} novelId
+ * @param {Integer} readerId
+ * @param {Object} highlight
+ * @returns {Object} created highlight
+ */
+const highlightNovelText = async (novelId, readerId, highlight) => {
+  const {
+    startIndex,
+    endIndex,
+    comment
+  } = highlight;
+
+  const createdHighlight = await Highlight.create({
+    novelId,
+    readerId,
+    startIndex,
+    endIndex,
+    comment
+  });
+
+  return createdHighlight.dataValues;
+};
+
+/**
+ * @name getNovelHighlights
+ * @param {object} novel
+ * @param {integer} readerId
+ * @returns {array} highlight array
+ */
+const getNovelHighlights = async (novel, readerId) => {
+  let highlight;
+  if (novel.authorId === readerId) {
+    highlight = await Highlight.findAll({
+      where: { novelId: novel.id }
+    });
+  } else {
+    highlight = await Highlight.findAll({
+      where: { novelId: novel.id, readerId }
+    });
+  }
+  return highlight;
+};
+
 /*
  * Finds a genre from the database by name
  * @name sendMail
@@ -129,5 +174,7 @@ export default {
   addNovel,
   findNovelLike,
   removeNovelLike,
-  findAllNovels
+  findAllNovels,
+  highlightNovelText,
+  getNovelHighlights
 };

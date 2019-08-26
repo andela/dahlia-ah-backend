@@ -116,6 +116,7 @@ const isValidComment = () => check('commentBody')
   .withMessage('commentBody cannot be empty')
   .isLength({ max: 200 });
 
+
 /**
    * @param {String} field
    * @returns {Object} - Express-validator

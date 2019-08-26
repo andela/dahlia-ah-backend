@@ -11,6 +11,12 @@ const novelMock = {
     body: 'The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read, The body contains text that is really long, it is a long text, it is very long, but it would not be too long to read',
     genre: 'action'
   },
+  highlightNovel: {
+    title: 'This is the highlight',
+    description: 'The very first highlight description',
+    body: 'The body contains text that is really long and highlighted',
+    genre: 'action'
+  },
   validGenre: {
     name: 'prose'
   },

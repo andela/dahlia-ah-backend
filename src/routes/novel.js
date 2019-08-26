@@ -7,11 +7,13 @@ const {
   novelValidator: {
     createNovelValidator, getNovelBySlugValidator, getNovelValidator, genreValidator
   },
+  highlightValidator: { createHighlightValidator },
   verifyToken,
   authorizeUser
 } = middlewares;
 const {
-  createNovel, getNovel, getNovels, createGenre
+  createNovel, getNovels, createGenre,
+  getSingleNovel, highlightNovel
 } = novelController;
 const novel = express.Router();
 const NOVEL_URL = '/novels';
@@ -29,6 +31,9 @@ novel.post('/genres', verifyToken, authorizeUser(['author', 'admin', 'superadmin
 novel.get(`${NOVEL_URL}`, verifyToken, getNovelValidator, getNovels);
 
 // Route to get novel by slug
-novel.get(`${NOVEL_URL}/:slug`, verifyToken, authorizeUser(['reader', 'author', 'admin', 'superadmin']), getNovelBySlugValidator, getNovel);
+novel.get(`${NOVEL_URL}/:slug`, verifyToken, authorizeUser(['reader', 'author', 'admin', 'superadmin']), getNovelBySlugValidator, getSingleNovel);
+
+// Route to post highlight
+novel.post(`${NOVEL_URL}/:slug/highlight`, createHighlightValidator, verifyToken, highlightNovel);
 
 export default novel;

@@ -153,7 +153,7 @@ describe('Test for novel CRUD', () => {
         .end((error, response) => {
           expect(response).to.have.status(404);
           expect(response.body).to.be.an('object');
-          expect(response.body.error).to.equal('novel not found');
+          expect(response.body.error).to.equal('Novel not found');
           done();
         });
     });
