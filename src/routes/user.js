@@ -8,15 +8,17 @@ const {
     editProfileValidator,
     validateUUID,
     validateCreateUser,
-    followUserValidator
+    followUserValidator,
+    validateUpdateUser,
   },
   verifyToken,
   authorizeUser
 } = middlewares;
 
 const {
-  getProfile, editProfile, createUser, listUsers, getUser, follow, unfollow
+  getProfile, editProfile, createUser, listUsers, getUser, follow, unfollow, updateUser, deleteUser
 } = userController;
+
 const user = express.Router();
 
 const USER_URL = '/users';
@@ -35,5 +37,7 @@ user.get(`${USER_URL}/:userId`, verifyToken, authorizeUser(['admin', 'superadmin
 
 user.post('/profiles/:userId/follow', followUserValidator, verifyToken, follow);
 user.delete('/profiles/:userId/follow', followUserValidator, verifyToken, unfollow);
+user.patch(`${USER_URL}/:userId`, validateUUID, validateUpdateUser, verifyToken, authorizeUser(['admin', 'superadmin']), updateUser);
+user.delete(`${USER_URL}/:userId`, validateUUID, verifyToken, authorizeUser(['superadmin']), deleteUser);
 
 export default user;

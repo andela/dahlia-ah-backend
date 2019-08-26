@@ -85,10 +85,26 @@ const addUser = async (requestBody) => {
   return createdUser;
 };
 
+/**
+ * Returns user role from roleId
+ * @param {String} param - role name or Id
+ * @param {String} roleName - role name
+ * @returns {Object} rows - role name and Id
+ */
+const findUserRole = async (param) => {
+  const field = (/^\w+$/ig.test(param)) ? { roleName: param } : { id: param };
+  const role = await Role.findOne({
+    where: field
+  });
+
+  return role;
+};
+
 export default {
   findUser,
   findFollower,
   getAllUsers,
   updateUser,
-  addUser
+  addUser,
+  findUserRole
 };

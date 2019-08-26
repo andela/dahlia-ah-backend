@@ -40,6 +40,16 @@ describe('USER ROUTES', () => {
         done();
       });
   });
+  before((done) => {
+    chai
+      .request(app)
+      .post(LOGIN_URL)
+      .send(seededSuperAdmin)
+      .end((error, response) => {
+        SuperAdminToken = response.body.user.token;
+        done(error);
+      });
+  });
 
   before((done) => {
     chai
@@ -214,6 +224,87 @@ describe('USER ROUTES', () => {
           done();
         });
     });
+
+    describe('POST api/v1/users', () => {
+      const userRoute = `${API_VERSION}/users`;
+      it('should create a new user and assign role', (done) => {
+        chai
+          .request(app)
+          .post(userRoute)
+          .send(newUserByAdmin)
+          .set('authorization', SuperAdminToken)
+          .end((error, response) => {
+            const { data } = response.body;
+            expect(response).status(201);
+            expect(data).property('firstName');
+            expect(data).property('lastName');
+            expect(data).property('email');
+            done(error);
+          });
+      });
+      it('should not create user if email already exists', (done) => {
+        chai
+          .request(app)
+          .post(userRoute)
+          .send(newUserByAdmin)
+          .set('authorization', SuperAdminToken)
+          .end((error, response) => {
+            expect(response).status(409);
+            expect(response.body).property('error').a('string').contains('already exists');
+            expect();
+            done(error);
+          });
+      });
+      it('should not create user if authorized', (done) => {
+        chai
+          .request(app)
+          .post(userRoute)
+          .send(newUserByAdmin)
+          .set('authorization', SuperAdminToken)
+          .end((error, response) => {
+            expect(response).status(409);
+            expect(response.body).property('error').a('string').contains('already exists');
+            expect();
+            done(error);
+          });
+      });
+      it('should return error 500 on server error', (done) => {
+        const stub = sinon.stub(User, 'create');
+        stub.throws(new Error('an error occurred'));
+        chai
+          .request(app)
+          .post(userRoute)
+          .send(newUser2ByAdmin)
+          .set('authorization', SuperAdminToken)
+          .end((error, response) => {
+            expect(response).status(500);
+            expect(response.body).property('error').include('an error occurred');
+            stub.restore();
+            done(error);
+          });
+      });
+    });
+
+    describe('GET api/v1/users/:userId', () => {
+      const userRoute = `${API_VERSION}/users/${seededUser.id}`;
+
+      it('should get one user', (done) => {
+        chai
+          .request(app)
+          .get(userRoute)
+          .set('authorization', SuperAdminToken)
+          .end((error, response) => {
+            const { data } = response.body;
+            expect(response).status(200);
+            expect(response.body).property('message').contains('successful');
+            expect(data).property('firstName');
+            expect(data).property('lastName');
+            expect(data).property('email');
+            expect(data).property('roleId').a('string');
+            done(error);
+          });
+      });
+    });
   });
 
   describe('POST/DELETE profiles/:userId/follow', () => {
@@ -223,6 +314,7 @@ describe('USER ROUTES', () => {
         .send(validProfileLogin)
         .end((error, response) => {
           const { token } = response.body.user;
+
           authToken = token;
           done();
         });
@@ -395,67 +487,7 @@ describe('Test for getting users', () => {
   });
 });
 
-describe('POST api/v1/users', () => {
-  const userRoute = `${API_VERSION}/users`;
-
-  it('should create a new user', (done) => {
-    chai
-      .request(app)
-      .post(userRoute)
-      .send(newUserByAdmin)
-      .set('authorization', SuperAdminToken)
-      .end((error, response) => {
-        const { data } = response.body;
-        expect(response).status(201);
-        expect(data).property('firstName');
-        expect(data).property('lastName');
-        expect(data).property('email');
-        done(error);
-      });
-  });
-  it('should not create user if email already exists', (done) => {
-    chai
-      .request(app)
-      .post(userRoute)
-      .send(newUserByAdmin)
-      .set('authorization', SuperAdminToken)
-      .end((error, response) => {
-        expect(response).status(409);
-        expect(response.body).property('error').contains('already exists');
-        expect();
-        done(error);
-      });
-  });
-  it('should not create user if authorized', (done) => {
-    chai
-      .request(app)
-      .post(userRoute)
-      .send(newUserByAdmin)
-      .set('authorization', SuperAdminToken)
-      .end((error, response) => {
-        expect(response).status(409);
-        expect(response.body).property('error').contains('already exists');
-        expect();
-        done(error);
-      });
-  });
-  it('should return error 500 on server error', (done) => {
-    const stub = sinon.stub(User, 'create');
-    stub.throws(new Error('an error occurred'));
-    chai
-      .request(app)
-      .post(userRoute)
-      .send(newUser2ByAdmin)
-      .set('authorization', SuperAdminToken)
-      .end((error, response) => {
-        expect(response).status(500);
-        expect(response.body).property('error').include('an error occurred');
-        stub.restore();
-        done(error);
-      });
-  });
-});
-
+// ================================ ADMIN GET USER ====================================
 describe('GET api/v1/users/:userId', () => {
   const userRoute = `${API_VERSION}/users/${seededUser.id}`;
 
@@ -486,6 +518,100 @@ describe('GET api/v1/users/:userId', () => {
         expect(response).status(500);
         expect(response.body).property('error').include('an error occurred');
         stub.restore();
+        done(error);
+      });
+  });
+});
+
+
+// ================================ ADMIN UPDATE USER ====================================
+describe('PATCH api/v1/users/:userId', () => {
+  const notUserId = '5db059c3-fa2e-4e7b-873b-8c1a33c5cc0a';
+  const userRoute = `${API_VERSION}/users/${seededUser.id}`;
+  const notUserRoute = `${API_VERSION}/users/${notUserId}`;
+
+  it('should update an existing user', (done) => {
+    chai
+      .request(app)
+      .patch(userRoute)
+      .send(newUserByAdmin)
+      .set('authorization', SuperAdminToken)
+      .end((error, response) => {
+        const { data } = response.body;
+        expect(response).status(200);
+        expect(data).property('firstName');
+        expect(data).property('lastName');
+        expect(data).property('email');
+        done(error);
+      });
+  });
+  it('should return error if user does not exist', (done) => {
+    chai
+      .request(app)
+      .patch(notUserRoute)
+      .send(newUserByAdmin)
+      .set('authorization', SuperAdminToken)
+      .end((error, response) => {
+        expect(response).status(404);
+        expect(response.body).property('error').contains('not found');
+        done(error);
+      });
+  });
+  it('should return server error on update', (done) => {
+    const stub = sinon.stub(User, 'update');
+    stub.throws(new Error('an error occurred'));
+    chai
+      .request(app)
+      .patch(notUserRoute)
+      .send(newUserByAdmin)
+      .set('authorization', SuperAdminToken)
+      .end((error, response) => {
+        expect(response).status(500);
+        expect(response.body).property('error').include('an error occurred');
+        stub.restore();
+        done(error);
+      });
+  });
+});
+
+
+// ============================ SUPER-ADMIN DELETE USERS ==================================
+describe('DELETE api/v1/users/:userId', () => {
+  const userRoute = `${API_VERSION}/users/${seededUser.id}`;
+
+  it('should delete a user', (done) => {
+    chai
+      .request(app)
+      .delete(userRoute)
+      .set('authorization', SuperAdminToken)
+      .end((error, response) => {
+        expect(response).status(200);
+        expect(response.body).property('message').contains('successful');
+        done(error);
+      });
+  });
+  it('should return server error on failed delete operation', (done) => {
+    const stub = sinon.stub(User, 'destroy');
+    stub.throws(new Error('an error occurred'));
+    chai
+      .request(app)
+      .delete(userRoute)
+      .set('authorization', SuperAdminToken)
+      .end((error, response) => {
+        expect(response).status(500);
+        expect(response.body).property('error').include('an error occurred');
+        stub.restore();
+        done(error);
+      });
+  });
+  it('should return error if user does not exist', (done) => {
+    chai
+      .request(app)
+      .delete(userRoute)
+      .set('authorization', SuperAdminToken)
+      .end((error, response) => {
+        expect(response).status(404);
+        expect(response.body).property('error').contains('not found');
         done(error);
       });
   });

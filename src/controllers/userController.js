@@ -10,7 +10,7 @@ const {
 } = helpers;
 const {
   userServices: {
-    findUser, findFollower, getAllUsers, addUser
+    findUser, findFollower, getAllUsers, addUser, findUserRole
   }
 } = services;
 const { User, Follower } = models;
@@ -288,7 +288,95 @@ const createUser = async (req, res) => {
   }
 };
 
+/**
+   * ADMIN create user
+   * @param {Object} req - server request
+   * @param {Object} res - server response
+   * @return {Object} - custom response
+   */
+const updateUser = async (req, res) => {
+  const {
+    firstName, lastName, roleName, phoneNumber, isSubscribed
+  } = req.body;
+  const id = req.params.userId;
+  let roleId;
+  try {
+    if (roleName) {
+      const role = await findUserRole(roleName);
+      roleId = role.id;
+    }
+
+    const updatedUser = await User.update({
+      firstName,
+      lastName,
+      roleName,
+      phoneNumber,
+      isSubscribed: !!isSubscribed,
+      roleId
+    }, {
+      where: { id },
+      returning: true,
+      raw: true,
+    });
+
+    const user = updatedUser[1][0];
+    if (!user) {
+      return responseMessage(res, 404, { error: 'user not found' });
+    }
+    user.password = undefined;
+
+    const response = {
+      message: 'successful',
+      data: user
+    };
+
+    return responseMessage(res, 200, response);
+  } catch (error) {
+    log(error);
+    return responseMessage(res, 500, { error: 'an error occurred' });
+  }
+};
+
+/**
+     * ADMIN create user
+     * @param {Object} req - server request
+     * @param {Object} res - server response
+     * @return {Object} - custom response
+     */
+const deleteUser = async (req, res) => {
+  const id = req.params.userId;
+  try {
+    const deleted = await User.destroy({
+      where: { id },
+      returning: true,
+      raw: true
+    });
+
+    if (!deleted) {
+      const error = 'user not found';
+      return responseMessage(res, 404, { error });
+    }
+
+    const message = 'user deleted successfully';
+
+    return responseMessage(res, 200, { message });
+  } catch (error) {
+    log(error);
+    return responseMessage(res, 500, { error: 'an error occurred' });
+  }
+};
+
 
 export default {
-  getProfile, editProfile, signUp, login, listUsers, follow, unfollow, createUser, getUser
+  getProfile,
+  editProfile,
+  signUp,
+  login,
+  listUsers,
+  follow,
+  unfollow,
+  createUser,
+  getUser,
+  updateUser,
+  deleteUser
 };

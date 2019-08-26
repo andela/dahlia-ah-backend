@@ -3,9 +3,17 @@ import errorHandler from './errorHandler';
 
 const { validators, emptyBody } = helpers;
 const {
-  isValidEmail, isValidName, isValidUUID, isValidPassword,
-  isValidProfileName, isValidProfilePassword,
-  isValidAvatarUrl, isValidUUIDParam
+  isValidEmail,
+  isValidName,
+  isValidUUID,
+  isValidPassword,
+  isValidProfileName,
+  isValidProfilePassword,
+  isValidAvatarUrl,
+  isValidUUIDParam,
+  isValidPhoneNumber,
+  isValidSubcription,
+  isValidRoleName
 } = validators;
 
 const { validatorError, paramsValidatorError } = errorHandler;
@@ -56,6 +64,14 @@ const userValidator = {
   ],
   validateUUID: [
     isValidUUIDParam('userId'),
+    validatorError
+  ],
+  validateUpdateUser: [
+    isValidName('firstName').optional(),
+    isValidName('lastName').optional(),
+    isValidRoleName('roleName').optional(),
+    isValidPhoneNumber('phoneNumber').optional(),
+    isValidSubcription('isSubscribed').optional(),
     validatorError
   ]
 };
