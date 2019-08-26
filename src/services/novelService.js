@@ -3,7 +3,7 @@ import models from '../database/models';
 import helpers from '../helpers';
 
 const {
-  Genre, Novel, Like, User, Highlight
+  Genre, Novel, Like, User, Highlight, Bookmark
 } = models;
 const { generateReadTime } = helpers;
 
@@ -20,6 +20,16 @@ const findNovel = async (param) => {
   });
   return novel;
 };
+
+/**
+ * Finds a novel from the database by id
+ * @param {string} param
+ * @returns {object} a novel object
+ */
+
+const findNovelById = param => Novel.findOne({
+  where: { id: param }
+});
 
 /**
  * Finds a novelLikes from the database by userid and novelId
@@ -46,6 +56,38 @@ const removeNovelLike = (userId, novelId) => Like.destroy({
     [Op.and]: [{ userId }, { novelId }]
   }
 });
+
+/**
+ *
+ *
+ * @param {string} userId
+ * @param {string} novelId
+ * @returns {object} json
+ */
+const bookmarkNovel = async (userId, novelId) => {
+  const createBookmark = await Bookmark.create({
+    userId,
+    novelId
+  });
+  return {
+    novelId: createBookmark.novelId,
+    title: createBookmark.title,
+    updatedAt: createBookmark.updatedAt
+  };
+};
+
+/**
+ *
+ *
+ * @param {string} userId
+ * @returns {object} json
+ */
+const getAllBookmark = async (userId) => {
+  const bookmarks = await Bookmark.findAll({
+    where: { userId }
+  });
+  return bookmarks;
+};
 
 /**
  *
@@ -100,14 +142,13 @@ const addNovel = async (novel, author) => {
  *
  * @param {object} offset
  * @param {object} limit
- * @param {object} queryFilter
  * @returns {object} json
  */
-const findAllNovels = async (offset, limit, queryFilter) => {
+const findAllNovels = async (offset, limit) => {
   const novels = await Novel.findAll({
     offset,
     limit,
-    ...queryFilter
+    include: [{ model: User }, { model: Genre }]
   });
   return novels;
 };
@@ -172,9 +213,12 @@ export default {
   findGenre,
   findNovel,
   addNovel,
+  findNovelById,
   findNovelLike,
   removeNovelLike,
   findAllNovels,
   highlightNovelText,
-  getNovelHighlights
+  getNovelHighlights,
+  bookmarkNovel,
+  getAllBookmark
 };

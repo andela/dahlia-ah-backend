@@ -9,11 +9,11 @@ const {
   },
   highlightValidator: { createHighlightValidator },
   verifyToken,
-  authorizeUser
+  authorizeUser,
 } = middlewares;
 const {
   createNovel, getNovels, createGenre,
-  getSingleNovel, highlightNovel
+  getSingleNovel, highlightNovel, postBookmark, fetchBookmarks
 } = novelController;
 const novel = express.Router();
 const NOVEL_URL = '/novels';
@@ -27,7 +27,12 @@ novel.post(`${NOVEL_URL}/:slug/like`, verifyToken, authorizeUser(['author', 'adm
 // Route to create a genre
 novel.post('/genres', verifyToken, authorizeUser(['author', 'admin', 'superadmin']), genreValidator, createGenre);
 
-// Route to get all novels
+// Route to get bookmark
+
+novel.post(`${NOVEL_URL}/:novelId/bookmarks`, verifyToken, postBookmark);
+novel.get(`${NOVEL_URL}/bookmarks`, verifyToken, fetchBookmarks);
+
+// Route to get novels
 novel.get(`${NOVEL_URL}`, verifyToken, getNovelValidator, getNovels);
 
 // Route to get novel by slug

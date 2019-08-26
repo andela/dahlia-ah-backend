@@ -6,13 +6,14 @@ import server from '../src';
 import mockData from './mockData';
 import models from '../src/database/models';
 import helpers from '../src/helpers';
+import novelServices from '../src/services/novelService';
 
 chai.use(chaiHttp);
 
 const { SECRET_KEY } = process.env;
 
 const { expect } = chai;
-const { Novel } = models;
+const { Novel, Bookmark } = models;
 const { Genre } = models;
 const {
   userMock: { validProfileLogin, validReaderProfileLogin },
@@ -21,6 +22,10 @@ const {
   }
 } = mockData;
 const { novelHelpers: { extractNovels } } = helpers;
+
+let authToken, authReaderToken;
+
+const { bookmarkNovel } = novelServices;
 
 const API_VERSION = '/api/v1';
 const LOGIN_URL = `${API_VERSION}/auth/login`;
@@ -31,7 +36,12 @@ const invalidToken = 'ksjbvksvkerlgvdsbv.ergrpewgjperger.gergnkerl';
 const nonExistUserToken = jwt.sign({ id: '8b031dd76-7348-425c-98ea-7b4bd5812c6f' }, process.env.SECRET_KEY);
 const validSlug = 'hancock';
 const invalidSlug = 'this-is-the-first-9a5f3850-c53b-4450-8ce4-d560aa2ca736';
-let authToken, authReaderToken;
+
+const endpointBookmark = '/api/v1/novels/7f45df6d-7003-424f-86ec-1e2b36e2fd14/bookmarks';
+const wrongBookmarkId = '/api/v1/novels/35bbffbe-97d4-47f9-88ce-b4502e0489f1/bookmarks';
+const endpointFetchBookmark = '/api/v1/novels/bookmarks';
+const userIdbookmark = '0ce36391-2c08-4703-bddb-a4ea8cccbbc5';
+const novelIdbookmark = '7f45df6d-7003-424f-86ec-1e2b36e2fd14';
 let endpoint;
 
 // token of logged in user Eden Hazard in the database
@@ -630,6 +640,79 @@ describe('Create a genre', () => {
       .end((error, response) => {
         expect(response).to.have.status(401);
         expect(response.body).to.be.an('object');
+        done();
+      });
+  });
+});
+
+describe('POST /api/v1/novels/:noveId/bookmarks', () => {
+  it('should successfully bookmark a novel and return a status code of 201', (done) => {
+    chai.request(server)
+      .post(endpointBookmark)
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).to.have.status(201);
+        expect(res.body.bookmark).to.have.property('title');
+        done();
+      });
+  });
+
+  it('should successfully fetched all bookmarks', (done) => {
+    chai.request(server)
+      .get(endpointFetchBookmark)
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).to.have.status(201);
+        expect(res.body.bookmarks).to.be.an('array');
+        expect(res.body.message).to.equal('Bookmarks fetched successfully');
+        done();
+      });
+  });
+
+  it('should return error response if novel is not found', (done) => {
+    chai.request(server)
+      .post(wrongBookmarkId)
+      .set('authorization', authToken)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body).to.be.an('object');
+        expect(res.body.error).to.equal('novel not found');
+        done();
+      });
+  });
+  it('test for bookmark service', async () => {
+    const bookmark = await bookmarkNovel(userIdbookmark, novelIdbookmark);
+    expect(bookmark).to.have.property('novelId');
+  });
+
+  it('should return a failure response if a server error occurs', (done) => {
+    const stub = sinon.stub(Bookmark, 'create');
+    stub.throws(new Error('error occurred!'));
+
+    chai.request(server)
+      .post(endpointBookmark)
+      .set('authorization', authToken)
+      .end((error, response) => {
+        expect(response).to.have.status(500);
+        expect(response.body).to.be.an('object');
+        expect(response.body.error).to.equal('error occurred!');
+        stub.restore();
+        done();
+      });
+  });
+
+  it('should return a failure response if a server error occurs', (done) => {
+    const stub = sinon.stub(Bookmark, 'findAll');
+    stub.throws(new Error('error occurred!'));
+
+    chai.request(server)
+      .get(endpointFetchBookmark)
+      .set('authorization', authToken)
+      .end((error, response) => {
+        expect(response).to.have.status(500);
+        expect(response.body).to.be.an('object');
+        expect(response.body.error).to.equal('error occurred!');
+        stub.restore();
         done();
       });
   });
