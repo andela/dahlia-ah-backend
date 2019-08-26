@@ -6,18 +6,20 @@ import novelController from '../controllers/novelController';
 const {
   novelValidator: {
     createNovelValidator, getNovelBySlugValidator, getNovelValidator,
-    genreValidator, editNovelValidator
+    createGenreValidator, getGenreValidator, editNovelValidator
   },
   highlightValidator: { createHighlightValidator },
   verifyToken,
   authorizeUser,
 } = middlewares;
 const {
-  createNovel, getNovels, createGenre,
+  createNovel, getNovels, createGenre, getGenres,
   getSingleNovel, highlightNovel, postBookmark, fetchBookmarks, editNovel, deleteNovel
 } = novelController;
+
 const novel = express.Router();
 const NOVEL_URL = '/novels';
+const GENRE_URL = '/genres';
 
 // Route to create a novel
 novel.post(`${NOVEL_URL}`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), createNovelValidator, createNovel);
@@ -32,7 +34,10 @@ novel.delete(`${NOVEL_URL}/:slug`, verifyToken, authorizeUser(['author', 'admin'
 novel.post(`${NOVEL_URL}/:slug/like`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), updateLikes);
 
 // Route to create a genre
-novel.post('/genres', verifyToken, authorizeUser(['author', 'admin', 'superadmin']), genreValidator, createGenre);
+novel.post(`${GENRE_URL}`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), createGenreValidator, createGenre);
+
+// Route to get all genres
+novel.get(`${GENRE_URL}`, verifyToken, getGenreValidator, getGenres);
 
 // Route to get bookmark
 

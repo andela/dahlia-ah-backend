@@ -24,7 +24,7 @@ const novelValidator = {
     isNotEmpty('keyword').optional(),
     validatorError
   ],
-  genreValidator: [
+  createGenreValidator: [
     isValidName('name'),
     validatorError
   ],
@@ -38,7 +38,11 @@ const novelValidator = {
     isOptional('body'),
     isOptional('genre'),
     validatorError
-  ]
+  ],
+  getGenreValidator: [
+    isNotEmpty('keyword').optional(),
+    validatorError
+  ],
 };
 
 export default novelValidator;

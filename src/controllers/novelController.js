@@ -1,11 +1,13 @@
+import Sequelize from 'sequelize';
 import models from '../database/models';
 import services from '../services';
 import helpers from '../helpers';
 
+const { Op } = Sequelize;
 const {
   errorResponse, successResponse, novelHelpers: { extractNovels, filter }, responseMessage
 } = helpers;
-const { Novel } = models;
+const { Novel, Genre } = models;
 const {
   novelServices: {
     addNovel, findGenre, findNovel, findAllNovels,
@@ -15,8 +17,6 @@ const {
   },
   notificationServices: { addNotification }
 } = services;
-
-const { Genre } = models;
 
 /**
  * @name createNovel
@@ -265,6 +265,26 @@ const fetchBookmarks = async (req, res) => {
     return responseMessage(res, 500, { error: error.message });
   }
 };
+/**
+ * @description gets all genre
+ * @param {object} request express request object
+ * @param {object} response express response object
+ * @param {object} next express next argument
+ * @returns {json} json
+ */
+const getGenres = async (request, response) => {
+  const { keyword } = request.query;
+  const genreFilter = keyword ? { name: { [Op.iLike]: `%${keyword}%` } } : { id: { [Op.ne]: null } };
+  try {
+    const genreList = await Genre.findAll({ where: genreFilter, attributes: ['id', 'name'] });
+    return response.status(200).json({
+      message: 'successfully returned genres',
+      data: genreList
+    });
+  } catch (error) {
+    responseMessage(response, 500, { error: error.message });
+  }
+};
 
 /**
  *
@@ -295,6 +315,7 @@ export default {
   createNovel,
   getNovels,
   createGenre,
+  getGenres,
   highlightNovel,
   getSingleNovel,
   postBookmark,

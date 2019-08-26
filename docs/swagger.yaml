@@ -495,7 +495,59 @@ paths:
         409:
           description: resource already exists
         500:
-          description: internal server error                  
+          description: internal server error
+    get:
+      tags:
+        - Novels
+      summary: fetches all genres
+      description: fetches genres from the database
+      parameters:
+        - name: keyword
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: successfully fetched genres
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: successfully returned genres
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: action
+        401:
+          description: unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid token
+        500:
+          description: server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: error occured
   /auth/login:
     post:
       tags:

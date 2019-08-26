@@ -549,182 +549,231 @@ describe('Test for novel CRUD', () => {
         });
     });
   });
-});
 
-describe('Create a genre', () => {
-  it('should be able to create a genre', (done) => {
-    chai.request(server)
-      .post(`${GENRE_URL}`)
-      .set('authorization', authToken)
-      .send(validGenre)
-      .end((error, response) => {
-        expect(response).to.have.status(201);
-        expect(response.body).to.be.an('object');
-        expect(response.body.message).to.equal('genre successfully created');
-        done();
-      });
+  describe('Create a genre', () => {
+    it('should be able to create a genre', (done) => {
+      chai.request(server)
+        .post(`${GENRE_URL}`)
+        .set('authorization', authToken)
+        .send(validGenre)
+        .end((error, response) => {
+          expect(response).to.have.status(201);
+          expect(response.body).to.be.an('object');
+          expect(response.body.message).to.equal('genre successfully created');
+          done();
+        });
+    });
+
+    it('should not be able to create a genre if the genre already exist', (done) => {
+      chai.request(server)
+        .post(`${GENRE_URL}`)
+        .set('authorization', authToken)
+        .send(existingGenre)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.be.an('object');
+          done();
+        });
+    });
+
+    it('should not be able to create a genre if the authorization token is invalid', (done) => {
+      chai.request(server)
+        .post(`${GENRE_URL}`)
+        .set('authorization', 'mklknjknljknklj')
+        .send(validGenre)
+        .end((error, response) => {
+          expect(response).to.have.status(401);
+          expect(response.body).to.be.an('object');
+          done();
+        });
+    });
+
+    it('should return an error message if a server error occurs', (done) => {
+      const stub = sinon.stub(Genre, 'findOne');
+      stub.throws(new Error('error occurred!'));
+      chai.request(server)
+        .post(`${GENRE_URL}`)
+        .set('authorization', authToken)
+        .send(validGenre)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.haveOwnProperty('error');
+          expect(response.body.error).to.be.a('string');
+          expect(response.body.error).to.equal('error occurred!');
+          stub.restore();
+          done();
+        });
+    });
+
+    it('should not be able to create a genre if request body is empty', (done) => {
+      chai.request(server)
+        .post(`${GENRE_URL}`)
+        .set('authorization', authToken)
+        .send({})
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.be.an('object');
+          done();
+        });
+    });
+
+    it('should not be able to create a genre if genre contains an empty string', (done) => {
+      chai.request(server)
+        .post(`${GENRE_URL}`)
+        .set('authorization', authToken)
+        .send(emptyGenre)
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.be.an('object');
+          done();
+        });
+    });
+
+    it('should not be able to create a genre if genre contains invalid characters', (done) => {
+      chai.request(server)
+        .post(`${GENRE_URL}`)
+        .set('authorization', authToken)
+        .send(invalidGenre)
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.be.an('object');
+          done();
+        });
+    });
+
+    it('should not be able to create a genre if authorization token is empty', (done) => {
+      chai.request(server)
+        .post(`${GENRE_URL}`)
+        .set('authorization', '')
+        .send({})
+        .end((error, response) => {
+          expect(response).to.have.status(401);
+          expect(response.body).to.be.an('object');
+          done();
+        });
+    });
   });
 
-  it('should not be able to create a genre if the genre already exist', (done) => {
-    chai.request(server)
-      .post(`${GENRE_URL}`)
-      .set('authorization', authToken)
-      .send(existingGenre)
-      .end((error, response) => {
-        expect(response).to.have.status(200);
-        expect(response.body).to.be.an('object');
-        done();
-      });
+  describe('POST /api/v1/novels/:noveId/bookmarks', () => {
+    it('should successfully bookmark a novel and return a status code of 201', (done) => {
+      chai.request(server)
+        .post(endpointBookmark)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res.body.bookmark).to.have.property('title');
+          done();
+        });
+    });
+
+    it('should successfully fetched all bookmarks', (done) => {
+      chai.request(server)
+        .get(endpointFetchBookmark)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res.body.bookmarks).to.be.an('array');
+          expect(res.body.message).to.equal('Bookmarks fetched successfully');
+          done();
+        });
+    });
+
+    it('should return error response if novel is not found', (done) => {
+      chai.request(server)
+        .post(wrongBookmarkId)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.an('object');
+          expect(res.body.error).to.equal('novel not found');
+          done();
+        });
+    });
+
+    it('test for bookmark service', async () => {
+      const bookmark = await bookmarkNovel(userIdbookmark, novelIdbookmark);
+      expect(bookmark).to.have.property('novelId');
+    });
+
+    it('should return a failure response if a server error occurs', (done) => {
+      const stub = sinon.stub(Bookmark, 'create');
+      stub.throws(new Error('error occurred!'));
+
+      chai.request(server)
+        .post(endpointBookmark)
+        .set('authorization', authToken)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('error occurred!');
+          stub.restore();
+          done();
+        });
+    });
   });
 
-  it('should not be able to create a genre if the authorization token is invalid', (done) => {
-    chai.request(server)
-      .post(`${GENRE_URL}`)
-      .set('authorization', 'mklknjknljknklj')
-      .send(validGenre)
-      .end((error, response) => {
-        expect(response).to.have.status(401);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
+  describe('Get all genre', () => {
+    it('should return an appropiate message if the count of genres gotten from the database is less than 1', (done) => {
+      chai.request(server)
+        .get(`${GENRE_URL}?keyword=z`)
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.have.keys(['message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('successfully returned genres');
+          done();
+        });
+    });
 
-  it('should return an error message if a server error occurs', (done) => {
-    const stub = sinon.stub(Genre, 'findOne');
-    stub.throws(new Error('error occurred!'));
-    chai.request(server)
-      .post(`${GENRE_URL}`)
-      .set('authorization', authToken)
-      .send(validGenre)
-      .end((error, response) => {
-        expect(response).to.have.status(500);
-        expect(response.body).to.haveOwnProperty('error');
-        expect(response.body.error).to.be.a('string');
-        expect(response.body.error).to.equal('error occurred!');
-        stub.restore();
-        done();
-      });
-  });
+    it('should return an error message if a server error occurs', (done) => {
+      const stub = sinon.stub(Genre, 'findAll');
+      stub.throws(new Error('error occurred!'));
 
-  it('should not be able to create a genre if request body is empty', (done) => {
-    chai.request(server)
-      .post(`${GENRE_URL}`)
-      .set('authorization', authToken)
-      .send({})
-      .end((error, response) => {
-        expect(response).to.have.status(400);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
+      chai.request(server)
+        .get(GENRE_URL)
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.haveOwnProperty('error');
+          expect(response.body.error).to.be.a('string');
+          expect(response.body.error).to.equal('error occurred!');
+          stub.restore();
+          done();
+        });
+    });
 
-  it('should not be able to create a genre if genre contains an empty string', (done) => {
-    chai.request(server)
-      .post(`${GENRE_URL}`)
-      .set('authorization', authToken)
-      .send(emptyGenre)
-      .end((error, response) => {
-        expect(response).to.have.status(400);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
+    it('should return a failure response if a server error occurs', (done) => {
+      const stub = sinon.stub(Bookmark, 'findAll');
+      stub.throws(new Error('error occurred!'));
 
-  it('should not be able to create a genre if genre contains invalid characters', (done) => {
-    chai.request(server)
-      .post(`${GENRE_URL}`)
-      .set('authorization', authToken)
-      .send(invalidGenre)
-      .end((error, response) => {
-        expect(response).to.have.status(400);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
+      chai.request(server)
+        .get(endpointFetchBookmark)
+        .set('authorization', authToken)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('error occurred!');
+          stub.restore();
+          done();
+        });
+    });
 
-  it('should not be able to create a genre if authorization token is empty', (done) => {
-    chai.request(server)
-      .post(`${GENRE_URL}`)
-      .set('authorization', '')
-      .send({})
-      .end((error, response) => {
-        expect(response).to.have.status(401);
-        expect(response.body).to.be.an('object');
-        done();
-      });
-  });
-});
-
-describe('POST /api/v1/novels/:noveId/bookmarks', () => {
-  it('should successfully bookmark a novel and return a status code of 201', (done) => {
-    chai.request(server)
-      .post(endpointBookmark)
-      .set('authorization', authToken)
-      .end((err, res) => {
-        expect(res).to.have.status(201);
-        expect(res.body.bookmark).to.have.property('title');
-        done();
-      });
-  });
-
-  it('should successfully fetched all bookmarks', (done) => {
-    chai.request(server)
-      .get(endpointFetchBookmark)
-      .set('authorization', authToken)
-      .end((err, res) => {
-        expect(res).to.have.status(201);
-        expect(res.body.bookmarks).to.be.an('array');
-        expect(res.body.message).to.equal('Bookmarks fetched successfully');
-        done();
-      });
-  });
-
-  it('should return error response if novel is not found', (done) => {
-    chai.request(server)
-      .post(wrongBookmarkId)
-      .set('authorization', authToken)
-      .end((err, res) => {
-        expect(res).to.have.status(404);
-        expect(res.body).to.be.an('object');
-        expect(res.body.error).to.equal('novel not found');
-        done();
-      });
-  });
-  it('test for bookmark service', async () => {
-    const bookmark = await bookmarkNovel(userIdbookmark, novelIdbookmark);
-    expect(bookmark).to.have.property('novelId');
-  });
-
-  it('should return a failure response if a server error occurs', (done) => {
-    const stub = sinon.stub(Bookmark, 'create');
-    stub.throws(new Error('error occurred!'));
-
-    chai.request(server)
-      .post(endpointBookmark)
-      .set('authorization', authToken)
-      .end((error, response) => {
-        expect(response).to.have.status(500);
-        expect(response.body).to.be.an('object');
-        expect(response.body.error).to.equal('error occurred!');
-        stub.restore();
-        done();
-      });
-  });
-
-  it('should return a failure response if a server error occurs', (done) => {
-    const stub = sinon.stub(Bookmark, 'findAll');
-    stub.throws(new Error('error occurred!'));
-
-    chai.request(server)
-      .get(endpointFetchBookmark)
-      .set('authorization', authToken)
-      .end((error, response) => {
-        expect(response).to.have.status(500);
-        expect(response.body).to.be.an('object');
-        expect(response.body.error).to.equal('error occurred!');
-        stub.restore();
-        done();
-      });
+    it('should successfully return all genres', (done) => {
+      chai.request(server)
+        .get(GENRE_URL)
+        .set('authorization', loggedInUserToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.have.keys(['message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('successfully returned genres');
+          expect(response.body.data.length).to.not.equal(0);
+          done();
+        });
+    });
   });
 });
 
