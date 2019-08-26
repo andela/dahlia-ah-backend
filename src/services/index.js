@@ -4,6 +4,7 @@ import novelServices from './novelService';
 import commentServices from './commentService';
 import notificationServices from './notification';
 import passwordServices from './passwordService';
+import blacklistedTokenService from './blacklistedToken';
 
 export default {
   sendMail,
@@ -11,5 +12,6 @@ export default {
   novelServices,
   commentServices,
   notificationServices,
-  passwordServices
+  passwordServices,
+  blacklistedTokenService
 };

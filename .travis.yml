@@ -19,4 +19,4 @@ after_success:
   - npm run coveralls
 
 git:
-  depth: 20
+  depth: 50

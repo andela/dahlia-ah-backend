@@ -8,7 +8,7 @@ dotenv.config();
 const { SECRET_KEY, ACCOUNT_VERIFICATION_SECRET } = process.env;
 const verifyPath = '/auth/verify/:token';
 const { responseMessage } = helpers;
-const { userServices: { findUser } } = services;
+const { userServices: { findUser }, blacklistedTokenService: { findBlacklistedToken } } = services;
 
 /**
  *
@@ -27,18 +27,24 @@ export default (request, response, next) => {
 
   jwt.verify(token, secret, async (error, decoded) => {
     if (error) {
-      const message = (error.name === 'TokenExpiredError') ? 'token expired, you have to be signed in to continue' : 'you have to be signed in to continue';
-      return responseMessage(response, 401, { error: message });
+      const message = (error.name === 'TokenExpiredError') ? 'token expired' : 'invalid token';
+      responseMessage(response, 401, { error: message });
     }
     try {
+      const blacklistedToken = await findBlacklistedToken(token);
+      if (blacklistedToken) {
+        return responseMessage(response, 401, { error: 'invalid token' });
+      }
       const user = await findUser(decoded.id);
       if (!user) {
         return responseMessage(response, 404, { error: 'user not found' });
       }
       request.user = user;
+      request.token = token;
+      request.decoded = decoded;
       return next();
     } catch (err) {
-      return responseMessage(response, 500, { error: err.message });
+      responseMessage(response, 500, { error: err.message });
     }
   });
 };

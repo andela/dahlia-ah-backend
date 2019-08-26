@@ -1,12 +1,13 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import sinon from 'sinon';
-import sendgridMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import sendgridMail from '@sendgrid/mail';
 import server from '../src';
 import mockData from './mockData';
+import models from '../src/database/models';
 
 chai.use(chaiHttp);
 const { expect } = chai;
@@ -23,6 +24,8 @@ const {
   userWithoutPreviousPassword, withoutFivePreviousPassword
 } = userMock;
 
+const { BlacklistedToken } = models;
+
 const BASE_URL = '/api/v1';
 const FORGOT_PASSWORD_URL = `${BASE_URL}/auth/forgotPassword`;
 const CHANGE_PASSWORD_URL = `${BASE_URL}/auth/changepassword`;
@@ -35,6 +38,10 @@ const loggedInUser2Token = jwt.sign({ id: '8f3e7eda-090a-4c44-9ffe-58443de5e1f8'
 
 // token of loggedIn user Bruce Clifford in the database
 const loggedInUser3Token = jwt.sign({ id: '8487ef08-2ac2-4387-8bd6-738b12c75dff' }, SECRET_KEY, { expiresIn: '60s' });
+const SIGN_OUT_URL = `${BASE_URL}/auth`;
+
+const logoutToken = jwt.sign({ id: '122a0d86-8b78-4bb8-b28f-8e5f7811c456' }, process.env.SECRET_KEY, { expiresIn: '60 minutes' });
+const logoutTokenTwo = jwt.sign({ id: 'ce87299b-0dfa-44ed-bb53-45d434647eb2' }, process.env.SECRET_KEY, { expiresIn: '60 minutes' });
 
 describe('AUTH', () => {
   describe('POST /auth/signup', () => {
@@ -283,5 +290,65 @@ describe('AUTH', () => {
           done();
         });
     });
+  });
+});
+// Logout route
+describe('GET api/v1/auth/logout', () => {
+  it('should return a 401 error accessing the logout route without a token', (done) => {
+    chai
+      .request(server)
+      .get(`${SIGN_OUT_URL}/logout`)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body.error)
+          .to.eql('you have to be signed in to continue');
+        done();
+      });
+  });
+
+  it('should be able to logout successfully and return a status code of 200', (done) => {
+    chai
+      .request(server)
+      .get(`${SIGN_OUT_URL}/logout`)
+      .set('Authorization', `${logoutToken}`)
+      .end((err, res) => {
+        expect(res).status(200);
+        expect(res.body)
+          .to.be.a('object');
+        expect(res.body.message)
+          .to.eql('Logout was successful');
+        done();
+      });
+  });
+
+  it('should not be allowed to sign in if token is blacklisted', (done) => {
+    chai
+      .request(server)
+      .get(`${SIGN_OUT_URL}/logout`)
+      .set('Authorization', `${logoutToken}`)
+      .end((err, res) => {
+        expect(res).status(401);
+        expect(res.body)
+          .to.be.a('object');
+        expect(res.body.error)
+          .to.eql('invalid token');
+        done();
+      });
+  });
+
+  it('should return a failure response if a server error occurs', (done) => {
+    const stub = sinon.stub(BlacklistedToken, 'create');
+    stub.throws(new Error('error occurred!'));
+
+    chai.request(server)
+      .get(`${SIGN_OUT_URL}/logout`)
+      .set('Authorization', `${logoutTokenTwo}`)
+      .end((error, response) => {
+        expect(response).to.have.status(500);
+        expect(response.body).to.be.an('object');
+        expect(response.body.error).to.equal('Something went wrong');
+        stub.restore();
+        done();
+      });
   });
 });

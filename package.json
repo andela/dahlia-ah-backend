@@ -6,6 +6,7 @@
   "scripts": {
     "heroku-postbuild": "npm run db:ready",
     "start": "babel-node ./src/index.js",
+    "deleteBlToken": "babel-node ./src/services/deleteBlacklistedToken.js --exit",
     "mocha-test": "nyc mocha --require @babel/register tests/*.js --timeout 20000 --exit",
     "test": "cross-env NODE_ENV=test npm-run-all db:ready mocha-test",
     "dev:start": "cross-env DEBUG=dev nodemon --exec babel-node ./src/index.js",
