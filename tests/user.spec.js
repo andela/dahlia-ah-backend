@@ -3,10 +3,7 @@ import sinon from 'sinon';
 import chai, { expect } from 'chai';
 import mockData from './mockData';
 import app from '../src';
-import userController from '../src/controllers/userController';
 import models from '../src/database/models';
-
-const { listUsers } = userController;
 
 const API_VERSION = '/api/v1';
 const LOGIN_URL = `${API_VERSION}/auth/login`;
@@ -446,6 +443,7 @@ describe('USER ROUTES', () => {
   });
 });
 
+// ================================ GET ALL USERS ====================================
 describe('Test for getting users', () => {
   before((done) => {
     const user = getUser;
@@ -457,6 +455,7 @@ describe('Test for getting users', () => {
         done();
       });
   });
+
   describe('GET /api/v1/users', () => {
     it('should get all users if user is authenticated', (done) => {
       chai.request(app)
@@ -466,6 +465,29 @@ describe('Test for getting users', () => {
           expect(res).to.have.status(200);
           expect(res.body).to.have.property('message');
           expect(res.body).to.have.property('users');
+          done();
+        });
+    });
+
+    it('should get all users if search query exists', (done) => {
+      chai.request(app)
+        .get(`${endpointUser}?search=zen`)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.property('message');
+          expect(res.body).to.have.property('users');
+          done();
+        });
+    });
+
+    it('should not get all users if page does not exist', (done) => {
+      chai.request(app)
+        .get(`${endpointUser}?page=2`)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.error).to.equal('page not found');
           done();
         });
     });
@@ -480,12 +502,19 @@ describe('Test for getting users', () => {
         });
     });
 
-    it('should return a failure response if a server error occurs', async () => {
-      try {
-        await listUsers('request', 'response');
-      } catch (error) {
-        expect(error).to.be.an('error');
-      }
+    it('should return server error on update', (done) => {
+      const stub = sinon.stub(User, 'findAndCountAll');
+      stub.throws(new Error('an error occurred'));
+      chai
+        .request(app)
+        .get(endpointUser)
+        .set('authorization', authToken)
+        .end((error, response) => {
+          expect(response).status(500);
+          expect(response.body).property('error').include('an error occurred');
+          stub.restore();
+          done(error);
+        });
     });
   });
 });

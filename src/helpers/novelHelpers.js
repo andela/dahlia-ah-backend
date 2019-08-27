@@ -57,7 +57,7 @@ const extractNovels = (results) => {
   }
   return results.map((novel) => {
     const {
-      id, title, slug, description, body, createdAt, updatedAt
+      id, title, slug, description, createdAt, updatedAt
     } = novel;
 
     return {
@@ -67,7 +67,6 @@ const extractNovels = (results) => {
       author: `${novel.User.firstName} ${novel.User.lastName}`,
       genre: novel.Genre.name,
       description,
-      body,
       createdAt,
       updatedAt
     };

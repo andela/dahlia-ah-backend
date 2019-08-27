@@ -1,13 +1,14 @@
+import Sequelize from 'sequelize';
 import models from '../database/models';
 import helpers from '../helpers';
 import novelServices from './novelService';
 
-const { authHelper: { generateRandomPassword } } = helpers;
-const { getAllBookmark } = novelServices;
-
+const { Op } = Sequelize;
 const {
   User, Role, Follower, readStats, Novel
 } = models;
+const { authHelper: { generateRandomPassword } } = helpers;
+const { getAllBookmark } = novelServices;
 
 /**
  * @description Finds a user from the database by id or email
@@ -53,11 +54,25 @@ const findFollower = async (followeeId, followerId) => {
 
 /**
  * @name getAllUsers
+ * @param {integer} offset
+ * @param {integer} limit
+ * @param {keyword} search
  * @returns {Array} array of users
  */
-const getAllUsers = async () => {
-  const allUsers = await User.findAll({
-    attributes: ['id', 'firstName', 'lastName', 'bio', 'avatarUrl']
+const getAllUsers = async (offset, limit, search) => {
+  let query;
+  if (search) {
+    query = {
+      where: Sequelize.where(Sequelize.fn('concat', Sequelize.col('User.firstName'), ' ', Sequelize.col('User.lastName')), {
+        [Op.iLike]: `%${search}%`,
+      })
+    };
+  }
+  const allUsers = await User.findAndCountAll({
+    offset,
+    limit,
+    attributes: ['id', 'firstName', 'lastName', 'bio', 'avatarUrl'],
+    ...query
   });
   return allUsers;
 };
