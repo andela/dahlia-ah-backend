@@ -233,8 +233,6 @@ const isValidReadInput = field => check(field)
   .exists()
   .withMessage(`${field} is a required field`)
   .trim()
-  .not()
-  .isEmpty()
   .withMessage(`${field} cannot be empty`)
   .isIn(['true', 'false'])
   .withMessage(`${field} can only contain true or false`);
