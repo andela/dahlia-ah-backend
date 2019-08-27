@@ -158,11 +158,22 @@ const editProfile = async (request, response) => {
   * @return {Object} json response
   */
 const listUsers = async (request, response) => {
+  const {
+    search, page = 1, limit = 20
+  } = request.query;
+  const offset = limit * (page - 1);
   try {
-    const users = await getAllUsers();
+    const users = await getAllUsers(offset, limit, search);
+    const pages = Math.ceil(users.count / limit);
+    if (page > pages) {
+      return responseMessage(response, 404, { error: 'page not found' });
+    }
     return successResponse(response, 200, {
       message: 'Request successful',
-      users
+      currentPage: page,
+      totalPages: pages,
+      limit,
+      users: users.rows
     });
   } catch (error) {
     return responseMessage(response, 500, { error: error.message });

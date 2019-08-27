@@ -626,6 +626,19 @@ paths:
       tags:
         - Users
       summary: Gets all users
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: search
+          in: query
+          schema:
+            type: string
       responses:
         200:
           description: request successful
