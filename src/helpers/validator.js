@@ -225,6 +225,18 @@ const isValidRoleName = field => check(field)
   .isIn(['reader', 'author', 'admin', 'superadmin'])
   .withMessage(`${field} can only be one of: 'reader', 'author', 'admin', 'superadmin'`);
 
+/**
+   * @param {String} field
+   * @returns {Object} - Express-validator
+   */
+const isValidReadInput = field => check(field)
+  .exists()
+  .withMessage(`${field} is a required field`)
+  .trim()
+  .withMessage(`${field} cannot be empty`)
+  .isIn(['true', 'false'])
+  .withMessage(`${field} can only contain true or false`);
+
 export default {
   isValidEmail,
   isValidName,
@@ -245,5 +257,6 @@ export default {
   isValidPhoneNumber,
   isValidSubcription,
   isValidRoleName,
-  isValidPasswords
+  isValidPasswords,
+  isValidReadInput
 };

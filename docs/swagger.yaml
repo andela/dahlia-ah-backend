@@ -28,6 +28,8 @@ tags:
   description: Operations available for Admin and Super-admin
 - name: Auth
   description: Register and login operations
+- name: Profiles
+  description: User profiles
 
 paths:
   /users:
@@ -1746,7 +1748,75 @@ paths:
         404:
           description: Not found
         500:
-          description: internal server error   
+          description: internal server error
+  /profiles/readingstats:
+    get:
+      tags: 
+        - Profiles
+      summary: Get all reading stats of user
+      security: 
+      - ApiKeyAuth: []
+      parameters:
+      - name: "period"
+        in: "query"
+        description: "time period in days"
+        required: false
+        schema:
+          type: string
+          example: 30
+      responses:
+        200:
+          description: reading stats of user fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadStats'
+        403:
+          description: not permitted
+        404:
+          description: not found
+        500:
+          description: database error
+  /novels/{slug}/markread:
+    patch:
+      tags:
+      - Novels
+      summary: Mark/remove a novel as read
+      description: Reply a parent comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentBody:
+                  type: string
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 'hancock-424f-86ec-1e2b36e2fd14'
+        - name: readStatus
+          in: path
+          required: true
+          schema:
+            type: string
+            example: true
+            
+      responses:
+        200:
+          description: marked/removed as read successfully
+        400:
+          description: input validation error
+        401:
+          description: authorization error
+        403:
+          description: not permitted
+        500:
+          description: database error
+  
                   
 components:
   schemas:
@@ -2001,6 +2071,46 @@ components:
         roleName:
           type: string
           example: author
+    ReadStats:
+      type: object
+      properties:
+        message:
+          type: string
+          example: success
+        readingStats:
+          type: object
+          properties:
+            bookmarks:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  novelId:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+            reads:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  userId:
+                    type: string
+                  novelId:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+            countRead:
+              type: integer
+              example: 2
   
   securitySchemes:
     token:

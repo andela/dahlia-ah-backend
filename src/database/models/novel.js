@@ -66,6 +66,10 @@ export default (Sequelize, DataTypes) => {
     Novel.belongsTo(models.Genre, {
       foreignKey: 'genreId'
     });
+    Novel.hasMany(models.readStats, {
+      foreignKey: 'novelId',
+      onDelete: 'CASCADE'
+    });
   };
   return Novel;
 };

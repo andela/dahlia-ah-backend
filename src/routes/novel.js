@@ -1,12 +1,12 @@
 import express from 'express';
+import novelController from '../controllers/novelController';
 import middlewares from '../middlewares';
 import updateLikes from '../controllers/likesController';
-import novelController from '../controllers/novelController';
 
 const {
   novelValidator: {
     createNovelValidator, getNovelBySlugValidator, getNovelValidator,
-    createGenreValidator, getGenreValidator, editNovelValidator
+    createGenreValidator, getGenreValidator, editNovelValidator, markReadValidator
   },
   highlightValidator: { createHighlightValidator },
   verifyToken,
@@ -14,7 +14,8 @@ const {
 } = middlewares;
 const {
   createNovel, getNovels, createGenre, getGenres,
-  getSingleNovel, highlightNovel, postBookmark, fetchBookmarks, editNovel, deleteNovel
+  getSingleNovel, highlightNovel, postBookmark,
+  fetchBookmarks, editNovel, deleteNovel, toggleRead
 } = novelController;
 
 const novel = express.Router();
@@ -52,5 +53,8 @@ novel.get(`${NOVEL_URL}/:slug`, verifyToken, authorizeUser(['reader', 'author', 
 
 // Route to post highlight
 novel.post(`${NOVEL_URL}/:slug/highlight`, createHighlightValidator, verifyToken, highlightNovel);
+
+// Route to mark novel as read
+novel.patch(`${NOVEL_URL}/:slug/markread`, verifyToken, markReadValidator, authorizeUser(['author', 'admin', 'superadmin']), toggleRead);
 
 export default novel;

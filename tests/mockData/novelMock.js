@@ -28,6 +28,14 @@ const novelMock = {
   },
   emptyGenre: {
     name: ''
+  },
+  seedNovel1: {
+    id: '7f45df6d-7003-424f-86ec-1e2b36e2fd14',
+    slug: 'hancock',
+  },
+  seedNovel2: {
+    id: '8bd8c0ec-3b50-4228-bb71-e617c7b8d3b5',
+    slug: 'bancock',
   }
 };
 

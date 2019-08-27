@@ -10,7 +10,7 @@ const {
 } = helpers;
 const {
   userServices: {
-    findUser, findFollower, getAllUsers, addUser, findUserRole
+    findUser, findFollower, getAllUsers, addUser, findUserRole, fetchReadStats
   }
 } = services;
 const { User, Follower } = models;
@@ -362,8 +362,26 @@ const deleteUser = async (req, res) => {
 
     return responseMessage(res, 200, { message });
   } catch (error) {
-    log(error);
+    log(error.message);
     return responseMessage(res, 500, { error: 'an error occurred' });
+  }
+};
+
+/**
+ * @description updates the profile of a user
+ * @param {object} request express request object
+ * @param {object} response express response object
+ * @returns {json} json
+ */
+const getReadingStats = async (request, response) => {
+  const { period } = request.query;
+  try {
+    const readingStats = await fetchReadStats(request.user.id, period);
+    const data = { message: 'success', readingStats };
+    return responseMessage(response, 200, data);
+  } catch (error) {
+    log(error.message);
+    return responseMessage(response, 500, { error: 'an error occurred' });
   }
 };
 
@@ -379,5 +397,6 @@ export default {
   createUser,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  getReadingStats
 };

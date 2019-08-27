@@ -2,7 +2,7 @@ import validator from '../helpers/validator';
 import errorHandler from './errorHandler';
 
 const {
-  isNotEmpty, isValidGenre, isValidInt, isValidName, isNotEmptySlug, isOptional
+  isNotEmpty, isValidGenre, isValidInt, isValidName, isNotEmptySlug, isOptional, isValidReadInput
 } = validator;
 
 const { validatorError } = errorHandler;
@@ -43,6 +43,10 @@ const novelValidator = {
     isNotEmpty('keyword').optional(),
     validatorError
   ],
+  markReadValidator: [
+    isValidReadInput('readStatus'),
+    validatorError
+  ]
 };
 
 export default novelValidator;
