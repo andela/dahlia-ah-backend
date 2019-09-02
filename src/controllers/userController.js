@@ -53,7 +53,8 @@ const signUp = async (req, res) => {
       email: createdUser.email,
       token: authHelper.generateToken({ id: createdUser.id }),
       bio: createdUser.bio,
-      image: createdUser.avatar
+      image: createdUser.avatar,
+      isVerified: createdUser.isVerified,
     }
   };
 
@@ -93,7 +94,8 @@ const login = async (req, res) => {
       lastName: foundUser.lastName,
       email: foundUser.email,
       token: authHelper.generateToken({ id: foundUser.id }),
-      bio: foundUser.bio
+      bio: foundUser.bio,
+      isVerified: foundUser.isVerified
     }
   };
   return successResponse(res, 200, data);
