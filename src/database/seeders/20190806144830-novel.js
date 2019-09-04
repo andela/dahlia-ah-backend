@@ -7,6 +7,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   genreId: 'ffe299b9-889b-4ad3-86cf-138cd57d5aab',
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   readTime: 1,
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555891/dahlia/back5unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524086/dahlia/holdstillbookcover.png',
   createdAt: new Date(),
   updatedAt: new Date()
 },
@@ -19,6 +21,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   genreId: 'ffe299b9-889b-4ad3-86cf-138cd57d5aab',
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   readTime: 1,
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555891/dahlia/back5unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524086/dahlia/sugarrunbookcover.png',
   createdAt: new Date(),
   updatedAt: new Date()
 },
@@ -30,6 +34,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Religion and Christianity proposes that all the answers can be found in the Bible, while Christianity is all bout searching for anwsers.',
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555877/dahlia/back8unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524086/dahlia/QueenOfHearts.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -42,6 +48,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555877/dahlia/back8unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524086/dahlia/QueenOfHearts.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -54,6 +62,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555878/dahlia/back2unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/arsonistbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -66,6 +76,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555876/dahlia/back3unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/foxbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -78,6 +90,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555877/dahlia/back4unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/artbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -90,6 +104,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555883/dahlia/back11unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/artbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -102,6 +118,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: '09add0fe-d063-48ce-8e18-0dc590d04dcf',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555882/dahlia/back10unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/artbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -114,6 +132,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555884/dahlia/back7unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/artbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -126,6 +146,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555884/dahlia/back7unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/abstractbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -138,6 +160,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555883/dahlia/back9unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/abstractbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -150,6 +174,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555878/dahlia/back6unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/abstractbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -162,6 +188,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'e4427fcd-d1dd-480d-98a6-bb08d5e4d4aa',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555878/dahlia/back2unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/abstractbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -174,6 +202,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555877/dahlia/back4unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/foxbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -186,6 +216,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555877/dahlia/back4unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/foxbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -198,6 +230,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: '09add0fe-d063-48ce-8e18-0dc590d04dcf',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555877/dahlia/back1unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/foxbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -210,6 +244,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555884/dahlia/back7unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/forestbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -222,6 +258,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555877/dahlia/back8unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/enchantmentbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -234,6 +272,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   genreId: 'da86915a-6d4d-455f-8b44-5c4b8221ebf6',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555891/dahlia/back5unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/arsonistbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -246,6 +286,8 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
   genreId: '09add0fe-d063-48ce-8e18-0dc590d04dcf',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555883/dahlia/back9unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524086/dahlia/holdstillbookcover.png',
   readTime: 1,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -258,7 +300,65 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris arcu ipsum, sagittis eu dapibus sed, pulvinar suscipit magna. Mauris iaculis rutrum ipsum in lobortis. Quisque ullamcorper at odio ac tristique. Vivamus vel risus vitae lorem varius consequat at quis urna.',
   authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
   genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555878/dahlia/back6unsplash.jpg',
+  thumbImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567524085/dahlia/forestbookcover.png',
   readTime: 1,
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '23df3b87-2c35-4b5b-a10a-04557309bdb3',
+  slug: 'my-home-in-the-woods',
+  title: 'my home in the woods',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?',
+  authorId: '122a0d86-8b78-4bb8-b28f-8e5f7811c456',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  readTime: 3,
+  coverImgUrl: 'https://res.cloudinary.com/drlcfqzym/image/upload/v1567081040/homepage_large.png',
+  thumbImgUrl: 'https://images.penguinrandomhouse.com/cover/9781101911532',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '7ab400ae-1ee4-48fd-90cd-a906b88fc87c',
+  slug: 'the-man-in-the-forest-of-dreams',
+  title: 'the man in the forest of dreams',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?',
+  authorId: '26099ff1-edfd-46f3-b6a5-aa900c233e2f',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  readTime: 5,
+  coverImgUrl: 'https://res.cloudinary.com/drlcfqzym/image/upload/v1567013343/ah-home.jpg',
+  thumbImgUrl: 'https://covers1.booksamillion.com/covers/bam/1/53/689/754/153689754X.jpg',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '958dae52-53dd-4924-ae63-d8cfc82fd57d',
+  slug: 'let-us-go-to-the-moon',
+  title: 'let us go to the moon',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?',
+  authorId: '26099ff1-edfd-46f3-b6a5-aa900c233e2f',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  readTime: 4,
+  coverImgUrl: 'https://res.cloudinary.com/drlcfqzym/image/upload/v1567083656/heaven-4349025_1920.jpg',
+  thumbImgUrl: 'https://pictures.abebooks.com/isbn/9780399203138-us.jpg',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '10d42194-2ea2-4c90-aef2-043421952220',
+  slug: 'one-way-trip',
+  title: 'one way trip',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum upidatat non proident, sunt in culpa qui officia.',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?',
+  authorId: '26099ff1-edfd-46f3-b6a5-aa900c233e2f',
+  genreId: 'ceb59aa0-b10d-4f37-a0d5-925b38876db4',
+  readTime: 4,
+  coverImgUrl: 'https://res.cloudinary.com/drlcfqzym/image/upload/v1567083948/claire-rodahaver-o1Sc5VXglNI-unsplash.jpg',
+  thumbImgUrl: 'https://pictures.abebooks.com/isbn/9780399203138-us.jpg',
   createdAt: new Date(),
   updatedAt: new Date()
 }], {});

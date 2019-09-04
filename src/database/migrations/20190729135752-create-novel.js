@@ -32,7 +32,7 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Novels', {
   },
   description: {
     allowNull: false,
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   },
   body: {
     allowNull: false,
@@ -41,6 +41,14 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Novels', {
   readTime: {
     allowNull: false,
     type: Sequelize.INTEGER
+  },
+  thumbImgUrl: {
+    allowNull: true,
+    type: Sequelize.STRING
+  },
+  coverImgUrl: {
+    allowNull: true,
+    type: Sequelize.STRING
   },
   createdAt: {
     allowNull: false,

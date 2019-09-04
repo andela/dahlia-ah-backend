@@ -11,6 +11,14 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     },
+    coverImgUrl: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    themeColor: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE

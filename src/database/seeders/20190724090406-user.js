@@ -222,5 +222,19 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
+}, {
+  id: '26099ff1-edfd-46f3-b6a5-aa900c233e2f',
+  firstName: 'Alex',
+  lastName: 'Parish',
+  email: 'alexparish@gmail.com',
+  password: bcrypt.hashSync('alexParish', 10),
+  bio: 'My name is Alex Parish, i also act in a series called quantico',
+  avatarUrl: null,
+  phoneNo: null,
+  isVerified: true,
+  isSubscribed: true,
+  roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
+  createdAt: new Date(),
+  updatedAt: new Date()
 }], {});
 export const down = queryInterface => queryInterface.bulkDelete('Users', null, {});

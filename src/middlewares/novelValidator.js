@@ -24,6 +24,10 @@ const novelValidator = {
     isNotEmpty('keyword').optional(),
     validatorError
   ],
+  getRandomNovelValidator: [
+    isValidInt('limit').optional(),
+    validatorError
+  ],
   createGenreValidator: [
     isValidName('name'),
     validatorError

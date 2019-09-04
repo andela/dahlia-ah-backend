@@ -1689,6 +1689,37 @@ paths:
           description: Novel not found
         500:
           description: internal server error  
+  /novels/random:
+    get:
+      tags:
+        - Novels
+      summary: Get random novels
+      description: Get random novels
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Request successful
+        404:
+          description: Novel not found
+        500:
+          description: internal server error
+  /noveloftheweek:
+    get:
+      tags:
+        - Novels
+      summary: Get novel of the week
+      description: Get novel of the week
+      responses:
+        200:
+          description: Request successful
+        404:
+          description: Novel not found
+        500:
+          description: internal server error 
   /novels/{slug}/highlight:
     post:
       tags:

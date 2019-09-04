@@ -41,6 +41,14 @@ export default (Sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER
     },
+    thumbImgUrl: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    coverImgUrl: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE

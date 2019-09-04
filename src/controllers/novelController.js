@@ -14,9 +14,9 @@ const { Novel, Genre } = models;
 const {
   novelServices: {
     addNovel, findGenre, findNovel, findAllNovels,
-    highlightNovelText, getNovelHighlights,
+    highlightNovelText, getNovelHighlights, findRandomNovels,
     findNovelById, bookmarkNovel, getAllBookmark,
-    updateNovel, removeNovel, toggleReadStatus
+    updateNovel, removeNovel, toggleReadStatus, findNovelOfTheWeek
   },
   notificationServices: { addNotification }
 } = services;
@@ -85,6 +85,53 @@ const getNovels = async (request, response) => {
       totalPages: pages,
       limit,
       data: novels
+    });
+  } catch (error) {
+    responseMessage(response, 500, { error: error.message });
+  }
+};
+
+/**
+ * getRandomNovels
+ *
+ * @param {object} request
+ * @param {object} response
+ * @returns {object} json
+ */
+const getRandomNovels = async (request, response) => {
+  const { limit = 1 } = request.query;
+  try {
+    const existingNovel = await findRandomNovels(limit);
+    if (!existingNovel) {
+      return responseMessage(response, 404, { message: 'no novels found in database', data: [] });
+    }
+    const novels = extractNovels(existingNovel);
+    response.status(200).json({
+      message: 'successfully returned novels',
+      data: novels
+    });
+  } catch (error) {
+    responseMessage(response, 500, { error: error.message });
+  }
+};
+
+/**
+ * getNovelOfTheWeek
+ *
+ * @param {object} request
+ * @param {object} response
+ * @returns {object} json
+ */
+const getNovelOfTheWeek = async (request, response) => {
+  try {
+    const existingNovel = await findNovelOfTheWeek();
+    if (!existingNovel) {
+      return responseMessage(response, 404, { message: 'no novels found in database', data: [] });
+    }
+    const novels = extractNovels(existingNovel);
+    response.status(200).json({
+      message: 'successfully returned novels',
+      data: novels[0]
     });
   } catch (error) {
     responseMessage(response, 500, { error: error.message });
@@ -279,7 +326,7 @@ const getGenres = async (request, response) => {
   const { keyword } = request.query;
   const genreFilter = keyword ? { name: { [Op.iLike]: `%${keyword}%` } } : { id: { [Op.ne]: null } };
   try {
-    const genreList = await Genre.findAll({ where: genreFilter, attributes: ['id', 'name'] });
+    const genreList = await Genre.findAll({ where: genreFilter, attributes: ['id', 'name', 'coverImgUrl', 'themeColor'] });
     return response.status(200).json({
       message: 'successfully returned genres',
       data: genreList
@@ -340,6 +387,8 @@ const toggleRead = async (request, response) => {
 export default {
   createNovel,
   getNovels,
+  getRandomNovels,
+  getNovelOfTheWeek,
   createGenre,
   getGenres,
   highlightNovel,

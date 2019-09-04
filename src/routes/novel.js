@@ -6,7 +6,8 @@ import updateLikes from '../controllers/likesController';
 const {
   novelValidator: {
     createNovelValidator, getNovelBySlugValidator, getNovelValidator,
-    createGenreValidator, getGenreValidator, editNovelValidator, markReadValidator
+    createGenreValidator, getGenreValidator, editNovelValidator, markReadValidator,
+    getRandomNovelValidator
   },
   highlightValidator: { createHighlightValidator },
   verifyToken,
@@ -15,7 +16,8 @@ const {
 const {
   createNovel, getNovels, createGenre, getGenres,
   getSingleNovel, highlightNovel, postBookmark,
-  fetchBookmarks, editNovel, deleteNovel, toggleRead
+  fetchBookmarks, editNovel, deleteNovel, toggleRead,
+  getRandomNovels, getNovelOfTheWeek
 } = novelController;
 
 const novel = express.Router();
@@ -40,13 +42,20 @@ novel.post(`${GENRE_URL}`, verifyToken, authorizeUser(['author', 'admin', 'super
 // Route to get all genres
 novel.get(`${GENRE_URL}`, verifyToken, getGenreValidator, getGenres);
 
-// Route to get bookmark
-
+// Route to add bookmark
 novel.post(`${NOVEL_URL}/:novelId/bookmarks`, verifyToken, postBookmark);
+
+// Route to get bookmark
 novel.get(`${NOVEL_URL}/bookmarks`, verifyToken, fetchBookmarks);
 
 // Route to get novels
 novel.get(`${NOVEL_URL}`, verifyToken, getNovelValidator, getNovels);
+
+// Route to get random novels
+novel.get(`${NOVEL_URL}/random`, getRandomNovelValidator, getRandomNovels);
+
+// Route to get novel of the week
+novel.get('/noveloftheweek', getNovelOfTheWeek);
 
 // Route to get novel by slug
 novel.get(`${NOVEL_URL}/:slug`, verifyToken, authorizeUser(['reader', 'author', 'admin', 'superadmin']), getNovelBySlugValidator, getSingleNovel);
