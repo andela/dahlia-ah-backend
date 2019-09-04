@@ -83,9 +83,6 @@ const login = async (req, res) => {
   if (!correctPassword) {
     return errorResponse(res, 401, authErrorMessage);
   }
-  if (!foundUser.isVerified) {
-    return errorResponse(res, 401, 'please verify your email');
-  }
 
   const data = {
     user: {
