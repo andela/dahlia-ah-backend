@@ -9,7 +9,7 @@ const {
   isValidPassword,
   isValidProfileName,
   isValidProfilePassword,
-  isValidAvatarUrl,
+  isValidUrl,
   isValidUUIDParam,
   isValidPhoneNumber,
   isValidSubcription,
@@ -38,7 +38,7 @@ const userValidator = {
   editProfileValidator: [
     isValidProfileName('firstName'),
     isValidProfileName('lastName'),
-    isValidAvatarUrl(),
+    isValidUrl('avatarUrl'),
     isValidProfilePassword(),
     validatorError,
     emptyBody

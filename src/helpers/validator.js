@@ -81,9 +81,10 @@ const isValidProfilePassword = () => check('password').isLength({ min: 8 })
   .withMessage('password cannot be updated here');
 
 /**
+   * @param {String} field
    * @returns {Object} - Express-validator
    */
-const isValidAvatarUrl = () => check('avatarUrl')
+const isValidUrl = field => check(field)
   .optional()
   .trim()
   .not()
@@ -249,7 +250,7 @@ export default {
   isValidUUID,
   isValidProfileName,
   isValidProfilePassword,
-  isValidAvatarUrl,
+  isValidUrl,
   isValidInt,
   isNotTypeOfReport,
   isBoolean,

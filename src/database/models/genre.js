@@ -11,6 +11,14 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     },
+    coverImgUrl: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    themeColor: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE
@@ -24,7 +32,7 @@ export default (sequelize, DataTypes) => {
     // associations can be defined here
     Genre.hasMany(models.Novel, {
       foreignKey: 'genreId',
-      as: 'genre',
+      as: 'novels',
     });
   };
   return Genre;

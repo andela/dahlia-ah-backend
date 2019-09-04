@@ -421,6 +421,151 @@ describe('Test for novel CRUD', () => {
     });
   });
 
+  describe('GET random novels', () => {
+    it('should return an error response if the limit provided is not an integer', (done) => {
+      chai.request(server)
+        .get(`${NOVEL_URL}/random`)
+        .query({ limit: 'abc' })
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('limit');
+          expect(response.body.errors[0].message).to.equal('limit must be an integer');
+          done();
+        });
+    });
+
+    it('should return an error response if the limit query provided is empty', (done) => {
+      chai.request(server)
+        .get(`${NOVEL_URL}/random`)
+        .query({ limit: '' })
+        .end((error, response) => {
+          expect(response).to.have.status(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(response.body.errors).to.be.an('array');
+          expect(response.body.errors[0]).to.be.an('object');
+          expect(response.body.errors[0]).to.have.keys(['field', 'message']);
+          expect(response.body.errors[0].field).to.equal('limit');
+          expect(response.body.errors[0].message).to.equal('limit cannot be empty');
+          done();
+        });
+    });
+
+    it('should return an appropiate message if the count of novels gotten from the database is less than 1', (done) => {
+      const stub = sinon.stub(Novel, 'findAll');
+      stub.returns(false);
+
+      chai.request(server)
+        .get(`${NOVEL_URL}/random`)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body).to.have.keys(['message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('no novels found in database');
+          stub.restore();
+          done();
+        });
+    });
+
+    it('should return an error message if a server error occurs', (done) => {
+      const stub = sinon.stub(Novel, 'findAll');
+      stub.throws(new Error('error occurred!'));
+
+      chai.request(server)
+        .get(`${NOVEL_URL}/random`)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.haveOwnProperty('error');
+          expect(response.body.error).to.be.a('string');
+          expect(response.body.error).to.equal('error occurred!');
+          stub.restore();
+          done();
+        });
+    });
+
+    it('should successfully return a random novel', (done) => {
+      chai.request(server)
+        .get(`${NOVEL_URL}/random`)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.have.keys(['message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('successfully returned novels');
+          expect(response.body.data.length).to.not.equal(0);
+          done();
+        });
+    });
+
+    it('should successfully return two random novels', (done) => {
+      chai.request(server)
+        .get(`${NOVEL_URL}/random`)
+        .query({ limit: 2 })
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.have.keys(['message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('successfully returned novels');
+          expect(response.body.data.length).to.not.equal(0);
+          done();
+        });
+    });
+  });
+
+  describe('GET novel of the week', () => {
+    it('should return an appropiate message if the count of novels gotten from the database is less than 1', (done) => {
+      const stub = sinon.stub(Novel, 'findAll');
+      stub.returns(false);
+
+      chai.request(server)
+        .get(`${API_VERSION}/noveloftheweek`)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body).to.have.keys(['message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('array');
+          expect(response.body.message).to.equal('no novels found in database');
+          stub.restore();
+          done();
+        });
+    });
+
+    it('should return an error message if a server error occurs', (done) => {
+      const stub = sinon.stub(Novel, 'findAll');
+      stub.throws(new Error('error occurred!'));
+
+      chai.request(server)
+        .get(`${API_VERSION}/noveloftheweek`)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.haveOwnProperty('error');
+          expect(response.body.error).to.be.a('string');
+          expect(response.body.error).to.equal('error occurred!');
+          stub.restore();
+          done();
+        });
+    });
+
+    it('should successfully return the novel of the week', (done) => {
+      chai.request(server)
+        .get(`${API_VERSION}/noveloftheweek`)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body).to.have.keys(['message', 'data']);
+          expect(response.body.message).to.be.a('string');
+          expect(response.body.data).to.be.an('object');
+          expect(response.body.message).to.equal('successfully returned novels');
+          expect(response.body.data.length).to.not.equal(0);
+          done();
+        });
+    });
+  });
+
   describe('PATCH api/v1/novels/:novelId/markread', () => {
     const markReadEndpoint = `${NOVEL_URL}/${seedNovel1.slug}/markread`;
     const markReadInvalidEndpoint = `${NOVEL_URL}/INVALID_SLUG/markread`;

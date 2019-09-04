@@ -18,16 +18,24 @@ const novelMock = {
     genre: 'action'
   },
   validGenre: {
-    name: 'prose'
+    name: 'prose',
+    themeColor: '#ffc0cb',
+    coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567603113/dahlia/back12unsplash.jpg'
   },
   existingGenre: {
-    name: 'thriller'
+    name: 'thriller',
+    coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555883/dahlia/back9unsplash.jpg',
+    themeColor: '#db0000'
   },
   invalidGenre: {
-    name: 'thr**ille**r'
+    name: 'thr**ille**r',
+    coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555883/dahlia/back9unsplash.jpg',
+    themeColor: '#db0000'
   },
   emptyGenre: {
-    name: ''
+    name: '',
+    coverImgUrl: '',
+    themeColor: '',
   },
   seedNovel1: {
     id: '7f45df6d-7003-424f-86ec-1e2b36e2fd14',

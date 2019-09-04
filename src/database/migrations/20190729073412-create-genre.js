@@ -8,6 +8,14 @@ const up = (queryInterface, Sequelize) => queryInterface.createTable('Genres', {
     allowNull: false,
     type: Sequelize.STRING
   },
+  coverImgUrl: {
+    allowNull: true,
+    type: Sequelize.STRING
+  },
+  themeColor: {
+    allowNull: true,
+    type: Sequelize.STRING
+  },
   createdAt: {
     allowNull: false,
     type: Sequelize.DATE

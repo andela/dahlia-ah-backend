@@ -10,7 +10,7 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('Lik
   },
   novelId: {
     allowNull: false,
-    type: Sequelize.UUID
+    type: Sequelize.UUID,
   },
   createdAt: {
     allowNull: false,

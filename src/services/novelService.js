@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import Sequelize from 'sequelize';
 import models from '../database/models';
 import helpers from '../helpers';
 
@@ -6,7 +6,7 @@ const {
   Genre, Novel, Like, User, Highlight, Bookmark, readStats
 } = models;
 const { generateReadTime } = helpers;
-
+const { Op } = Sequelize;
 /**
  * Finds a novel from the database by slug
  * @param {string} param
@@ -155,6 +155,41 @@ const findAllNovels = async (offset, limit, queryFilter) => {
 };
 
 /**
+ * @param {object} limit
+ * @returns {object} json
+ */
+const findRandomNovels = async (limit) => {
+  const novels = await Novel.findAll({
+    order: Sequelize.literal('random()'),
+    limit,
+    include: [
+      { model: User, attributes: ['firstName', 'lastName'] },
+      { model: Genre, attributes: ['name'] }
+    ]
+  });
+  return novels;
+};
+
+/**
+ * @returns {object} json
+ */
+const findNovelOfTheWeek = async () => {
+  const novels = await Novel.findAll({
+    attributes: {
+      include: [[Sequelize.fn('COUNT', Sequelize.col('novelId')), 'likescount']],
+    },
+    include: [
+      { model: Like, attributes: [] },
+      { model: User, attributes: ['firstName', 'lastName'] },
+      { model: Genre, attributes: ['name'] }
+    ],
+    group: ['Novel.id', 'User.id', 'Genre.id'],
+    order: Sequelize.literal('likescount DESC')
+  });
+  return novels;
+};
+
+/**
  * @name highlightNovelText
  * @param {Integer} novelId
  * @param {Integer} readerId
@@ -281,12 +316,9 @@ const toggleReadStatus = async (userId, novelId, readStatus) => {
     await readStats.destroy({ where: { userId, novelId } });
     return 'removed as read';
   }
-  const read = await readStats.findOne({
+  await readStats.findOne({
     where: { userId, novelId }
   });
-  if (read) {
-    return 'marked as read';
-  }
   await readStats.create({
     userId, novelId
   }, {
@@ -295,10 +327,10 @@ const toggleReadStatus = async (userId, novelId, readStatus) => {
   return 'marked as read';
 };
 
-
 export default {
   findGenre,
   findNovel,
+  findRandomNovels,
   addNovel,
   findNovelById,
   updateNovel,
@@ -311,4 +343,5 @@ export default {
   bookmarkNovel,
   getAllBookmark,
   toggleReadStatus,
+  findNovelOfTheWeek
 };
