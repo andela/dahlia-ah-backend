@@ -32,7 +32,7 @@ export default (sequelize, DataTypes) => {
     // associations can be defined here
     Genre.hasMany(models.Novel, {
       foreignKey: 'genreId',
-      as: 'genre',
+      as: 'novels',
     });
   };
   return Genre;

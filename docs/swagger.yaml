@@ -1983,6 +1983,8 @@ components:
     GenreInput:
       required:
         - name
+        - themeColor
+        - coverImgUrl
       type: object
       properties:
         name:

@@ -10,7 +10,9 @@ const { Op } = Sequelize;
 const {
   errorResponse, successResponse, novelHelpers: { extractNovels, filter }, responseMessage
 } = helpers;
-const { Novel, Genre } = models;
+const {
+  Novel, Genre, User, Like
+} = models;
 const {
   novelServices: {
     addNovel, findGenre, findNovel, findAllNovels,
@@ -326,7 +328,21 @@ const getGenres = async (request, response) => {
   const { keyword } = request.query;
   const genreFilter = keyword ? { name: { [Op.iLike]: `%${keyword}%` } } : { id: { [Op.ne]: null } };
   try {
-    const genreList = await Genre.findAll({ where: genreFilter, attributes: ['id', 'name', 'coverImgUrl', 'themeColor'] });
+    const genreList = await Genre.findAll({
+      where: genreFilter,
+      attributes: ['id', 'name', 'coverImgUrl', 'themeColor'],
+      include: [{
+        model: Novel,
+        as: 'novels',
+        include: [
+          { model: User, attributes: ['firstName', 'lastName'] },
+          { model: Like, attributes: [] }],
+        attributes: {
+          include: [[Sequelize.fn('COUNT', Sequelize.col('novelId')), 'likescount']],
+        }
+      }],
+      group: ['Genre.id', 'novels.id', 'novels->User.id']
+    });
     return response.status(200).json({
       message: 'successfully returned genres',
       data: genreList
