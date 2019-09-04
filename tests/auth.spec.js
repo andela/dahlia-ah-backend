@@ -134,18 +134,6 @@ describe('AUTH', () => {
           done(err);
         });
     });
-    it('should return error if user is not verified', (done) => {
-      chai
-        .request(server)
-        .post(loginsignupEndpoint)
-        .type('form')
-        .send(userMock.validUser2)
-        .end((err, res) => {
-          expect(res).status(401);
-          expect(res.body).property('errors').eq('please verify your email');
-          done(err);
-        });
-    });
   });
 
   // Forgot password route
@@ -350,18 +338,6 @@ describe('AUTH', () => {
           done(err);
         });
     });
-    it('should return error if user is not verified', (done) => {
-      chai
-        .request(server)
-        .post(loginsignupEndpoint)
-        .type('form')
-        .send(userMock.validUser2)
-        .end((err, res) => {
-          expect(res).status(401);
-          expect(res.body).property('errors').eq('please verify your email');
-          done(err);
-        });
-    });
   });
 
   describe('reset password route', () => {
@@ -498,18 +474,6 @@ describe('POST /api/v1/auth/login', () => {
         done(err);
       });
   });
-  it('should return error if user is not verified', (done) => {
-    chai
-      .request(server)
-      .post(loginsignupEndpoint)
-      .type('form')
-      .send(userMock.validUser2)
-      .end((err, res) => {
-        expect(res).status(401);
-        expect(res.body).property('errors').eq('please verify your email');
-        done(err);
-      });
-  });
 });
 
 // Logout route
@@ -628,18 +592,6 @@ describe('POST /api/v1/auth/login', () => {
       .end((err, res) => {
         expect(res).status(401);
         expect(res.body).property('errors').eq('email or password is incorrect');
-        done(err);
-      });
-  });
-  it('should return error if user is not verified', (done) => {
-    chai
-      .request(server)
-      .post(loginsignupEndpoint)
-      .type('form')
-      .send(userMock.validUser2)
-      .end((err, res) => {
-        expect(res).status(401);
-        expect(res.body).property('errors').eq('please verify your email');
         done(err);
       });
   });
