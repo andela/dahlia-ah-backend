@@ -316,12 +316,9 @@ const toggleReadStatus = async (userId, novelId, readStatus) => {
     await readStats.destroy({ where: { userId, novelId } });
     return 'removed as read';
   }
-  const read = await readStats.findOne({
+  await readStats.findOne({
     where: { userId, novelId }
   });
-  if (read) {
-    return 'marked as read';
-  }
   await readStats.create({
     userId, novelId
   }, {
