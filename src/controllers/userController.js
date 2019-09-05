@@ -50,10 +50,11 @@ const signUp = async (req, res) => {
   const response = {
     user: {
       id: createdUser.id,
+      firstname: createdUser.firstName,
+      lastName: createdUser.lastName,
       email: createdUser.email,
       token: authHelper.generateToken({ id: createdUser.id }),
       bio: createdUser.bio,
-      image: createdUser.avatar,
       isVerified: createdUser.isVerified,
     }
   };
