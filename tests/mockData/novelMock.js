@@ -19,21 +19,25 @@ const novelMock = {
   },
   validGenre: {
     name: 'prose',
+    description: 'something',
     themeColor: '#ffc0cb',
     coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567603113/dahlia/back12unsplash.jpg'
   },
   existingGenre: {
     name: 'thriller',
+    description: 'something',
     coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555883/dahlia/back9unsplash.jpg',
     themeColor: '#db0000'
   },
   invalidGenre: {
     name: 'thr**ille**r',
+    description: 'description',
     coverImgUrl: 'https://res.cloudinary.com/allebd/image/upload/v1567555883/dahlia/back9unsplash.jpg',
     themeColor: '#db0000'
   },
   emptyGenre: {
     name: '',
+    description: '',
     coverImgUrl: '',
     themeColor: '',
   },

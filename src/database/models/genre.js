@@ -11,6 +11,10 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     },
+    description: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     coverImgUrl: {
       allowNull: true,
       type: DataTypes.STRING

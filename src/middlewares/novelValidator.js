@@ -32,6 +32,7 @@ const novelValidator = {
   ],
   createGenreValidator: [
     isValidName('name'),
+    isNotEmpty('description'),
     isNotEmpty('themeColor'),
     isValidUrl('coverImgUrl'),
     validatorError

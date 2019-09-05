@@ -214,7 +214,9 @@ const editNovel = async (request, response) => {
  */
 const createGenre = async (request, response) => {
   try {
-    const { name } = request.body;
+    const {
+      name, description, coverImgUrl, themeColor
+    } = request.body;
     const nameValue = name.toLowerCase();
     const existingGenre = await findGenre(nameValue);
     if (existingGenre) {
@@ -223,7 +225,9 @@ const createGenre = async (request, response) => {
         data: { genre: { name: genreName.name } }
       });
     }
-    const createdGenre = await Genre.create({ name: nameValue });
+    const createdGenre = await Genre.create({
+      name: nameValue, description, coverImgUrl, themeColor
+    });
     const { dataValues } = createdGenre;
     return responseMessage(response, 201, {
       message: 'genre successfully created',
@@ -330,7 +334,7 @@ const getGenres = async (request, response) => {
   try {
     const genreList = await Genre.findAll({
       where: genreFilter,
-      attributes: ['id', 'name', 'coverImgUrl', 'themeColor'],
+      attributes: ['id', 'name', 'description', 'coverImgUrl', 'themeColor'],
       include: [{
         model: Novel,
         as: 'novels',
