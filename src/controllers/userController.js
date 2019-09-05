@@ -10,7 +10,7 @@ const {
 } = helpers;
 const {
   userServices: {
-    findUser, findFollower, getAllUsers, addUser, findUserRole, fetchReadStats
+    findUser, findFollower, getAllUsers, addUser, findUserRole, fetchReadStats, findFollows
   }
 } = services;
 const { User, Follower } = models;
@@ -111,13 +111,24 @@ const getProfile = async (request, response) => {
   if (!user) {
     return responseMessage(response, 404, { error: 'user not found' });
   }
-  const { bio, avatarUrl } = user;
+  const {
+    firstName, lastName, bio, avatarUrl
+  } = user;
   const { id } = request.user;
   const follower = await findFollower(userId, id);
   const following = !!follower;
+  const { followers, following: follows } = await findFollows(userId);
+
   return responseMessage(response, 200, {
     profile: {
-      id: userId, bio, image: avatarUrl, following
+      id: userId,
+      firstName,
+      lastName,
+      bio,
+      image: avatarUrl,
+      following,
+      followers,
+      follows
     }
   });
 };

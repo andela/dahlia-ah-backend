@@ -53,6 +53,21 @@ const findFollower = async (followeeId, followerId) => {
 };
 
 /**
+ * @description Finds a follower following a user
+ * @param {string} userId
+ * @returns {object} a user object
+ */
+const findFollows = async (userId) => {
+  const following = await Follower.findAll({
+    where: { followerId: userId }
+  });
+  const followers = await Follower.findAll({
+    where: { followeeId: userId }
+  });
+  return { following, followers };
+};
+
+/**
  * @name getAllUsers
  * @param {integer} offset
  * @param {integer} limit
@@ -168,5 +183,6 @@ export default {
   updateUser,
   addUser,
   findUserRole,
-  fetchReadStats
+  fetchReadStats,
+  findFollows
 };
