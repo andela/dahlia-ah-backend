@@ -11,31 +11,37 @@ const controller = async (req, res) => {
   const userData = {
     firstName: user.firstName,
     lastName: user.lastName,
-    email: user.email || '',
+    email: `${user.oauthId}@gmail.com`,
     password: user.oauthId,
-    username: user.firstName + user.lastName,
-    avatarUrl: user.profileImage
+    avatarUrl: user.profileImage,
+    isVerified: true,
   };
 
-  let dbUser = await User.findOne({
-    where: { password: user.oauthId }
-  });
+  try {
+    let dbUser = await User.findOne({
+      where: { password: user.oauthId }
+    });
 
-  if (!dbUser) {
-    dbUser = await User.create(userData);
+    if (!dbUser) {
+      dbUser = await User.create(userData);
+    }
+
+    const payload = {
+      id: dbUser.id,
+      email: '',
+      token: authHelper.generateToken({ id: dbUser.id }),
+      bio: dbUser.bio,
+      image: dbUser.avatar,
+      isVerified: dbUser.isVerified,
+      firstName: dbUser.firstName,
+      lastName: dbUser.lastName,
+      avatarUrl: dbUser.avatarUrl,
+    };
+    const token = authHelper.generateToken(payload);
+
+    return res.redirect(`${process.env.FRONTEND_OAUTH_CALLBACK}?token=${token}`);
+  } catch (e) {
+    return res.redirect(`${process.env.FRONTEND_OAUTH_CALLBACK}`);
   }
-
-  const payload = {
-    id: dbUser.id,
-    email: dbUser.email
-  };
-
-  const token = authHelper.generateToken(payload);
-
-  return res.json({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    token
-  });
 };
 export default controller;
