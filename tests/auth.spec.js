@@ -618,7 +618,7 @@ describe('PATCH /api/v1/auth/verify/resend/:id', () => {
       .patch(verifiedUserResendEndpoint)
       .end((err, res) => {
         expect(res).status(403);
-        expect(res.body).property('error').eq('you\'re already verified');
+        expect(res.body).property('error').eq('You are already verified');
         done(err);
       });
   });
@@ -638,7 +638,7 @@ describe('PATCH /api/v1/auth/verify/resend/:id', () => {
       .patch(resendEndpoint)
       .end((err, res) => {
         expect(res).status(200);
-        expect(res.body).property('message').eq('request sent you\'ll a mail shortly');
+        expect(res.body).property('message').eq('Request sent. You will receive an email shortly');
         done(err);
       });
   });

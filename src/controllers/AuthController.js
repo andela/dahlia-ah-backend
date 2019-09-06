@@ -190,13 +190,13 @@ const resendMail = async (req, res) => {
     const { email, firstName, isVerified } = user;
     if (isVerified) {
       return responseMessage(res, 403, {
-        error: 'you\'re already verified',
+        error: 'You are already verified',
       });
     }
 
     await verifyUser({ id, email, firstName });
     return responseMessage(res, 200, {
-      message: 'request sent you\'ll a mail shortly',
+      message: 'Request sent. You will receive an email shortly',
     });
   } catch (err) {
     return responseMessage(res, 500, {
