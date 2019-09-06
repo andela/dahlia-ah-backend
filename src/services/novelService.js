@@ -3,7 +3,7 @@ import models from '../database/models';
 import helpers from '../helpers';
 
 const {
-  Genre, Novel, Like, User, Highlight, Bookmark, readStats
+  Genre, Novel, Like, User, Highlight, Bookmark, readStats, Comment
 } = models;
 const { generateReadTime } = helpers;
 const { Op } = Sequelize;
@@ -183,7 +183,7 @@ const findRandomNovels = async (limit) => {
 /**
  * @returns {object} json
  */
-const findNovelOfTheWeek = async () => {
+const findNovelOfTheWeek = async () => { //
   const novels = await Novel.findAll({
     where: { isPublished: true },
     attributes: {
@@ -338,6 +338,25 @@ const toggleReadStatus = async (userId, novelId, readStatus) => {
   return 'marked as read';
 };
 
+/**
+ * returns novel activity
+ * @param {object} userId - user id
+ * @returns {object} object
+ */
+const getNovelStats = async (userId) => {
+  const novelLikes = await Novel.findAll({
+    where: { authorId: userId },
+    include: [
+      { model: Like },
+      { model: Comment },
+      { model: User, attributes: ['id'] },
+    ],
+    group: ['Novel.id', 'User.id', 'Likes.id', 'Comments.id']
+  });
+
+  return novelLikes;
+};
+
 export default {
   findGenre,
   findNovel,
@@ -354,5 +373,6 @@ export default {
   bookmarkNovel,
   getAllBookmark,
   toggleReadStatus,
-  findNovelOfTheWeek
+  findNovelOfTheWeek,
+  getNovelStats
 };

@@ -1158,4 +1158,33 @@ describe('GET api/v1/profiles/readingstats', () => {
         done();
       });
   });
+
+  // ========================== Novel Stats By Author =================================
+  describe('GET /profiles/userId/novels', () => {
+    const authorStatsUrl = `${API_VERSION}/profiles/122a0d86-8b78-4bb8-b28f-8e5f7811c456/novels`;
+    it('should return the author\'s novels and their activities', (done) => {
+      chai
+        .request(server)
+        .get(authorStatsUrl)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(200);
+          done();
+        });
+    });
+    it('should return error 500 on server error', (done) => {
+      const stub = sinon.stub(Novel, 'findAll');
+      stub.throws(new Error('error occurred!'));
+
+      chai.request(server)
+        .get(authorStatsUrl)
+        .set('authorization', authToken)
+        .end((err, res) => {
+          expect(res).status(500);
+          expect(res.body).property('error').include('an error occurred');
+          stub.restore();
+          done();
+        });
+    });
+  });
 });
