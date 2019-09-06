@@ -19,7 +19,7 @@ const forgotPasswordMessage = (firstName, token) => {
     html: `${messageHeader}
             <p>Dear <span style='text-transform: capitalize;'>${firstName}</span>,</p>
             <p>You requested for a password reset. Click on the button below to confirm this action.</p>
-            <p style='margin-top:20px;text-align:center'><a style='text-decoration:none;padding:10px;background:#0e87e3;color:#ffffff;border-radius:5px;' href='${URL}/reset-password/${token}'>Reset Password</a></p>
+            <p style='margin-top:20px;text-align:center'><a style='text-decoration:none;padding:10px;background:#0e87e3;color:#ffffff;border-radius:5px;' href='${URL}/reset-password?token=${token}'>Reset Password</a></p>
             ${messageFooter}`,
   };
   return message;
