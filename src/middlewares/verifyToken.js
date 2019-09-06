@@ -5,8 +5,7 @@ import services from '../services';
 
 dotenv.config();
 
-const { SECRET_KEY, ACCOUNT_VERIFICATION_SECRET } = process.env;
-const verifyPath = '/auth/verify/:token';
+const { SECRET_KEY } = process.env;
 const { responseMessage } = helpers;
 const { userServices: { findUser }, blacklistedTokenService: { findBlacklistedToken } } = services;
 
@@ -19,13 +18,12 @@ const { userServices: { findUser }, blacklistedTokenService: { findBlacklistedTo
  */
 export default (request, response, next) => {
   const token = request.headers.authorization || request.query.token || request.params.token;
-  const { route: { path } } = request;
+
   if (!token) {
     return responseMessage(response, 401, { error: 'you have to be signed in to continue' });
   }
-  const secret = (path === verifyPath) ? ACCOUNT_VERIFICATION_SECRET : SECRET_KEY;
 
-  jwt.verify(token, secret, async (error, decoded) => {
+  jwt.verify(token, SECRET_KEY, async (error, decoded) => {
     if (error) {
       const message = (error.name === 'TokenExpiredError') ? 'token expired' : 'invalid token';
       responseMessage(response, 401, { error: message });

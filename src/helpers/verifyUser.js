@@ -26,7 +26,7 @@ const msg = (...userName) => ({
 
 const verifyUser = async (info) => {
   const { id, firstName, email } = info;
-  const token = jwt.sign({ id }, process.env.ACCOUNT_VERIFICATION_SECRET, { expiresIn: '5h' });
+  const token = jwt.sign({ id }, process.env.SECRET_KEY, { expiresIn: '5h' });
   await User.update({
     verifiedToken: token
   }, {
@@ -34,6 +34,7 @@ const verifyUser = async (info) => {
       id,
     }
   });
+
   const url = `http://dahlia-ah-frontend-staging.herokuapp.com/confirmation-page?token=${token}`;
   const message = msg(firstName, url);
   mailer(process.env.HOST_EMAIL, email, message);
