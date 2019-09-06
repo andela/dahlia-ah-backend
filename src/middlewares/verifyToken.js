@@ -9,6 +9,7 @@ const { SECRET_KEY } = process.env;
 const { responseMessage } = helpers;
 const { userServices: { findUser }, blacklistedTokenService: { findBlacklistedToken } } = services;
 
+
 /**
  *
  * @param {object} request
@@ -18,7 +19,6 @@ const { userServices: { findUser }, blacklistedTokenService: { findBlacklistedTo
  */
 export default (request, response, next) => {
   const token = request.headers.authorization || request.query.token || request.params.token;
-
   if (!token) {
     return responseMessage(response, 401, { error: 'you have to be signed in to continue' });
   }
@@ -26,7 +26,7 @@ export default (request, response, next) => {
   jwt.verify(token, SECRET_KEY, async (error, decoded) => {
     if (error) {
       const message = (error.name === 'TokenExpiredError') ? 'token expired' : 'invalid token';
-      responseMessage(response, 401, { error: message });
+      return responseMessage(response, 401, { error: message });
     }
     try {
       const blacklistedToken = await findBlacklistedToken(token);

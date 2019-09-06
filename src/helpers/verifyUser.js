@@ -34,7 +34,6 @@ const verifyUser = async (info) => {
       id,
     }
   });
-
   const url = `http://dahlia-ah-frontend-staging.herokuapp.com/confirmation-page?token=${token}`;
   const message = msg(firstName, url);
   mailer(process.env.HOST_EMAIL, email, message);
