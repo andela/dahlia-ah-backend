@@ -50,7 +50,7 @@ const signUp = async (req, res) => {
   const response = {
     user: {
       id: createdUser.id,
-      firstname: createdUser.firstName,
+      firstName: createdUser.firstName,
       lastName: createdUser.lastName,
       email: createdUser.email,
       token: authHelper.generateToken({ id: createdUser.id }),
@@ -88,7 +88,7 @@ const login = async (req, res) => {
   const data = {
     user: {
       id: foundUser.id,
-      firstname: foundUser.firstName,
+      firstName: foundUser.firstName,
       lastName: foundUser.lastName,
       email: foundUser.email,
       token: authHelper.generateToken({ id: foundUser.id }),
