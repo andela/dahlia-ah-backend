@@ -11,7 +11,7 @@ const AUTH_URL = '/auth';
 
 const { userValidator, userValidator: { resetPasswordValidator }, verifyToken } = middlewares;
 const {
-  forgotPassword, updateStatus, logOut, changePassword, resetPassword
+  forgotPassword, updateStatus, logOut, changePassword, resetPassword, resendMail
 } = AuthController;
 
 // forgot password endpoint
@@ -25,5 +25,6 @@ auth.post(`${AUTH_URL}/register`, userValidator.signUpValidator, signUp);
 auth.post(`${AUTH_URL}/login`, userValidator.loginValidator, login);
 auth.get(`${AUTH_URL}/logout`, verifyToken, logOut);
 auth.patch(`${AUTH_URL}/passwordreset`, resetPasswordValidator, verifyToken, resetPassword);
+auth.patch(`${AUTH_URL}/verify/resend/:id`, resendMail);
 
 export default auth;

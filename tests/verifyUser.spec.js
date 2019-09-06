@@ -28,10 +28,10 @@ describe('Test for base api base url', () => {
     });
     userId = id;
 
-    tokenData = jwt.sign({ id }, process.env.ACCOUNT_VERIFICATION_SECRET);
-    const fakeIdTokenData = jwt.sign({ id: '3ac4005a-4942-4a59-a053-5099518e8a7f' }, process.env.ACCOUNT_VERIFICATION_SECRET);
-    const invalidIdTokenData = jwt.sign({ id: 1 }, process.env.ACCOUNT_VERIFICATION_SECRET);
-    const expTokenData = jwt.sign({ id }, process.env.ACCOUNT_VERIFICATION_SECRET, { expiresIn: '0.2s' });
+    tokenData = jwt.sign({ id }, process.env.SECRET_KEY);
+    const fakeIdTokenData = jwt.sign({ id: '3ac4005a-4942-4a59-a053-5099518e8a7f' }, process.env.SECRET_KEY);
+    const invalidIdTokenData = jwt.sign({ id: 1 }, process.env.SECRET_KEY);
+    const expTokenData = jwt.sign({ id }, process.env.SECRET_KEY, { expiresIn: '0.2s' });
     url = `/api/v1/auth/verify/${tokenData}`;
     fakeIdUrl = `/api/v1/auth/verify/${fakeIdTokenData}`;
     invalidTokenUrl = `/api/v1/auth/verify/${invalidToken}`;

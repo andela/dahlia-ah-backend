@@ -596,3 +596,50 @@ describe('POST /api/v1/auth/login', () => {
       });
   });
 });
+
+describe('PATCH /api/v1/auth/verify/resend/:id', () => {
+  const invalidResendEndpoint = `${BASE_URL}/auth/verify/resend/sdfghg-ffehfbf-tehue`;
+  const verifiedUserResendEndpoint = `${BASE_URL}/auth/verify/resend/26099ff1-edfd-46f3-b6a5-aa900c233e2f`;
+  const nonUserResendEndpoint = `${BASE_URL}/auth/verify/resend/579bf999-7e5f-4041-9b55-fff155ab3ca7`;
+  const resendEndpoint = `${BASE_URL}/auth/verify/resend/4b977749-e4cf-4b01-8533-b80a58b4c116`;
+  it('should return error if id is invalid', (done) => {
+    chai
+      .request(server)
+      .patch(invalidResendEndpoint)
+      .end((err, res) => {
+        expect(res).status(500);
+        expect(res.body).property('error');
+        done(err);
+      });
+  });
+  it('should return error user is already verified', (done) => {
+    chai
+      .request(server)
+      .patch(verifiedUserResendEndpoint)
+      .end((err, res) => {
+        expect(res).status(403);
+        expect(res.body).property('error').eq('You are already verified');
+        done(err);
+      });
+  });
+  it('should return error if user deos not exist', (done) => {
+    chai
+      .request(server)
+      .patch(nonUserResendEndpoint)
+      .end((err, res) => {
+        expect(res).status(404);
+        expect(res.body).property('error').eq('User not found');
+        done(err);
+      });
+  });
+  it('should return error if password id not correct', (done) => {
+    chai
+      .request(server)
+      .patch(resendEndpoint)
+      .end((err, res) => {
+        expect(res).status(200);
+        expect(res.body).property('message').eq('Request sent. You will receive an email shortly');
+        done(err);
+      });
+  });
+});

@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import helpers from '../helpers';
 import services from '../services';
 import models from '../database/models';
+import verifyUser from '../helpers/verifyUser';
 
 const {
   forgotPasswordMessage, responseMessage, errorResponse, successResponse, authHelper
@@ -176,10 +177,39 @@ const resetPassword = async (request, response) => {
   }
 };
 
+const resendMail = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await findUser(id);
+    if (!user) {
+      return responseMessage(res, 404, {
+        error: 'User not found',
+      });
+    }
+
+    const { email, firstName, isVerified } = user;
+    if (isVerified) {
+      return responseMessage(res, 403, {
+        error: 'You are already verified',
+      });
+    }
+
+    await verifyUser({ id, email, firstName });
+    return responseMessage(res, 200, {
+      message: 'Request sent. You will receive an email shortly',
+    });
+  } catch (err) {
+    return responseMessage(res, 500, {
+      error: err.message,
+    });
+  }
+};
+
 export default {
   forgotPassword,
   updateStatus,
   logOut,
   changePassword,
-  resetPassword
+  resetPassword,
+  resendMail
 };
