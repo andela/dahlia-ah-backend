@@ -413,9 +413,9 @@ const toggleRead = async (request, response) => {
  */
 const getAuthorStats = async (request, response) => {
   try {
-    const mostLikedNovels = await getNovelStats(request.params.userId);
+    const novelsInfo = await getNovelStats(request.params.userId);
 
-    return responseMessage(response, 200, { message: mostLikedNovels });
+    return responseMessage(response, 200, { data: novelsInfo });
   } catch (error) {
     log(error.message);
     return responseMessage(response, 500, { error: 'an error occurred' });
