@@ -89,9 +89,9 @@ const isValidUrl = field => check(field)
   .trim()
   .not()
   .isEmpty()
-  .withMessage('avatarUrl cannot be blank')
+  .withMessage(`${field} cannot be blank`)
   .isURL()
-  .withMessage('avatarUrl must be a valid URL string');
+  .withMessage(`${field} must be a valid URL string`);
 
 /**
    * @param {String} field
