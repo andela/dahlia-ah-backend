@@ -39,6 +39,7 @@ const createNovel = async (request, response) => {
     configObjectId: 0,
     entityId: createdNovel.id,
     followeeId: request.user.id,
+    actorId: request.user.id,
     isSingle: false,
     response
   };

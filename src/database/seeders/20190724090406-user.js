@@ -13,6 +13,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   roleId: '2c4dfb3f-1798-43d4-8eb6-1c125994a263',
   createdAt: new Date(),
   updatedAt: new Date()
@@ -28,6 +29,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
@@ -43,6 +45,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
@@ -58,6 +61,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
@@ -73,6 +77,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: false,
+  allowEmailNotification: true,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
@@ -87,6 +92,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: '2347032123404',
   isVerified: true,
   isSubscribed: false,
+  allowEmailNotification: true,
   roleId: 'b79c4eed-60c6-42fb-9040-f0822d8414fa',
   createdAt: new Date(),
   updatedAt: new Date()
@@ -101,6 +107,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   avatarUrl: null,
   phoneNo: null,
   isVerified: true,
+  allowEmailNotification: false,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   isSubscribed: true,
   createdAt: new Date(),
@@ -117,6 +124,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   isVerified: true,
+  allowEmailNotification: true,
   isSubscribed: true,
   createdAt: new Date(),
   updatedAt: new Date()
@@ -133,6 +141,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   createdAt: new Date(),
   updatedAt: new Date()
 },
@@ -145,6 +154,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   roleId: superAdminRoleId,
   isVerified: true,
   isSubscribed: false,
+  allowEmailNotification: true,
   createdAt: new Date(),
   updatedAt: new Date()
 },
@@ -159,6 +169,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: '2347032123909',
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
@@ -176,6 +187,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   createdAt: new Date(),
   updatedAt: new Date()
 },
@@ -191,6 +203,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   createdAt: new Date(),
   updatedAt: new Date()
 },
@@ -206,6 +219,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   createdAt: new Date(),
   updatedAt: new Date()
 }, {
@@ -219,6 +233,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: false,
+  allowEmailNotification: true,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
@@ -233,6 +248,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: true,
   isSubscribed: true,
+  allowEmailNotification: true,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
@@ -247,6 +263,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Users', [{
   phoneNo: null,
   isVerified: false,
   isSubscribed: true,
+  allowEmailNotification: true,
   roleId: 'f2dec928-1ff9-421a-b77e-8998c8e2e720',
   createdAt: new Date(),
   updatedAt: new Date()
