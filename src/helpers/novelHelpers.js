@@ -11,9 +11,10 @@ const { Genre, User } = models;
  * @param { string } genre
  * @param { string } author
  * @param { string } keyword
+ * @param { string } isPublished
  * @returns { array } formated novels
  */
-const filter = (title, genre, author, keyword) => {
+const filter = (title, genre, author, keyword, isPublished) => {
   const queryParams = {
     query: {
       '$Novel.title$': { [Op.iLike]: `%${title}%` },
@@ -39,8 +40,8 @@ const filter = (title, genre, author, keyword) => {
   return {
     include: [{ model: User }, { model: Genre }],
     where: (keyword || title || genre || author) ? {
-      ...filterQuery
-    } : undefined
+      ...filterQuery, isPublished
+    } : isPublished
   };
 };
 
@@ -57,7 +58,7 @@ const extractNovels = (results) => {
   }
   return results.map((novel) => {
     const {
-      id, title, slug, description, coverImgUrl, thumbImgUrl, createdAt, updatedAt
+      id, title, slug, description, coverImgUrl, thumbImgUrl, isPublished, createdAt, updatedAt
     } = novel;
 
     return {
@@ -69,6 +70,7 @@ const extractNovels = (results) => {
       description,
       coverImgUrl,
       thumbImgUrl,
+      isPublished,
       createdAt,
       updatedAt
     };
