@@ -648,3 +648,46 @@ describe('DELETE api/v1/users/:userId', () => {
       });
   });
 });
+
+// Update user settings
+
+describe('UPDATE api/v1/users/setting?allowEmailNotification=false', () => {
+  const settings = `${API_VERSION}/users/setting?allowEmailNotification=true`;
+  const invalidUrl = `${API_VERSION}/users/setting?allowEmailNotification=ben`;
+
+  it('should allow user notification', (done) => {
+    chai
+      .request(app)
+      .patch(settings)
+      .set('authorization', SuperAdminToken)
+      .end((error, response) => {
+        expect(response).status(200);
+        expect(response.body).property('message').contains('settings was updated successfully');
+        done(error);
+      });
+  });
+  it('should return server error on failed update operation', (done) => {
+    const stub = sinon.stub(User, 'update');
+    stub.throws(new Error('an error occurred'));
+    chai
+      .request(app)
+      .patch(settings)
+      .set('authorization', SuperAdminToken)
+      .end((error, response) => {
+        expect(response).status(500);
+        expect(response.body).property('error').include('an error occurred');
+        stub.restore();
+        done(error);
+      });
+  });
+  it('should return error if query is invalid', (done) => {
+    chai
+      .request(app)
+      .patch(invalidUrl)
+      .set('authorization', SuperAdminToken)
+      .end((error, response) => {
+        expect(response).status(400);
+        done(error);
+      });
+  });
+});
