@@ -187,8 +187,13 @@ const isNotTypeOfReport = () => check('type')
 const isBoolean = field => check(field)
   .isBoolean()
   .optional()
-  .withMessage('isHandled must be a boolean ( true or false )');
+  .withMessage(`${field} must be a boolean ( true or false )`);
 
+const isBooleanNotOptional = field => check(field)
+  .exists()
+  .withMessage(`${field} is a required field`)
+  .isBoolean()
+  .withMessage(`${field} must be a boolean ( true or false )`);
 /**
    * @param {String} paramName
    * @returns {Object} - Express-validator
@@ -259,5 +264,6 @@ export default {
   isValidSubcription,
   isValidRoleName,
   isValidPasswords,
-  isValidReadInput
+  isValidReadInput,
+  isBooleanNotOptional,
 };

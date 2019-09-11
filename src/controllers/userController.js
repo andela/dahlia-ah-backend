@@ -56,6 +56,7 @@ const signUp = async (req, res) => {
       token: authHelper.generateToken({ id: createdUser.id }),
       bio: createdUser.bio,
       isVerified: createdUser.isVerified,
+      allowEmailNotification: createdUser.allowEmailNotification
     }
   };
 
@@ -93,7 +94,8 @@ const login = async (req, res) => {
       email: foundUser.email,
       token: authHelper.generateToken({ id: foundUser.id }),
       bio: foundUser.bio,
-      isVerified: foundUser.isVerified
+      isVerified: foundUser.isVerified,
+      allowEmailNotification: foundUser.allowEmailNotification
     }
   };
   return successResponse(res, 200, data);
@@ -407,6 +409,20 @@ const getReadingStats = async (request, response) => {
   }
 };
 
+const userSettings = async (req, res) => {
+  const { allowEmailNotification } = req.query;
+  const { id } = req.user;
+  try {
+    await User.update(
+      { allowEmailNotification },
+      { where: { id } }
+    );
+    return responseMessage(res, 200, { message: 'settings was updated successfully' });
+  } catch (error) {
+    return responseMessage(res, 500, { error: 'an error occurred' });
+  }
+};
+
 
 export default {
   getProfile,
@@ -420,5 +436,6 @@ export default {
   getUser,
   updateUser,
   deleteUser,
-  getReadingStats
+  getReadingStats,
+  userSettings
 };

@@ -14,7 +14,8 @@ const {
   isValidPhoneNumber,
   isValidSubcription,
   isValidRoleName,
-  isValidPasswords
+  isValidPasswords,
+  isBooleanNotOptional,
 } = validators;
 
 const { validatorError, paramsValidatorError } = errorHandler;
@@ -77,6 +78,10 @@ const userValidator = {
   ],
   resetPasswordValidator: [
     isValidPasswords(),
+    validatorError
+  ],
+  validateEmailNotificationSettings: [
+    isBooleanNotOptional('allowEmailNotification'),
     validatorError
   ]
 };

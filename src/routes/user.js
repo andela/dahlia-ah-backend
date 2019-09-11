@@ -10,6 +10,7 @@ const {
     validateCreateUser,
     followUserValidator,
     validateUpdateUser,
+    validateEmailNotificationSettings
   },
   verifyToken,
   authorizeUser
@@ -17,13 +18,16 @@ const {
 
 const {
   getProfile, editProfile, createUser, listUsers, getUser,
-  follow, unfollow, updateUser, deleteUser, getReadingStats
+  follow, unfollow, updateUser, deleteUser, getReadingStats, userSettings
 } = userController;
 
 const user = express.Router();
 
 const USER_URL = '/users';
 const PROFILE_URL = '/profiles';
+
+// Route for user settings
+user.patch(`${USER_URL}/setting`, verifyToken, validateEmailNotificationSettings, userSettings);
 
 user.get(`${PROFILE_URL}/readingstats`, verifyToken, authorizeUser(['author', 'admin', 'superadmin']), getReadingStats);
 // Route to get user profile by userId
