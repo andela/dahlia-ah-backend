@@ -33,7 +33,7 @@ const findComments = async (novelId) => {
       exclude: ['parentId', 'novelId', 'userId']
     },
     include: [
-      { model: User, as: 'commentAuthor', attributes: ['firstName', 'lastName'] },
+      { model: User, as: 'commentAuthor', attributes: ['firstName', 'lastName', 'avatarUrl'] },
       { model: CommentLike, attributes: [] },
       {
         model: Comment,

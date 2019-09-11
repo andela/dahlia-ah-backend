@@ -101,9 +101,11 @@ const addNovel = async (novel, author) => {
     genre,
     title,
     description,
-    body
+    body,
+    coverImgUrl,
+    thumbImgUrl
   } = novel;
-  const getGenre = await Genre.findOne({ where: { name: genre } });
+  const getGenre = await Genre.findOrCreate({ where: { name: genre } });
   const slug = `${title.toLowerCase().split(' ').join('-')}-${author.id}`;
   const foundNovel = await Novel.findOne({ where: { slug } });
   const generatedReadTime = generateReadTime(body);
@@ -117,11 +119,13 @@ const addNovel = async (novel, author) => {
 
   const createdNovel = await Novel.create({
     authorId: author.id,
-    genreId: getGenre.id,
+    genreId: getGenre[0].id,
     slug,
     title,
     description,
     body,
+    coverImgUrl,
+    thumbImgUrl,
     readTime
   });
   return {
@@ -129,6 +133,8 @@ const addNovel = async (novel, author) => {
     slug: createdNovel.slug,
     title: createdNovel.title,
     description: createdNovel.description,
+    coverImgUrl: createdNovel.coverImgUrl,
+    thumbImgUrl: createdNovel.thumbImgUrl,
     body: createdNovel.body,
     genre,
     author: `${author.firstName} ${author.lastName}`,
