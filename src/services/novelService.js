@@ -103,7 +103,8 @@ const addNovel = async (novel, author) => {
     description,
     body,
     coverImgUrl,
-    thumbImgUrl
+    thumbImgUrl,
+    isPublished,
   } = novel;
   const getGenre = await Genre.findOrCreate({ where: { name: genre } });
   const slug = `${title.toLowerCase().split(' ').join('-')}-${author.id}`;
@@ -126,7 +127,8 @@ const addNovel = async (novel, author) => {
     body,
     coverImgUrl,
     thumbImgUrl,
-    readTime
+    readTime,
+    isPublished
   });
   return {
     id: createdNovel.id,
@@ -139,6 +141,7 @@ const addNovel = async (novel, author) => {
     genre,
     author: `${author.firstName} ${author.lastName}`,
     readTime,
+    isPublished: createdNovel.isPublished,
     createdAt: createdNovel.createdAt,
     updatedAt: createdNovel.updatedAt
   };
@@ -168,6 +171,7 @@ const findRandomNovels = async (limit) => {
   const novels = await Novel.findAll({
     order: Sequelize.literal('random()'),
     limit,
+    where: { isPublished: true },
     include: [
       { model: User, attributes: ['firstName', 'lastName'] },
       { model: Genre, attributes: ['name'] }
@@ -181,6 +185,7 @@ const findRandomNovels = async (limit) => {
  */
 const findNovelOfTheWeek = async () => {
   const novels = await Novel.findAll({
+    where: { isPublished: true },
     attributes: {
       include: [[Sequelize.fn('COUNT', Sequelize.col('novelId')), 'likescount']],
     },

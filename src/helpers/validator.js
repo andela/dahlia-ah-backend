@@ -138,6 +138,16 @@ const isValidComment = () => check('commentBody')
   .withMessage('commentBody cannot be empty')
   .isLength({ max: 200 });
 
+/**
+   * @returns {Object} - Express-validator
+   */
+const isValidPublishedStatus = () => check('isPublished')
+  .optional()
+  .not()
+  .isEmpty({ ignore_whitespace: true })
+  .withMessage('isPublished cannot be empty')
+  .isIn(['true', 'false'])
+  .withMessage('isPublish can only be true or false');
 
 /**
    * @param {String} field
@@ -266,4 +276,5 @@ export default {
   isValidPasswords,
   isValidReadInput,
   isBooleanNotOptional,
+  isValidPublishedStatus
 };

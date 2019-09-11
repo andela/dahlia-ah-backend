@@ -76,8 +76,7 @@ const login = async (req, res) => {
 
   const authErrorMessage = 'email or password is incorrect';
 
-  const foundUser = await User.findOne({ where: { email } });
-
+  const foundUser = await findUser(email);
   if (!foundUser) return errorResponse(res, 401, authErrorMessage);
 
   const correctPassword = authHelper.comparePassword(password, foundUser.password);
@@ -95,7 +94,8 @@ const login = async (req, res) => {
       token: authHelper.generateToken({ id: foundUser.id }),
       bio: foundUser.bio,
       isVerified: foundUser.isVerified,
-      allowEmailNotification: foundUser.allowEmailNotification
+      allowEmailNotification: foundUser.allowEmailNotification,
+      role: foundUser.Role.roleName
     }
   };
   return successResponse(res, 200, data);

@@ -60,10 +60,10 @@ const createNovel = async (request, response) => {
  */
 const getNovels = async (request, response) => {
   const {
-    title, author, genre, keyword, page = 1, limit = 20
+    title, author, genre, keyword, page = 1, limit = 20, isPublished = true
   } = request.query;
   const standardQueries = title || author || genre;
-  const queryFilter = filter(title, genre, author, keyword);
+  const queryFilter = filter(title, genre, author, keyword, isPublished);
   try {
     if (keyword && standardQueries) {
       return responseMessage(response, 400, {
