@@ -58,7 +58,8 @@ const extractNovels = (results) => {
   }
   return results.map((novel) => {
     const {
-      id, title, slug, description, coverImgUrl, thumbImgUrl, isPublished, createdAt, updatedAt
+      id, title, slug, description, coverImgUrl, thumbImgUrl,
+      readTime, isPublished, createdAt, updatedAt,
     } = novel;
 
     return {
@@ -70,6 +71,7 @@ const extractNovels = (results) => {
       description,
       coverImgUrl,
       thumbImgUrl,
+      readTime,
       isPublished,
       createdAt,
       updatedAt
