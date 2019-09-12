@@ -82,13 +82,13 @@ const getNovels = async (request, response) => {
     }
     const offset = limit * (page - 1);
     const results = await findAllNovels(offset, limit, queryFilter);
-    const novels = extractNovels(results);
+    // const novels = extractNovels(results);
     response.status(200).json({
       message: 'succesfully returned novels',
       currentPage: page,
       totalPages: pages,
       limit,
-      data: novels
+      data: results
     });
   } catch (error) {
     responseMessage(response, 500, { error: error.message });

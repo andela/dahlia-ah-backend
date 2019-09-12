@@ -355,7 +355,6 @@ const getNovelStats = async (userId) => {
       { model: Genre, attributes: ['name'] },
     ],
     group: ['Novel.id', 'Genre.id', 'Likes.id', 'Comments.id'],
-    // order: [Sequelize.fn('COUNT', Sequelize.col('Likes.id'))],
     order: Sequelize.literal('likescount DESC')
   });
 

@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import models from '../database/models';
 
 const { Op } = Sequelize;
-const { Genre, User } = models;
+const { Genre, User, Like } = models;
 
 /**
  * extractBooks
@@ -38,7 +38,7 @@ const filter = (title, genre, author, keyword, isPublished) => {
   if (!author) delete queryParams.query.where;
   const filterQuery = (keyword) ? { ...queryParams.keyword } : { ...queryParams.query };
   return {
-    include: [{ model: User }, { model: Genre }],
+    include: [{ model: User }, { model: Genre }, { model: Like }],
     where: (keyword || title || genre || author) ? {
       ...filterQuery, isPublished
     } : isPublished
@@ -58,7 +58,8 @@ const extractNovels = (results) => {
   }
   return results.map((novel) => {
     const {
-      id, title, slug, description, coverImgUrl, thumbImgUrl, isPublished, createdAt, updatedAt
+      id, title, slug, description, coverImgUrl, thumbImgUrl,
+      readTime, isPublished, createdAt, updatedAt, Likes
     } = novel;
 
     return {
@@ -70,7 +71,9 @@ const extractNovels = (results) => {
       description,
       coverImgUrl,
       thumbImgUrl,
+      readTime,
       isPublished,
+      Likes,
       createdAt,
       updatedAt
     };
