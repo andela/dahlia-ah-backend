@@ -200,6 +200,11 @@ const isValidUUIDParam = paramName => param(paramName)
   .isUUID()
   .withMessage('invalid request');
 
+const isValidUUIDOptional = field => check(field)
+  .trim()
+  .optional()
+  .isUUID()
+  .withMessage(`${field} must be an UUID`);
 /**
    * @param {String} field
    * @returns {Object} - Express-validator
@@ -262,5 +267,6 @@ export default {
   isValidPasswords,
   isValidReadInput,
   isBooleanNotOptional,
-  isValidPublishedStatus
+  isValidPublishedStatus,
+  isValidUUIDOptional,
 };

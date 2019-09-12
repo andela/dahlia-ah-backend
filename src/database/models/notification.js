@@ -7,7 +7,8 @@ export default (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
     },
     notificationObjectId: DataTypes.UUID,
-    notifierId: DataTypes.UUID
+    notifierId: DataTypes.UUID,
+    isRead: DataTypes.BOOLEAN,
   }, {});
   Notification.associate = (models) => {
     Notification.belongsTo(models.User, {

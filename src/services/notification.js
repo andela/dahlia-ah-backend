@@ -2,7 +2,7 @@ import db from '../database/models';
 import sendMail from './sendMail';
 import helpers from '../helpers';
 
-const { emailNotificationMessage, notificationConfig, responseMessage } = helpers;
+const { emailNotificationMessage, notificationConfig } = helpers;
 
 const {
   User, Follower, Like, Novel, NotificationObject, Notification, Comment
@@ -43,7 +43,7 @@ const getNovelData = async (entityId, entity) => {
 };
 
 const buildUserNotificationObject = (notifications) => {
-  const notificationPromise = notifications.map(async ({ notificationObjectId, isRead }) => {
+  const notificationPromise = notifications.map(async ({ id, notificationObjectId, isRead }) => {
     let novelTitle = null, novelUrl = null;
     const {
       entityId, entityTypeId, actorId, createdAt
@@ -57,7 +57,7 @@ const buildUserNotificationObject = (notifications) => {
     const { firstName, lastName } = await User.findByPk(actorId);
 
     const data = {
-      actor: `${firstName} ${lastName}`, message, novelTitle, novelUrl, createdAt, isRead
+      actor: `${firstName} ${lastName}`, message, novelTitle, novelUrl, createdAt, isRead, id
     };
     return data;
   });
@@ -65,9 +65,31 @@ const buildUserNotificationObject = (notifications) => {
 };
 
 const getUserNotification = async (id) => {
-  const notifications = await Notification.findAll({ where: { notifierId: id, isRead: false } });
+  const notifications = await Notification.findAll({
+    where: { notifierId: id },
+    order: [
+      ['createdAt', 'DESC'],
+    ],
+  });
   const userNotificationObject = buildUserNotificationObject(notifications);
   return userNotificationObject;
+};
+
+const markAsRead = async (id = null, userId) => {
+  const baseCondition = { isRead: false, notifierId: userId };
+  const notificationCondition = id
+    ? { ...baseCondition, id }
+    : baseCondition;
+  const notifications = await Notification.findAll({ where: notificationCondition });
+  notifications.forEach(async (notification) => {
+    Notification.update(
+      { isRead: true },
+      {
+        where: { id: notification.id },
+      },
+    );
+  });
+  return true;
 };
 
 const broadcastNotification = async (notificationObjectId) => {
@@ -85,6 +107,7 @@ const broadcastNotification = async (notificationObjectId) => {
       await sendMail(process.env.ADMIN_MAIL, email, message);
     }
   });
+  return true;
 };
 
 /**
@@ -143,29 +166,25 @@ const createUsersNotification = (notificationObjectId, usersToBeNotified) => {
  * @returns {boolean} - returns true when all went well
  */
 const addNotification = async ({
-  configObjectId, entityId, followeeId, actorId = null, isSingle = true, response
+  configObjectId, entityId, followeeId, actorId = null, isSingle = true,
 }) => {
   if (actorId === followeeId && isSingle) {
     return;
   }
-  try {
-    const entityConfigurationObject = getEntityConfigurationObject(configObjectId);
-    let usersToBeNotified = null;
-    if (isSingle) {
-      usersToBeNotified = [{ userId: followeeId }];
-    } else {
-      usersToBeNotified = await getUsersToBeNotified(entityConfigurationObject, followeeId);
-    }
-    const notificationObject = await NotificationObject.create({
-      entityTypeId: configObjectId, entityId, actorId
-    });
-    const { id: notificationObjectId } = notificationObject;
-    createUsersNotification(notificationObjectId, usersToBeNotified);
-    broadcastNotification(notificationObjectId);
-    return true;
-  } catch (error) {
-    responseMessage(response, 500, { error: error.message });
+  const entityConfigurationObject = getEntityConfigurationObject(configObjectId);
+  let usersToBeNotified = null;
+  if (isSingle) {
+    usersToBeNotified = [{ userId: followeeId }];
+  } else {
+    usersToBeNotified = await getUsersToBeNotified(entityConfigurationObject, followeeId);
   }
+  const notificationObject = await NotificationObject.create({
+    entityTypeId: configObjectId, entityId, actorId
+  });
+  const { id: notificationObjectId } = notificationObject;
+  createUsersNotification(notificationObjectId, usersToBeNotified);
+  broadcastNotification(notificationObjectId);
+  return true;
 };
 
 
@@ -178,4 +197,5 @@ export default {
   buildUserNotificationObject,
   getNovelData,
   getEntityConfigurationObject,
+  markAsRead,
 };

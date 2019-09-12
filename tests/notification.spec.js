@@ -24,7 +24,7 @@ const novelId = '7f45df6d-7003-424f-86ec-1e2b36e2fd14';
 const {
   notificationServices: {
     addNotification, getEntityConfigurationObject, getUserNotification, getNovelData,
-    getUsersToBeNotified,
+    getUsersToBeNotified, broadcastNotification
   }
 } = services;
 
@@ -35,6 +35,8 @@ const { expect, should } = chai;
 should();
 
 const url = '/api/v1/notifications';
+const markNotificationAsReadUrl = '/api/v1/notification';
+const invalidUUID = '/api/v1/notification/2cec37fd-feeb-4b01-9bfe-14e81d578k';
 
 const notificationMessageObject = [{
   actor: 'John Doe',
@@ -166,4 +168,58 @@ describe('A test to get novel data', () => {
     expect(novelUrl).to.be.a('string');
     expect(novelData).to.have.property('id');
   });
+});
+
+describe('test for marking notification as read', () => {
+  it('should return a success message', (done) => {
+    chai.request(app)
+      .patch(markNotificationAsReadUrl)
+      .set('authorization', token)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('message');
+        done();
+      });
+  });
+  it('should return mark all as read', (done) => {
+    chai.request(app)
+      .patch(markNotificationAsReadUrl)
+      .set('authorization', token)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('message');
+        done();
+      });
+  });
+  it('should return an error for invalid UUID', (done) => {
+    chai.request(app)
+      .patch(invalidUUID)
+      .set('authorization', token)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body).to.have.property('errors');
+        done();
+      });
+  });
+});
+describe('test for handling 500 errors', () => {
+  it('should return an error 500 when trying to update notification', (done) => {
+    const stub = sinon.stub(Notification, 'findAll');
+    stub.throws(new Error('error occured!'));
+
+    chai.request(app)
+      .patch(markNotificationAsReadUrl)
+      .set('authorization', token)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        stub.restore();
+        done();
+      });
+  });
+});
+
+describe('test broadcast notification', async () => {
+  const notificationObjectId = 'aeab6e66-b8e9-4045-803a-92eced0c56db';
+  const result = await broadcastNotification(notificationObjectId);
+  expect(result).to.equal(true);
 });

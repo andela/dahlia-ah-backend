@@ -6,6 +6,7 @@ import highlightValidator from './highlightValidator';
 import verifyToken from './verifyToken';
 import authorizeUser from './authorizeUser';
 import reportValidator from './reportValidator';
+import notificationValidator from './notification';
 
 
 export default {
@@ -16,5 +17,6 @@ export default {
   highlightValidator,
   verifyToken,
   authorizeUser,
-  reportValidator
+  reportValidator,
+  notificationValidator,
 };
