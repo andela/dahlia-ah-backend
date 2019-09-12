@@ -153,7 +153,7 @@ const resetPassword = async (request, response) => {
 
     if (passwordExist) {
       return responseMessage(response, 403, {
-        error: 'new password is too similar to previous password'
+        error: 'you cannot use any of your last 5 passwords'
       });
     }
 

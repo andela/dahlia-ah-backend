@@ -153,19 +153,6 @@ const isValidPublishedStatus = () => check('isPublished')
    * @param {String} field
    * @returns {Object} - Express-validator
    */
-const isValidGenre = field => check(field)
-  .trim()
-  .not()
-  .isEmpty()
-  .exists()
-  .withMessage(`${field} is a required field`)
-  .isIn(['action', 'thriller', 'romance', 'fiction', 'motivational'])
-  .withMessage('Must be a valid genre: action, thriller, romance, fiction, motivational');
-
-/**
-   * @param {String} field
-   * @returns {Object} - Express-validator
-   */
 const isValidUUID = field => check(field)
   .exists()
   .withMessage(`${field} is a required field`)
@@ -259,7 +246,6 @@ export default {
   isValidPassword,
   isNotEmpty,
   isOptional,
-  isValidGenre,
   isNotEmptySlug,
   isValidComment,
   isValidUUID,

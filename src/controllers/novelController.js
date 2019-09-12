@@ -18,7 +18,8 @@ const {
     addNovel, findGenre, findNovel, findAllNovels,
     highlightNovelText, getNovelHighlights, findRandomNovels,
     findNovelById, bookmarkNovel, getAllBookmark,
-    updateNovel, removeNovel, toggleReadStatus, findNovelOfTheWeek
+    updateNovel, removeNovel, toggleReadStatus, findNovelOfTheWeek,
+    getNovelStats
   },
   notificationServices: { addNotification }
 } = services;
@@ -404,6 +405,23 @@ const toggleRead = async (request, response) => {
   }
 };
 
+/**
+ * @description return the likes and comment activity of the logged in user
+ * @param {object} request express request object
+ * @param {object} response express response object
+ * @returns {json} json
+ */
+const getAuthorStats = async (request, response) => {
+  try {
+    const novelsInfo = await getNovelStats(request.params.userId);
+
+    return responseMessage(response, 200, { novels: novelsInfo });
+  } catch (error) {
+    log(error.message);
+    return responseMessage(response, 500, { error: 'an error occurred' });
+  }
+};
+
 export default {
   createNovel,
   getNovels,
@@ -417,5 +435,6 @@ export default {
   fetchBookmarks,
   editNovel,
   deleteNovel,
-  toggleRead
+  toggleRead,
+  getAuthorStats
 };

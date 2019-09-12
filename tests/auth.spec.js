@@ -409,7 +409,7 @@ describe('AUTH', () => {
         .end((error, response) => {
           expect(response).to.have.status(403);
           expect(response.body).to.be.an('object');
-          expect(response.body.error).to.equal('new password is too similar to previous password');
+          expect(response.body.error).to.equal('you cannot use any of your last 5 passwords');
           done();
         });
     });

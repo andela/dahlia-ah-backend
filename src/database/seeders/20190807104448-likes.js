@@ -32,5 +32,28 @@ export const up = queryInterface => queryInterface.bulkInsert('Likes', [{
   novelId: '10d42194-2ea2-4c90-aef2-043421952220',
   createdAt: new Date(),
   updatedAt: new Date()
-}], {});
+},
+{
+  id: 'd917c842-b16e-4eff-b203-c646a67f4e78',
+  userId: 'fb94de4d-47ff-4079-89e8-b0186c0a3be8',
+  novelId: '8bd8c0ec-3b50-4228-bb71-e617c7b8d3b5',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: 'ac8f540a-9867-4745-b857-147076cd5ef4',
+  userId: 'ce87299b-0dfa-44ed-bb53-45d434647eb2',
+  novelId: '8bd8c0ec-3b50-4228-bb71-e617c7b8d3b5',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+{
+  id: '23c6743a-e7ba-4283-a20b-bc7d17b3087b',
+  userId: '11fb0350-5b46-4ace-9a5b-e3b788167915',
+  novelId: '8bd8c0ec-3b50-4228-bb71-e617c7b8d3b5',
+  createdAt: new Date(),
+  updatedAt: new Date()
+},
+
+], {});
 export const down = queryInterface => queryInterface.bulkDelete('Likes', null, {});
