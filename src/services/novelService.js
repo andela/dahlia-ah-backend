@@ -16,7 +16,7 @@ const { Op } = Sequelize;
 const findNovel = async (param) => {
   const novel = await Novel.findOne({
     where: { slug: param },
-    include: [{ model: Genre, attributes: ['name'] }, { model: User, attributes: ['id', 'firstName', 'lastName', 'bio', 'avatarUrl'] }],
+    include: [{ model: Like }, { model: Genre, attributes: ['name'] }, { model: User, attributes: ['id', 'firstName', 'lastName', 'bio', 'avatarUrl'] }],
   });
   return novel;
 };

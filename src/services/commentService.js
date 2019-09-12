@@ -46,10 +46,12 @@ const findComments = async (novelId) => {
           { model: User, as: 'commentAuthor', attributes: ['firstName', 'lastName', 'avatarUrl'] },
           { model: CommentLike, attributes: [] }],
         separate: true,
-        group: ['Comment.id', 'commentAuthor.id']
+        group: ['Comment.id', 'commentAuthor.id'],
+        order: [['Comment', 'createdAt', 'ASC']]
       }
     ],
-    group: ['Comment.id', 'commentAuthor.id']
+    group: ['Comment.id', 'commentAuthor.id'],
+    order: [['Comment', 'createdAt', 'ASC']]
   });
   return comment;
 };
