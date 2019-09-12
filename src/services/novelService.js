@@ -346,12 +346,17 @@ const toggleReadStatus = async (userId, novelId, readStatus) => {
 const getNovelStats = async (userId) => {
   const novelLikes = await Novel.findAll({
     where: { authorId: userId },
+    attributes: {
+      include: [[Sequelize.fn('COUNT', Sequelize.col('Likes.id')), 'likescount']],
+    },
     include: [
       { model: Like },
       { model: Comment },
-      { model: User, attributes: ['id'] },
+      { model: Genre, attributes: ['name'] },
     ],
-    group: ['Novel.id', 'User.id', 'Likes.id', 'Comments.id']
+    group: ['Novel.id', 'Genre.id', 'Likes.id', 'Comments.id'],
+    // order: [Sequelize.fn('COUNT', Sequelize.col('Likes.id'))],
+    order: Sequelize.literal('likescount DESC')
   });
 
   return novelLikes;

@@ -1,7 +1,8 @@
 export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
   id: '7f45df6d-7003-424f-86ec-1e2b36e2fd14',
   title: 'hancock',
-  description: 'A',
+  description:
+  'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
   slug: 'hancock',
   body: 'abcd',
   genreId: 'ffe299b9-889b-4ad3-86cf-138cd57d5aab',
@@ -16,7 +17,7 @@ export const up = queryInterface => queryInterface.bulkInsert('Novels', [{
 {
   id: '8bd8c0ec-3b50-4228-bb71-e617c7b8d3b5',
   title: 'bancock',
-  description: 'A',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod',
   slug: 'bancock',
   body: 'abcd',
   genreId: 'ffe299b9-889b-4ad3-86cf-138cd57d5aab',
