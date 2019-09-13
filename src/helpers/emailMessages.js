@@ -46,8 +46,8 @@ const VerifyAccountEmailPage = (info) => {
             <h1 style="font-family: 'Roboto', sans-serif; font-weight:normal; text-align: left; margin-left: 25px"><i style="color: #73C81F; margin-right:7px" class="fas fa-feather"></i>Authors Haven</h1>
             <h3 style="font-weight: normal; font-family: 'Roboto', sans-serif; normal">Welcome, ${firstName}</h3>
             <p style="font-family: 'Roboto', sans-serif">You’ve  sucessfully signed up to Authors Haven</p>
-            <p style="font-weight: bold; font-family:'Courgette', cursive">Share your ideas, get reviews and request collaborations</p>
-            <p style="font-weight: bold; font-family:'Courgette', cursive">Bring your ideas to life</p>
+            <p style="font-weight: bold; font-family: 'Roboto', sans-serif">Share your ideas, get reviews and request collaborations</p>
+            <p style="font-weight: bold; font-family: 'Roboto', sans-serif">Bring your ideas to life</p>
             <a href = "${url}" style="font-family:'Roboto', sans-serif;  margin: 10px auto auto auto; color: black; display: block; width: 120px; border: 1px solid #73C81F; text-decoration: none; padding:14px; text-transform: uppercase">Confirm Email</a>
         </div>
     </body>
