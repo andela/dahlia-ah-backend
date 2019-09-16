@@ -38,7 +38,7 @@ const filter = (title, genre, author, keyword, isPublished) => {
   if (!author) delete queryParams.query.where;
   const filterQuery = (keyword) ? { ...queryParams.keyword } : { ...queryParams.query };
   return {
-    include: [{ model: User }, { model: Genre }, { model: Like }],
+    include: [{ model: User, required: true }, { model: Genre, required: true }, { model: Like }],
     where: (keyword || title || genre || author) ? {
       ...filterQuery, isPublished
     } : isPublished
@@ -73,7 +73,7 @@ const extractNovels = (results) => {
       thumbImgUrl,
       readTime,
       isPublished,
-      likes: novel.Likes.length,
+      likes: novel.Likes ? novel.Likes.length : null,
       createdAt,
       updatedAt
     };
