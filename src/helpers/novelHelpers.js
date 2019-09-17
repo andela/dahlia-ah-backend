@@ -58,7 +58,11 @@ const filter = (title, genre, author, keyword, isPublished) => {
  * @returns { array } formated novels
  */
 const extractNovels = (results, req) => {
-  const { user: { id: userId } } = req;
+  let userid;
+  if (req) {
+    const { user: { id: userId } } = req;
+    userid = userId;
+  }
   if (results.constructor !== Array) {
     throw new Error('invalid argument type');
   }
@@ -80,7 +84,8 @@ const extractNovels = (results, req) => {
       readTime,
       isPublished,
       likes: novel.Likes ? novel.Likes.length : null,
-      bookmark: !!novel.Bookmarks.find(current => current.userId === userId),
+      bookmark: novel.bookmark
+        ? !!novel.Bookmarks.find(current => current.userId === userid) : null,
       createdAt,
       updatedAt
     };
