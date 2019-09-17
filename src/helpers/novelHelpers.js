@@ -2,7 +2,9 @@ import Sequelize from 'sequelize';
 import models from '../database/models';
 
 const { Op } = Sequelize;
-const { Genre, User, Like } = models;
+const {
+  Genre, User, Like, Bookmark
+} = models;
 
 /**
  * extractBooks
@@ -12,6 +14,7 @@ const { Genre, User, Like } = models;
  * @param { string } author
  * @param { string } keyword
  * @param { string } isPublished
+ *@param { object } req
  * @returns { array } formated novels
  */
 const filter = (title, genre, author, keyword, isPublished) => {
@@ -38,7 +41,8 @@ const filter = (title, genre, author, keyword, isPublished) => {
   if (!author) delete queryParams.query.where;
   const filterQuery = (keyword) ? { ...queryParams.keyword } : { ...queryParams.query };
   return {
-    include: [{ model: User, required: true }, { model: Genre, required: true }, { model: Like }],
+    include: [{ model: User, required: true }, { model: Genre, required: true },
+      { model: Like }, { model: Bookmark }],
     where: (keyword || title || genre || author) ? {
       ...filterQuery, isPublished
     } : isPublished
@@ -50,9 +54,11 @@ const filter = (title, genre, author, keyword, isPublished) => {
  * extractBooks
  *
  * @param { array } results
+ * @param { object } req
  * @returns { array } formated novels
  */
-const extractNovels = (results) => {
+const extractNovels = (results, req) => {
+  const { user: { id: userId } } = req;
   if (results.constructor !== Array) {
     throw new Error('invalid argument type');
   }
@@ -74,6 +80,7 @@ const extractNovels = (results) => {
       readTime,
       isPublished,
       likes: novel.Likes ? novel.Likes.length : null,
+      bookmark: !!novel.Bookmarks.find(current => current.userId === userId),
       createdAt,
       updatedAt
     };
