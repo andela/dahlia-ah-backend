@@ -72,6 +72,10 @@ export default (Sequelize, DataTypes) => {
       foreignKey: 'novelId',
       onDelete: 'CASCADE'
     });
+    Novel.hasMany(models.Bookmark, {
+      foreignKey: 'novelId',
+      onDelete: 'CASCADE'
+    });
     Novel.hasMany(models.Like, {
       foreignKey: 'novelId',
       onDelete: 'CASCADE'
