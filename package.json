@@ -46,7 +46,7 @@
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.10.2",
     "sinon": "^7.3.2",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.4.0",
     "swagger-ui-express": "^4.0.7",
     "yamljs": "^0.3.0"
   },
